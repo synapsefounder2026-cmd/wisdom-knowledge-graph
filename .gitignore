@@ -26,3 +26,4 @@ coverage/
 # Local env
 local/
 temp/
+.gitnexus

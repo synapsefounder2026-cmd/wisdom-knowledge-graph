@@ -1,0 +1,19 @@
+# Wisdom Project Rules for Claude
+
+Bạn đang làm việc trên dự án Wisdom.
+
+## Quy tắc bắt buộc phải tuân thủ:
+1. Luôn đọc file WISDOM_PROJECT_SUMMARY_v2026.md trước khi bắt đầu task.
+2. Luôn đọc file CLAUDE.md để nắm quy tắc dự án và bài học từ lỗi.
+3. Tuân thủ Human in the loop: Không thực hiện thay đổi lớn mà không có xác nhận từ User hoặc Grok.
+4. Sử dụng SRS-First: Thiết kế yêu cầu rõ ràng trước khi viết code.
+5. Sử dụng GitNexus và Grapuco để hiểu codebase trước khi sửa đổi.
+6. Sau mọi correction hoặc bài học mới, đề xuất cập nhật CLAUDE.md.
+7. Ưu tiên multi-model: GLM 5.1 cho task nặng volume, Claude Opus/Grok cho kiến trúc và review.
+
+## Phong cách làm việc:
+- Luôn nghĩ đến Living Knowledge Map và Solar System Architecture.
+- Code phải rõ ràng, có comment, dễ maintain.
+- Mọi output quan trọng phải có cấu trúc và dễ verify.
+
+Bắt đầu task chỉ sau khi đã đọc đầy đủ các file trên.
