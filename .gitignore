@@ -27,3 +27,8 @@ coverage/
 local/
 temp/
 .gitnexus
+nvm-setup.exe
+download
+**/__pycache__/
+*.pyc
+.env
