@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wisdom Bookmarklet</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --border: #1e1e2e;
+    --accent: #7c6af7;
+    --accent2: #f7c76a;
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --success: #4ade80;
+    --danger: #f87171;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(124,106,247,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124,106,247,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 680px;
+  }
+
+  /* Header */
+  .header {
+    margin-bottom: 3rem;
+    animation: fadeDown 0.6s ease;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .logo-text {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--text);
+  }
+
+  .logo-text span {
+    color: var(--accent);
+  }
+
+  .tagline {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Bookmarklet card */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.6s ease;
+  }
+
+  .card-title {
+    font-size: 0.7rem;
+    font-family: 'Space Mono', monospace;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  /* Bookmarklet button */
+  .bookmarklet-wrapper {
+    background: linear-gradient(135deg, rgba(124,106,247,0.1), rgba(247,199,106,0.05));
+    border: 1px dashed var(--accent);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .bookmarklet-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--accent), #9b8bf7);
+    color: white;
+    padding: 0.875rem 2rem;
+    border-radius: 10px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    cursor: grab;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(124,106,247,0.3);
+    user-select: none;
+  }
+
+  .bookmarklet-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(124,106,247,0.5);
+  }
+
+  .bookmarklet-btn:active {
+    cursor: grabbing;
+  }
+
+  .drag-hint {
+    margin-top: 0.75rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  .drag-hint span {
+    color: var(--accent2);
+  }
+
+  /* Steps */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.875rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    transition: background 0.2s;
+  }
+
+  .step:hover {
+    background: rgba(124,106,247,0.05);
+  }
+
+  .step-num {
+    width: 24px;
+    height: 24px;
+    background: var(--border);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .step-text {
+    font-size: 0.875rem;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .step-text strong {
+    color: var(--accent2);
+  }
+
+  /* Supported platforms */
+  .platforms {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .platform-tag {
+    padding: 0.3rem 0.75rem;
+    border-radius: 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+
+  .platform-tag:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .platform-tag.active {
+    border-color: var(--success);
+    color: var(--success);
+    background: rgba(74,222,128,0.05);
+  }
+
+  /* Config section */
+  .config-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .config-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    width: 120px;
+    flex-shrink: 0;
+  }
+
+  .config-input {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.5rem 0.875rem;
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .config-input:focus {
+    border-color: var(--accent);
+  }
+
+  .save-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.5rem 1.25rem;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .save-btn:hover {
+    background: #9b8bf7;
+  }
+
+  /* Status */
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: rgba(74,222,128,0.05);
+    border: 1px solid rgba(74,222,128,0.2);
+    border-radius: 8px;
+    margin-top: 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--success);
+    display: none;
+  }
+
+  .status-bar.show { display: flex; }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); animation: pulse 1.5s infinite; }
+
+  /* Code block */
+  .code-block {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    overflow-x: auto;
+    line-height: 1.6;
+    margin-top: 0.75rem;
+  }
+
+  .code-block .kw { color: var(--accent); }
+  .code-block .str { color: var(--accent2); }
+  .code-block .fn { color: #7dd3fc; }
+
+  /* Animations */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .card:nth-child(2) { animation-delay: 0.1s; }
+  .card:nth-child(3) { animation-delay: 0.2s; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">🧠</div>
+      <div class="logo-text">Wi<span>s</span>dom</div>
+    </div>
+    <div class="tagline">// knowledge capture bookmarklet</div>
+  </div>
+
+  <!-- Config Card -->
+  <div class="card">
+    <div class="card-title">⚙ Config — Wisdom API Endpoint</div>
+    <div class="config-row">
+      <span class="config-label">API URL</span>
+      <input class="config-input" id="apiUrl" value="http://localhost:8000" placeholder="http://localhost:8000">
+      <button class="save-btn" onclick="saveConfig()">Save & Generate</button>
+    </div>
+    <div class="status-bar" id="statusBar">
+      <div class="status-dot"></div>
+      Config saved — bookmarklet updated!
+    </div>
+  </div>
+
+  <!-- Bookmarklet Card -->
+  <div class="card">
+    <div class="card-title">🔖 Drag to Bookmark Bar</div>
+    <div class="bookmarklet-wrapper">
+      <a class="bookmarklet-btn" id="bookmarkletLink" href="#" 
+         onclick="return false;"
+         title="Kéo vào bookmark bar">
+        📥 Send to Wisdom
+      </a>
+      <div class="drag-hint">
+        <span>↑ Kéo button này</span> lên bookmark bar của browser
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">Kéo button <strong>"Send to Wisdom"</strong> lên bookmark bar (Ctrl+Shift+B để hiện bar)</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">Mở bất kỳ video/post nào trên <strong>YouTube, Facebook, TikTok, LinkedIn...</strong></div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">Click bookmark <strong>"Send to Wisdom"</strong> — trang sẽ được gửi về Wisdom tự động</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text">Wisdom <strong>ingest, analyze, vectorize</strong> và lưu vào Knowledge Graph ngay lập tức</div>
+      </div>
+    </div>
+
+    <div class="platforms">
+      <span class="platform-tag active">YouTube ✓</span>
+      <span class="platform-tag active">Facebook</span>
+      <span class="platform-tag active">TikTok</span>
+      <span class="platform-tag active">LinkedIn</span>
+      <span class="platform-tag active">Twitter/X</span>
+      <span class="platform-tag active">Reddit</span>
+      <span class="platform-tag active">GitHub</span>
+      <span class="platform-tag active">Any URL</span>
+    </div>
+  </div>
+
+  <!-- API Server Card -->
+  <div class="card">
+    <div class="card-title">🔌 Wisdom API Server — Cần chạy trước</div>
+    <div class="step-text" style="margin-bottom:0.75rem; font-size:0.8rem;">
+      Bookmarklet gửi URL về local API server. Chạy lệnh này trong Git Bash:
+    </div>
+    <div class="code-block">
+      <span class="kw">cd</span> /c/Users/LENOVO/wisdom-knowledge-graph<br>
+      <span class="fn">python</span> wisdom/core/wisdom_api.py
+    </div>
+    <div class="step-text" style="margin-top:0.75rem; font-size:0.75rem; color: var(--muted);">
+      API sẽ chạy tại <span style="color:var(--accent)">http://localhost:8000</span> — nhận URL từ bookmarklet và trigger ingest pipeline tự động.
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function generateBookmarklet(apiUrl) {
+    const code = `
+      (function(){
+        var url = window.location.href;
+        var title = document.title;
+        var platform = 'unknown';
+        if(url.includes('youtube.com') || url.includes('youtu.be')) platform = 'youtube';
+        else if(url.includes('facebook.com') || url.includes('fb.com')) platform = 'facebook';
+        else if(url.includes('tiktok.com')) platform = 'tiktok';
+        else if(url.includes('linkedin.com')) platform = 'linkedin';
+        else if(url.includes('twitter.com') || url.includes('x.com')) platform = 'twitter';
+        else if(url.includes('reddit.com')) platform = 'reddit';
+        else if(url.includes('github.com')) platform = 'github';
+        
+        var payload = JSON.stringify({url: url, title: title, platform: platform, captured_at: new Date().toISOString()});
+        
+        fetch('${apiUrl}/ingest', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: payload
+        })
+        .then(function(r){ return r.json(); })
+        .then(function(d){
+          var msg = d.status === 'ok' 
+            ? '✅ Sent to Wisdom!\n\n' + title 
+            : '❌ Error: ' + (d.message || 'Unknown error');
+          alert(msg);
+        })
+        .catch(function(e){
+          alert('❌ Wisdom API not running!\n\nStart it with:\npython wisdom/core/wisdom_api.py');
+        });
+      })();
+    `.replace(/\s+/g, ' ').trim();
+    
+    return 'javascript:' + encodeURIComponent(code);
+  }
+
+  function saveConfig() {
+    var apiUrl = document.getElementById('apiUrl').value.trim();
+    if (!apiUrl) return;
+    
+    localStorage.setItem('wisdomApiUrl', apiUrl);
+    document.getElementById('bookmarkletLink').href = generateBookmarklet(apiUrl);
+    
+    var bar = document.getElementById('statusBar');
+    bar.classList.add('show');
+    setTimeout(() => bar.classList.remove('show'), 3000);
+  }
+
+  // Init
+  window.onload = function() {
+    var saved = localStorage.getItem('wisdomApiUrl') || 'http://localhost:8000';
+    document.getElementById('apiUrl').value = saved;
+    document.getElementById('bookmarkletLink').href = generateBookmarklet(saved);
+  };
+</script>
+
+</body>
+</html>

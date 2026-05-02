@@ -1,6 +1,6 @@
 """
 Wisdom Knowledge Ingestion Pipeline
-watch-cli → Ollama (phân tích) → Neo4j + Qdrant (lưu trữ)
+watch-cli  Ollama (phn tch)  Neo4j + Qdrant (lu tr)
 
 Usage:
     python wisdom_ingest.py <youtube_url>
@@ -16,7 +16,7 @@ from neo4j import GraphDatabase
 from qdrant_client import QdrantClient
 from qdrant_client.models import PointStruct, VectorParams, Distance
 
-# ── Config ──────────────────────────────────────────────────────────────────
+#  Config 
 OLLAMA_BASE    = "http://localhost:11434"
 OLLAMA_MODEL   = "llama3.1:8b"
 NEO4J_URI      = "bolt://localhost:7687"
@@ -25,16 +25,16 @@ NEO4J_PASS     = "password123"
 QDRANT_HOST    = "localhost"
 QDRANT_PORT    = 6333
 COLLECTION     = "wisdom_knowledge"
-EMBED_MODEL    = "nomic-embed-text"  # ollama pull nomic-embed-text nếu chưa có
+EMBED_MODEL    = "nomic-embed-text"  # ollama pull nomic-embed-text nu cha c
 VECTOR_SIZE    = 768
 
-# ── Helpers ──────────────────────────────────────────────────────────────────
+#  Helpers 
 
 def run_watch_cli(url: str) -> dict:
-    """Chạy watch-cli và parse output thành dict."""
-    print(f"[1/4] 🎬 Downloading & transcribing: {url}")
+    """Chy watch-cli v parse output thnh dict."""
+    print(f"[1/4]  Downloading & transcribing: {url}")
     result = subprocess.run(
-        ["C:/Program Files/Git/bin/bash.exe", "-c", f"watch {url}"],
+        ["C:/Program Files/Git/bin/bash.exe", "-c", f"watch '{url}' --cookies-from-browser chrome"],
 
         capture_output=True, text=True, encoding="utf-8"
     )
@@ -68,8 +68,8 @@ def run_watch_cli(url: str) -> dict:
 
 
 def analyze_with_ollama(transcript: str, url: str) -> dict:
-    """Gửi transcript lên Ollama để phân tích và extract knowledge."""
-    print(f"[2/4] 🧠 Analyzing with {OLLAMA_MODEL}...")
+    """Gi transcript ln Ollama  phn tch v extract knowledge."""
+    print(f"[2/4]  Analyzing with {OLLAMA_MODEL}...")
     prompt = f"""Analyze this video transcript and extract structured knowledge.
 Return ONLY valid JSON, no markdown, no explanation.
 
@@ -94,7 +94,7 @@ Return this exact JSON structure:
     )
     raw = response.json().get("response", "{}")
 
-    # Strip markdown fences nếu có
+    # Strip markdown fences nu c
     raw = raw.strip()
     if raw.startswith("```"):
         raw = raw.split("```")[1]
@@ -105,7 +105,7 @@ Return this exact JSON structure:
     try:
         return json.loads(raw)
     except json.JSONDecodeError:
-        print(f"  ⚠️  JSON parse failed, using defaults")
+        print(f"    JSON parse failed, using defaults")
         return {
             "title": "Unknown",
             "summary": transcript[:200],
@@ -118,7 +118,7 @@ Return this exact JSON structure:
 
 
 def get_embedding(text: str) -> list[float]:
-    """Lấy embedding từ Ollama."""
+    """Ly embedding t Ollama."""
     response = requests.post(
         f"{OLLAMA_BASE}/api/embeddings",
         json={"model": EMBED_MODEL, "prompt": text},
@@ -128,12 +128,12 @@ def get_embedding(text: str) -> list[float]:
 
 
 def save_to_neo4j(data: dict, analysis: dict):
-    """Lưu knowledge graph vào Neo4j."""
-    print(f"[3/4] 🗄️  Saving to Neo4j...")
+    """Lu knowledge graph vo Neo4j."""
+    print(f"[3/4]   Saving to Neo4j...")
     driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASS))
 
     with driver.session() as session:
-        # Tạo Video node
+        # To Video node
         video_id = hashlib.md5(data["url"].encode()).hexdigest()[:12]
         session.run("""
             MERGE (v:Video {id: $id})
@@ -150,7 +150,7 @@ def save_to_neo4j(data: dict, analysis: dict):
              flywheel=analysis.get("value_flywheel", "learning"),
              ingested_at=datetime.now().isoformat())
 
-        # Tạo Concept nodes và relationships
+        # To Concept nodes v relationships
         for concept in analysis.get("key_concepts", []):
             session.run("""
                 MERGE (c:Concept {name: $name})
@@ -159,7 +159,7 @@ def save_to_neo4j(data: dict, analysis: dict):
                 MERGE (v)-[:HAS_CONCEPT]->(c)
             """, name=concept, video_id=video_id)
 
-        # Tạo Tag nodes
+        # To Tag nodes
         for tag in analysis.get("tags", []):
             session.run("""
                 MERGE (t:Tag {name: $name})
@@ -169,30 +169,30 @@ def save_to_neo4j(data: dict, analysis: dict):
             """, name=tag, video_id=video_id)
 
     driver.close()
-    print(f"  ✅ Neo4j: Video node + {len(analysis.get('key_concepts', []))} concepts saved")
+    print(f"   Neo4j: Video node + {len(analysis.get('key_concepts', []))} concepts saved")
     return video_id
 
 
 def save_to_qdrant(video_id: str, data: dict, analysis: dict):
-    """Lưu vector embedding vào Qdrant."""
-    print(f"[4/4] 🔍 Saving to Qdrant...")
+    """Lu vector embedding vo Qdrant."""
+    print(f"[4/4]  Saving to Qdrant...")
     client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT)
 
-    # Tạo collection nếu chưa có
+    # To collection nu cha c
     existing = [c.name for c in client.get_collections().collections]
     if COLLECTION not in existing:
         client.create_collection(
             collection_name=COLLECTION,
             vectors_config=VectorParams(size=VECTOR_SIZE, distance=Distance.COSINE)
         )
-        print(f"  📦 Created collection: {COLLECTION}")
+        print(f"   Created collection: {COLLECTION}")
 
     # Embed summary + transcript
     text_to_embed = f"{analysis.get('title', '')} {analysis.get('summary', '')} {data['transcript'][:1000]}"
     embedding = get_embedding(text_to_embed)
 
     if len(embedding) != VECTOR_SIZE:
-        print(f"  ⚠️  Embedding size mismatch: {len(embedding)} vs {VECTOR_SIZE}, skipping Qdrant")
+        print(f"    Embedding size mismatch: {len(embedding)} vs {VECTOR_SIZE}, skipping Qdrant")
         return
 
     point_id = int(hashlib.md5(video_id.encode()).hexdigest()[:8], 16)
@@ -213,10 +213,10 @@ def save_to_qdrant(video_id: str, data: dict, analysis: dict):
             }
         )]
     )
-    print(f"  ✅ Qdrant: Vector saved to '{COLLECTION}'")
+    print(f"   Qdrant: Vector saved to '{COLLECTION}'")
 
 
-# ── Main ─────────────────────────────────────────────────────────────────────
+#  Main 
 
 def ingest(url: str):
     print(f"\n{'='*60}")
@@ -226,15 +226,15 @@ def ingest(url: str):
     # Step 1: watch-cli
     data = run_watch_cli(url)
     if not data["transcript"]:
-        print("❌ No transcript found. Aborting.")
+        print(" No transcript found. Aborting.")
         return
 
-    print(f"  📝 Transcript: {data['transcript'][:100]}...")
+    print(f"   Transcript: {data['transcript'][:100]}...")
 
     # Step 2: Ollama analysis
     analysis = analyze_with_ollama(data["transcript"], url)
-    print(f"  💡 Title: {analysis.get('title')}")
-    print(f"  🏷️  Concepts: {', '.join(analysis.get('key_concepts', []))}")
+    print(f"   Title: {analysis.get('title')}")
+    print(f"    Concepts: {', '.join(analysis.get('key_concepts', []))}")
 
     # Step 3: Neo4j
     video_id = save_to_neo4j(data, analysis)
@@ -243,7 +243,7 @@ def ingest(url: str):
     save_to_qdrant(video_id, data, analysis)
 
     print(f"\n{'='*60}")
-    print(f"  ✅ INGESTION COMPLETE")
+    print(f"   INGESTION COMPLETE")
     print(f"  Video ID: {video_id}")
     print(f"  Flywheel: {analysis.get('value_flywheel', 'learning')}")
     print(f"{'='*60}\n")
