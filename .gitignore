@@ -33,3 +33,4 @@ download
 *.pyc
 .env
 .wisdom_errors.json
+backups/
