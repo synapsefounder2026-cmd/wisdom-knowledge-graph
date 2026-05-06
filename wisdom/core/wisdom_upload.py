@@ -12,9 +12,37 @@ import os
 import sys
 import hashlib
 import json
+import re
 import requests
 from datetime import datetime
+# P-012: Import dedup module
+try:
+    import sys as _sys, os as _os
+    _sys.path.append(_os.path.dirname(_os.path.abspath(__file__)))
+    from wisdom_dedup import WisdomDedup
+    _dedup = WisdomDedup()
+except Exception as e:
+    print(f'  Dedup warning: {e}')
+    _dedup = None
+
 from pathlib import Path
+
+# ── EP-001 Fix: Strip emoji ───────────────────────────────────────────────────
+def strip_emoji(text: str) -> str:
+    if not isinstance(text, str):
+        return str(text) if text else ""
+    emoji_pattern = re.compile(
+        '['
+        u'\U0001F600-\U0001F64F'
+        u'\U0001F300-\U0001F5FF'
+        u'\U0001F680-\U0001F6FF'
+        u'\U0001F1E0-\U0001F1FF'
+        u'\U00002600-\U000027BF'
+        u'\U0001F900-\U0001F9FF'
+        ']+',
+        flags=re.UNICODE
+    )
+    return emoji_pattern.sub('', text).strip()
 
 # ── Optional imports (graceful fallback) ─────────────────────────────────────
 try:
@@ -206,7 +234,7 @@ def transcribe_audio(path: str) -> str:
         # Try read từ watch-cli config
         env_path = os.path.expanduser("~/.config/watch-cli/env")
         if os.path.exists(env_path):
-            with open(env_path) as f:
+            with open(env_path, encoding="utf-8") as f:
                 for line in f:
                     if line.startswith("GROQ_API_KEY="):
                         groq_key = line.split("=", 1)[1].strip()
@@ -287,7 +315,9 @@ def extract_content(path: str) -> str:
 # ── AI Analysis ───────────────────────────────────────────────────────────────
 
 def analyze_with_ollama(content: str, filename: str) -> dict:
-    print(f"  🧠  Analyzing with {OLLAMA_MODEL}...")
+    content = strip_emoji(content)    # EP-001 fix
+    filename = strip_emoji(filename)  # EP-001 fix
+    print(f"  Analyzing with {OLLAMA_MODEL}...")
     prompt = f"""Analyze this document and extract structured knowledge.
 Return ONLY valid JSON, no markdown, no explanation.
 
@@ -344,89 +374,100 @@ def get_embedding(text: str) -> list:
 
 
 def save_to_neo4j(file_id: str, path: str, analysis: dict):
-    print(f"  🗄️   Saving to Neo4j...")
-    driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASS))
-    filename = Path(path).name
+    print(f"  Saving to Neo4j...")
+    try:
+        driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASS))
+        filename = Path(path).name
 
-    with driver.session() as session:
-        session.run("""
-            MERGE (d:Document {id: $id})
-            SET d.filename = $filename,
-                d.path = $path,
-                d.title = $title,
-                d.summary = $summary,
-                d.document_type = $doc_type,
-                d.language = $language,
-                d.value_flywheel = $flywheel,
-                d.ingested_at = $ingested_at
-        """, id=file_id, filename=filename, path=path,
-             title=analysis.get("title", ""),
-             summary=analysis.get("summary", ""),
-             doc_type=analysis.get("document_type", "other"),
-             language=analysis.get("language", "en"),
-             flywheel=analysis.get("value_flywheel", "learning"),
-             ingested_at=datetime.now().isoformat())
-
-        for concept in analysis.get("key_concepts", []):
+        with driver.session() as session:
             session.run("""
-                MERGE (c:Concept {name: $name})
-                WITH c
-                MATCH (d:Document {id: $doc_id})
-                MERGE (d)-[:HAS_CONCEPT]->(c)
-            """, name=concept, doc_id=file_id)
+                MERGE (d:Document {id: $id})
+                SET d.filename = $filename,
+                    d.path = $path,
+                    d.title = $title,
+                    d.summary = $summary,
+                    d.document_type = $doc_type,
+                    d.language = $language,
+                    d.value_flywheel = $flywheel,
+                    d.ingested_at = $ingested_at,
+                    d.trust_score = 0.8,
+                    d.decay_lambda = 0.003,
+                    d.epistemic_status = "PENDING",
+                    d.cultural_context = "GLOBAL"
+            """, id=file_id, filename=filename, path=path,
+                 title=analysis.get("title", ""),
+                 summary=analysis.get("summary", ""),
+                 doc_type=analysis.get("document_type", "other"),
+                 language=analysis.get("language", "en"),
+                 flywheel=analysis.get("value_flywheel", "learning"),
+                 ingested_at=datetime.now().isoformat())
 
-        for tag in analysis.get("tags", []):
-            session.run("""
-                MERGE (t:Tag {name: $name})
-                WITH t
-                MATCH (d:Document {id: $doc_id})
-                MERGE (d)-[:HAS_TAG]->(t)
-            """, name=tag, doc_id=file_id)
+            for concept in analysis.get("key_concepts", []):
+                session.run("""
+                    MERGE (c:Concept {name: $name})
+                    WITH c
+                    MATCH (d:Document {id: $doc_id})
+                    MERGE (d)-[:HAS_CONCEPT]->(c)
+                """, name=concept, doc_id=file_id)
 
-    driver.close()
-    print(f"  ✅  Neo4j: Document node + {len(analysis.get('key_concepts', []))} concepts saved")
+            for tag in analysis.get("tags", []):
+                session.run("""
+                    MERGE (t:Tag {name: $name})
+                    WITH t
+                    MATCH (d:Document {id: $doc_id})
+                    MERGE (d)-[:HAS_TAG]->(t)
+                """, name=tag, doc_id=file_id)
+
+        driver.close()
+        print(f"  Neo4j: Document node + {len(analysis.get('key_concepts', []))} concepts saved")
+    except Exception as e:
+        print(f"  Neo4j ERROR: {e}")
 
 
 def save_to_qdrant(file_id: str, path: str, content: str, analysis: dict):
-    print(f"  🔍  Saving to Qdrant...")
-    client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT)
+    print(f"  Saving to Qdrant...")
+    try:
+        client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT)
 
-    existing = [c.name for c in client.get_collections().collections]
-    if COLLECTION not in existing:
-        client.create_collection(
+        existing = [c.name for c in client.get_collections().collections]
+        if COLLECTION not in existing:
+            client.create_collection(
+                collection_name=COLLECTION,
+                vectors_config=VectorParams(size=VECTOR_SIZE, distance=Distance.COSINE)
+            )
+
+        text_to_embed = f"{analysis.get('title', '')} {analysis.get('summary', '')} {content[:1000]}"
+        embedding = get_embedding(text_to_embed)
+
+        if len(embedding) != VECTOR_SIZE:
+            print(f"  WARNING: Embedding size mismatch, skipping Qdrant")
+            return
+
+        point_id = int(hashlib.md5(file_id.encode()).hexdigest()[:8], 16)
+        client.upsert(
             collection_name=COLLECTION,
-            vectors_config=VectorParams(size=VECTOR_SIZE, distance=Distance.COSINE)
+            points=[PointStruct(
+                id=point_id,
+                vector=embedding,
+                payload={
+                    "neo4j_id": file_id,  # P-004
+                    "file_id": file_id,
+                    "filename": Path(path).name,
+                    "path": path,
+                    "title": analysis.get("title", ""),
+                    "summary": analysis.get("summary", ""),
+                    "tags": analysis.get("tags", []),
+                    "key_concepts": analysis.get("key_concepts", []),
+                    "document_type": analysis.get("document_type", "other"),
+                    "value_flywheel": analysis.get("value_flywheel", "learning"),
+                    "source": "manual_upload",
+                    "ingested_at": datetime.now().isoformat()
+                }
+            )]
         )
-
-    text_to_embed = f"{analysis.get('title', '')} {analysis.get('summary', '')} {content[:1000]}"
-    embedding = get_embedding(text_to_embed)
-
-    if len(embedding) != VECTOR_SIZE:
-        print(f"  ⚠️   Embedding size mismatch, skipping Qdrant")
-        return
-
-    point_id = int(hashlib.md5(file_id.encode()).hexdigest()[:8], 16)
-    client.upsert(
-        collection_name=COLLECTION,
-        points=[PointStruct(
-            id=point_id,
-            vector=embedding,
-            payload={
-                "file_id": file_id,
-                "filename": Path(path).name,
-                "path": path,
-                "title": analysis.get("title", ""),
-                "summary": analysis.get("summary", ""),
-                "tags": analysis.get("tags", []),
-                "key_concepts": analysis.get("key_concepts", []),
-                "document_type": analysis.get("document_type", "other"),
-                "value_flywheel": analysis.get("value_flywheel", "learning"),
-                "source": "manual_upload",
-                "ingested_at": datetime.now().isoformat()
-            }
-        )]
-    )
-    print(f"  ✅  Qdrant: Vector saved to '{COLLECTION}'")
+        print(f"  Qdrant: Vector saved to '{COLLECTION}'")
+    except Exception as e:
+        print(f"  Qdrant ERROR: {e}")
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
@@ -479,7 +520,8 @@ def upload(path: str):
     print(f"  Now searchable via: python wisdom_query.py \"<question>\"")
     print(f"{'='*60}\n")
 
-    return {"file_id": file_id, "analysis": analysis}
+    return {"neo4j_id": file_id,  # P-004
+                    "file_id": file_id, "analysis": analysis}
 
 
 if __name__ == "__main__":

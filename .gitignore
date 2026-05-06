@@ -32,3 +32,4 @@ download
 **/__pycache__/
 *.pyc
 .env
+.wisdom_errors.json

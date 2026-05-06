@@ -11,10 +11,39 @@ import requests
 import json
 import hashlib
 import sys
+import re
 from datetime import datetime
+# P-012: Import dedup module
+try:
+    import sys as _sys, os as _os
+    _sys.path.append(_os.path.dirname(_os.path.abspath(__file__)))
+    from wisdom_dedup import WisdomDedup
+    _dedup = WisdomDedup()
+except Exception as e:
+    print(f'  Dedup warning: {e}')
+    _dedup = None
+
 from neo4j import GraphDatabase
 from qdrant_client import QdrantClient
 from qdrant_client.models import PointStruct, VectorParams, Distance
+
+# ── EP-001 Fix: Strip emoji khoi moi text input ──────────────────────────────
+def strip_emoji(text: str) -> str:
+    """Strip emoji va ky tu dac biet gay loi encoding. AP DUNG DONG DAU moi ham nhan text."""
+    if not isinstance(text, str):
+        return str(text) if text else ""
+    emoji_pattern = re.compile(
+        '['
+        u'\U0001F600-\U0001F64F'
+        u'\U0001F300-\U0001F5FF'
+        u'\U0001F680-\U0001F6FF'
+        u'\U0001F1E0-\U0001F1FF'
+        u'\U00002600-\U000027BF'
+        u'\U0001F900-\U0001F9FF'
+        ']+',
+        flags=re.UNICODE
+    )
+    return emoji_pattern.sub('', text).strip()
 
 #  Config 
 OLLAMA_BASE    = "http://localhost:11434"
@@ -69,6 +98,8 @@ def run_watch_cli(url: str) -> dict:
 
 def analyze_with_ollama(transcript: str, url: str) -> dict:
     """Gi transcript ln Ollama  phn tch v extract knowledge."""
+    transcript = strip_emoji(transcript)  # EP-001 fix
+    url = strip_emoji(url)                # EP-001 fix
     print(f"[2/4]  Analyzing with {OLLAMA_MODEL}...")
     prompt = f"""Analyze this video transcript and extract structured knowledge.
 Return ONLY valid JSON, no markdown, no explanation.
@@ -130,90 +161,101 @@ def get_embedding(text: str) -> list[float]:
 def save_to_neo4j(data: dict, analysis: dict):
     """Lu knowledge graph vo Neo4j."""
     print(f"[3/4]   Saving to Neo4j...")
-    driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASS))
-
-    with driver.session() as session:
-        # To Video node
-        video_id = hashlib.md5(data["url"].encode()).hexdigest()[:12]
-        session.run("""
-            MERGE (v:Video {id: $id})
-            SET v.url = $url,
-                v.title = $title,
-                v.summary = $summary,
-                v.duration = $duration,
-                v.language = $language,
-                v.value_flywheel = $flywheel,
-                v.ingested_at = $ingested_at
-        """, id=video_id, url=data["url"], title=analysis.get("title", ""),
-             summary=analysis.get("summary", ""), duration=data["duration"],
-             language=analysis.get("language", "en"),
-             flywheel=analysis.get("value_flywheel", "learning"),
-             ingested_at=datetime.now().isoformat())
-
-        # To Concept nodes v relationships
-        for concept in analysis.get("key_concepts", []):
+    try:
+        driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASS))
+        with driver.session() as session:
+            # To Video node
+            video_id = hashlib.md5(data["url"].encode()).hexdigest()[:12]
             session.run("""
-                MERGE (c:Concept {name: $name})
-                WITH c
-                MATCH (v:Video {id: $video_id})
-                MERGE (v)-[:HAS_CONCEPT]->(c)
-            """, name=concept, video_id=video_id)
+                MERGE (v:Video {id: $id})
+                SET v.url = $url,
+                    v.title = $title,
+                    v.summary = $summary,
+                    v.duration = $duration,
+                    v.language = $language,
+                    v.value_flywheel = $flywheel,
+                    v.ingested_at = $ingested_at,
+                    v.trust_score      = 0.8,
+                    v.decay_lambda     = 0.003,
+                    v.valid_from       = $valid_from,
+                    v.valid_until      = null,
+                    v.epistemic_status = 'PENDING',
+                    v.cultural_context = 'GLOBAL',
+            """, id=video_id, url=data["url"], title=analysis.get("title", ""),
+                 summary=analysis.get("summary", ""), duration=data["duration"],
+                 language=analysis.get("language", "en"),
+                 flywheel=analysis.get("value_flywheel", "learning"),
+                 ingested_at=datetime.now().isoformat())
 
-        # To Tag nodes
-        for tag in analysis.get("tags", []):
-            session.run("""
-                MERGE (t:Tag {name: $name})
-                WITH t
-                MATCH (v:Video {id: $video_id})
-                MERGE (v)-[:HAS_TAG]->(t)
-            """, name=tag, video_id=video_id)
+            # To Concept nodes v relationships
+            for concept in analysis.get("key_concepts", []):
+                session.run("""
+                    MERGE (c:Concept {name: $name})
+                    WITH c
+                    MATCH (v:Video {id: $video_id})
+                    MERGE (v)-[:HAS_CONCEPT]->(c)
+                """, name=concept, video_id=video_id)
 
-    driver.close()
-    print(f"   Neo4j: Video node + {len(analysis.get('key_concepts', []))} concepts saved")
-    return video_id
+            # To Tag nodes
+            for tag in analysis.get("tags", []):
+                session.run("""
+                    MERGE (t:Tag {name: $name})
+                    WITH t
+                    MATCH (v:Video {id: $video_id})
+                    MERGE (v)-[:HAS_TAG]->(t)
+                """, name=tag, video_id=video_id)
+
+        driver.close()
+        print(f"   Neo4j: Video node + {len(analysis.get('key_concepts', []))} concepts saved")
+        return video_id
+    except Exception as e:
+        print(f"   Neo4j ERROR: {e}")
+        return hashlib.md5(data["url"].encode()).hexdigest()[:12]
 
 
 def save_to_qdrant(video_id: str, data: dict, analysis: dict):
     """Lu vector embedding vo Qdrant."""
     print(f"[4/4]  Saving to Qdrant...")
-    client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT)
+    try:
+        client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT)
 
-    # To collection nu cha c
-    existing = [c.name for c in client.get_collections().collections]
-    if COLLECTION not in existing:
-        client.create_collection(
+        existing = [c.name for c in client.get_collections().collections]
+        if COLLECTION not in existing:
+            client.create_collection(
+                collection_name=COLLECTION,
+                vectors_config=VectorParams(size=VECTOR_SIZE, distance=Distance.COSINE)
+            )
+            print(f"   Created collection: {COLLECTION}")
+
+        text_to_embed = f"{analysis.get('title', '')} {analysis.get('summary', '')} {data['transcript'][:1000]}"
+        embedding = get_embedding(text_to_embed)
+
+        if len(embedding) != VECTOR_SIZE:
+            print(f"    Embedding size mismatch: {len(embedding)} vs {VECTOR_SIZE}, skipping Qdrant")
+            return
+
+        point_id = int(hashlib.md5(video_id.encode()).hexdigest()[:8], 16)
+        client.upsert(
             collection_name=COLLECTION,
-            vectors_config=VectorParams(size=VECTOR_SIZE, distance=Distance.COSINE)
+            points=[PointStruct(
+                id=point_id,
+                vector=embedding,
+                payload={
+                    "neo4j_id": video_id,  # P-004
+                    "video_id": video_id,
+                    "url": data["url"],
+                    "title": analysis.get("title", ""),
+                    "summary": analysis.get("summary", ""),
+                    "tags": analysis.get("tags", []),
+                    "key_concepts": analysis.get("key_concepts", []),
+                    "value_flywheel": analysis.get("value_flywheel", "learning"),
+                    "ingested_at": datetime.now().isoformat()
+                }
+            )]
         )
-        print(f"   Created collection: {COLLECTION}")
-
-    # Embed summary + transcript
-    text_to_embed = f"{analysis.get('title', '')} {analysis.get('summary', '')} {data['transcript'][:1000]}"
-    embedding = get_embedding(text_to_embed)
-
-    if len(embedding) != VECTOR_SIZE:
-        print(f"    Embedding size mismatch: {len(embedding)} vs {VECTOR_SIZE}, skipping Qdrant")
-        return
-
-    point_id = int(hashlib.md5(video_id.encode()).hexdigest()[:8], 16)
-    client.upsert(
-        collection_name=COLLECTION,
-        points=[PointStruct(
-            id=point_id,
-            vector=embedding,
-            payload={
-                "video_id": video_id,
-                "url": data["url"],
-                "title": analysis.get("title", ""),
-                "summary": analysis.get("summary", ""),
-                "tags": analysis.get("tags", []),
-                "key_concepts": analysis.get("key_concepts", []),
-                "value_flywheel": analysis.get("value_flywheel", "learning"),
-                "ingested_at": datetime.now().isoformat()
-            }
-        )]
-    )
-    print(f"   Qdrant: Vector saved to '{COLLECTION}'")
+        print(f"   Qdrant: Vector saved to '{COLLECTION}'")
+    except Exception as e:
+        print(f"   Qdrant ERROR: {e}")
 
 
 #  Main 
@@ -248,7 +290,8 @@ def ingest(url: str):
     print(f"  Flywheel: {analysis.get('value_flywheel', 'learning')}")
     print(f"{'='*60}\n")
 
-    return {"video_id": video_id, "analysis": analysis}
+    return {"video_id": video_id,
+                    "video_id": video_id, "analysis": analysis}
 
 
 if __name__ == "__main__":
