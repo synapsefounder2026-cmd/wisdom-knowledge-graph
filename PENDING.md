@@ -541,3 +541,135 @@ P-004 (node_id bridge) -> P-003 (schema migration) -> P-007 (Web UI)
 ---
 *PENDING.md — Doc dau moi session | Cap nhat cuoi moi buoi lam viec*
 *Last updated: 2026-05-06 | Version: Full reconstructed*
+# APPEND VÀO PENDING.md — Infrastructure Update (2026-05-06)
+
+---
+
+### [P-038] Infrastructure Roadmap — Revised (Claude Assessment)
+
+#### Giai đoạn 1 (Hiện tại — Laptop)
+- Muc tieu: Build loi, test, dev
+- RUI RO SO 1: Mat du lieu neu may hong -> can backup NGAY
+- ACTION: Setup rclone + OneDrive backup (mien phi, lam hom nay)
+- wisdom_backup.py -> them vao P-015 cron 21:00 hang ngay
+
+#### Giai đoạn 2 (Khi P-007 Web UI xong)
+- Chon: Hetzner CX32 — 4 vCPU, 8GB RAM, ~$14/thang
+- Ly do chon Hetzner vs alternatives:
+  DigitalOcean: $48/thang — dat gap 3x, khong xung dang
+  AWS t3.medium: $30/thang + complexity — overkill
+  Hetzner CX32: $14/thang — du manh cho Phase 2
+- Chay duoc: Neo4j + Qdrant + FastAPI + wisdom_cron.py
+- GPU chua can — Ollama CPU-only du dung
+- Latency VN->Hetzner: ~150-200ms, chap nhan duoc
+
+#### Giai đoạn 3 (Khi co 50+ users / doanh thu on dinh)
+- KHONG mua server vat ly — sai lam pho bien
+  Ly do: phi dien + cooling + bao tri o VN ~$100-200/thang an
+  Downtime khong kiem soat duoc khi hong phan cung
+- Mo hinh Hybrid:
+  Hetzner CX52 ($49/thang)   — Wisdom core luon chay
+  RunPod / Vast.ai (pay/use) — GPU tasks: Voice-Pro, Docling batch
+  Cloudflare (mien phi)      — CDN + DDoS + rate limiting
+- Tong chi phi: ~$50-80/thang co dinh + GPU bien phi ($0.5-2/gio)
+
+#### Bảo mật bắt buộc khi lên VPS
+```bash
+# Tắt password SSH, chỉ dùng key
+# UFW firewall
+ufw allow 22/tcp    # SSH
+ufw allow 443/tcp   # HTTPS
+ufw deny 7474       # Neo4j — KHONG expose
+ufw deny 6333       # Qdrant — KHONG expose
+# Fail2ban chong brute force
+# Neo4j + Qdrant chi listen localhost
+# FastAPI la middleman duy nhat co auth
+```
+
+#### Chi phí theo giai đoạn
+| Giai đoạn | Chi phí/tháng | Trigger |
+|-----------|---------------|---------|
+| Laptop | $0 + backup mien phi | Dang lam |
+| VPS Phase 2 | $14 (Hetzner CX32) | Khi P-007 xong |
+| Scale Phase 3 | $50-80 + GPU bien phi | Khi 50+ users |
+| Enterprise | Tinh sau | Khi doanh thu > $2,000/thang |
+
+---
+
+### [P-039] wisdom_backup.py — Knowledge Graph Backup
+- Mo ta: Backup Neo4j + Qdrant hang ngay, tu dong
+- Tool: rclone sync len OneDrive (mien phi 5GB)
+- Chay: 21:00 hang ngay qua Windows Task Scheduler
+- Output: Log backup vao .wisdom_errors.json
+- Uu tien: KHAN CAP — lam ngay hom nay truoc khi lam bat cu thu gi khac
+# APPEND VÀO PENDING.md — Cuối ngày 2026-05-06
+
+---
+
+### [P-040] Section 20 CLAUDE.md — Soul of Wisdom
+- Source: Bai viet "Thue ngoai suy nghi, khong the thue ngoai thau hieu"
+- Noi dung chinh:
+  Explicit knowledge (99%) = AI xu ly
+  Tacit knowledge (1%) = Moat cua Sep
+  Wisdom = Amplifier, KHONG phai Replacement
+  Above the Algorithm (Sangeet Paul Choudary)
+- Key quote de dua vao CLAUDE.md:
+  "Co the thue ngoai suy nghi. Khong the thue ngoai thau hieu."
+- Ap dung cho: Trang chu P-007, Onboarding P-034, Marketing copy
+- Uu tien: CAO — lam ngay dau session toi, 1 session
+
+### [P-041] Caveman Protocol — Internal Agent Communication
+- Mo ta: Agent-to-agent messages dung Caveman style
+- Repo: github.com/JuliusBrussee/caveman | 55k stars | MIT
+- Muc tieu: Giam 65-75% tokens trong internal pipeline
+- Vi du:
+  BAD:  "Dua tren phan tich knowledge graph, co the thay rang node nay..."
+  GOOD: "Node stale. trust_score 0.3. Council check needed."
+- Ap dung cho:
+  Council interrogation output (P-020)
+  wisdom_cron.py internal logs (P-015)
+  wisdom_validator.py agent messages
+  Tat ca agent-to-agent communication
+- KHONG ap dung cho: Output ra user — phai human-readable
+- Lien ket: P-029 WISDOM_VOICE.md (2 doc complement nhau)
+- Uu tien: Phase 2
+
+### [P-042] wisdom_strategy_handover.md — Master Strategy Doc
+- Mo ta: Tong hop toan bo chien luoc Wisdom thanh 1 doc duy nhat
+- Muc tieu: Thay the viec doc nhieu file khi bat dau session moi
+- Noi dung:
+  Architecture tong the (Neo4j + Qdrant + Ollama + FastAPI)
+  Soul of Wisdom (P-040 — Tacit vs Explicit)
+  OPC Model (1 Founder + AI Labor + N Partners)
+  Dependency chain hien tai
+  Phase roadmap (1-2-3)
+  Council personas (Buffett/Jobs/Munger/Street/Intuition)
+- Output: wisdom/docs/wisdom_strategy_handover.md
+- Lam khi: P-026 node_schema + P-029 WISDOM_VOICE xong
+- Uu tien: Phase 2
+
+---
+
+## COMPLETED (Cuoi ngay 2026-05-06)
+
+- [x] P-039 wisdom_backup — Docker volume backup chay thanh cong
+- [x] backup_now.sh — 1 lenh backup Neo4j + Qdrant
+- [x] Windows Task Scheduler 21:00 hang ngay
+- [x] Phan tich "Thue ngoai suy nghi" — P-040 created
+- [x] Danh gia Caveman protocol — P-041 created
+- [x] P-042 Strategy Handover doc planned
+
+---
+
+## NHAC NHO DAU SESSION TOI (Priority order)
+
+1. wisdom_backup.py verify — chay bash backup_now.sh kiem tra OK
+2. P-040 Section 20 CLAUDE.md — Soul of Wisdom (1 session)
+3. P-026 wisdom_node_schema.md (1 session)
+4. P-029 WISDOM_VOICE.md (1 session)
+5. P-004 node_id bridge -> P-003 -> P-007 Web UI
+
+Git commit cuoi ngay:
+  git add PENDING.md backup_now.sh .gitignore
+  git commit -m "feat: P-039 backup done, P-040 to P-042, end of day"
+  git push origin main
