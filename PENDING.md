@@ -673,3 +673,70 @@ Git commit cuoi ngay:
   git add PENDING.md backup_now.sh .gitignore
   git commit -m "feat: P-039 backup done, P-040 to P-042, end of day"
   git push origin main
+  # APPEND VÀO PENDING.md — Cuối session 2026-05-06
+
+---
+
+### [P-001] wisdom_fb_ingest.py — ĐÓNG CHÍNH THỨC
+- Ly do dong: Cookies approach = bad UX, khong scalable cho khach hang
+- Thay the boi: P-043 Wisdom Lens Extension (approach tot hon)
+- Status: CLOSED -> replaced by P-043
+
+### [P-043] Wisdom Lens — Chrome Extension Clipper
+- Ten chinh thuc: Wisdom Lens
+- Mo ta: 1-click capture tu bat ky trang nao vao Wisdom
+- Dac biet:
+  Chay trong browser user -> vao duoc Group kin FB
+  Lay duoc comments, anh, text ma khong can cookies
+  Khong vi pham ToS (user tu chon content)
+  UX: 1 nut "Clip to Wisdom" -> xong
+- Capture: DOM content + anh + metadata + URL + timestamp
+- Flow:
+  User nhan "Clip"
+  -> Extension capture DOM
+  -> POST /api/clip den Wisdom API
+  -> wisdom_cleaner.py (P-023) xu ly
+  -> Tao INBOX node trong Neo4j
+  -> Hien thi trong Web UI (P-007)
+- Stack: Chrome Extension Manifest V3 + FastAPI endpoint
+- Tuong tu: Pocket Clipper, Readwise Reader, Notion Web Clipper
+- API endpoint them vao P-007:
+  POST /api/clip
+  Body: {url, content, images[], metadata, user_id}
+- WARNING: Them ToS disclaimer trong UI
+  "Scraping Group kin co the vi pham ToS Facebook
+   User tu chiu trach nhiem ve noi dung capture"
+- Uu tien: Phase 2 — lam NGAY SAU P-007 API ready
+- Thay the chinh thuc cho: P-001 (FB cookies approach)
+
+---
+
+## COMPLETED (Cuoi session 2026-05-06)
+
+- [x] P-001 dong chinh thuc — thay bang P-043 Wisdom Lens
+- [x] P-043 Wisdom Lens — thiet ke xong, cho P-007 API
+- [x] FB strategy: Extension > Cookies > Graph API
+
+---
+
+## DEPENDENCY UPDATE
+
+| Pending | Phu thuoc vao |
+|---------|---------------|
+| P-043 Wisdom Lens | P-007 API /api/clip endpoint |
+| P-023 wisdom_cleaner | Khong — lam ngay |
+
+---
+
+## NHAN XET CHIEN LUOC
+
+Wisdom Lens giai quyet triet de P-001:
+- Vượt FB walled garden hop phap
+- UX don gian: 1 click
+- Data chat luong: user tu filter
+- Privacy-first: chi lay cai user chon
+- Mo rong: clip duoc moi trang web, khong chi FB
+
+Tuong lai: Wisdom Lens = entry point chinh
+cho moi knowledge vao Wisdom ecosystem
+```
