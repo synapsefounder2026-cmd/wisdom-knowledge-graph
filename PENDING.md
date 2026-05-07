@@ -780,3 +780,72 @@ cho moi knowledge vao Wisdom ecosystem
 - ClawTeam — agent orchestration
 - autoresearch — tu dong nghien cuu
 - openlogs.dev — monitor agents (dung Phase 2)
+# APPEND VÀO PENDING.md — Session 2026-05-07
+
+---
+
+### [P-046] Refactor CLAUDE.md — DONE
+- Giam tu 1,269 dong xuong ~100 dong
+- Cau truc: WHY + MAP + RULES + WORKFLOW
+- Chi tiet kỹ thuật chuyển vào docs/WISDOM_ARCHITECTURE.md
+- Status: COMPLETED 2026-05-07
+
+### [P-047] .claude/hooks/ — Guardrails
+- Mo ta: Auto-checks khi chinh sua code
+- Vi du:
+  Pre-edit: canh bao neu file la auth/payment
+  Post-edit: auto run tests
+  Block: khong xoa Neo4j schema
+- Uu tien: Phase 2
+
+### [P-048] docs/decisions/ — ADR Folder
+- Mo ta: Architecture Decision Records
+- Vi du: "Tai sao chon Neo4j thay vi PostgreSQL?"
+- Lam cung P-046 (da tao docs/ folder)
+- Uu tien: Phase 2
+
+---
+
+## P-007 Web UI — COMPLETED (2026-05-07)
+
+- [x] wisdom_dashboard_v2.html — soft/nature theme
+- [x] Font: system-ui giong Claude chat window
+- [x] Components: Stats, INBOX, Council, Search,
+      Decay tracker, Quick ingest, Build progress
+- [x] Responsive, tab interactions, decay animation
+- File: wisdom_dashboard_v2.html -> copy vao repo
+
+---
+
+## Files can commit hom nay
+
+```bash
+# Copy files moi vao repo
+cp CLAUDE_NEW.md CLAUDE.md
+mkdir -p docs
+cp WISDOM_ARCHITECTURE.md docs/
+cp wisdom_dashboard_v2.html wisdom_app_ui.html
+
+# Commit
+git add CLAUDE.md docs/ wisdom_app_ui.html PENDING.md
+git commit -m "feat: P-007 dashboard done, P-046 CLAUDE.md refactor"
+git push origin main
+```
+
+---
+
+## COMPLETED (2026-05-07)
+
+- [x] P-007 Web UI Dashboard — soft nature theme
+- [x] P-046 CLAUDE.md refactor — 100 dong thay vi 1,269
+- [x] docs/WISDOM_ARCHITECTURE.md — technical details
+- [x] wisdom_dashboard_v2.html — production ready
+
+---
+
+## NHAC NHO DAU SESSION TOI
+
+1. Commit files hom nay (lenh o tren)
+2. P-026 wisdom_node_schema.md — 1 session
+3. P-029 WISDOM_VOICE.md — 1 session
+4. Connect dashboard vao FastAPI backend

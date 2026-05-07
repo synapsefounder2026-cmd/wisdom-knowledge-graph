@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wisdom Factory — Knowledge OS</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;font-size:13px;background:#f5f7f5;color:#1a1a1a;min-height:100vh;padding:0}
+.wrap{padding:1.5rem 2rem;max-width:760px;margin:0 auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+.logo-area{display:flex;align-items:center;gap:12px}
+.lotus{width:36px;height:36px;background:#e1f5ee;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px}
+.brand{font-size:16px;font-weight:500;color:#1a1a1a}
+.brand-sub{font-size:12px;color:#666}
+.top-btns{display:flex;gap:8px}
+.btn-soft{padding:7px 14px;border-radius:20px;border:1px solid #d4e8d4;font-size:13px;cursor:pointer;background:#fff;color:#555;font-family:inherit}
+.btn-soft:hover{background:#f0f8f0}
+.btn-main{padding:7px 16px;border-radius:20px;border:none;font-size:13px;font-weight:500;cursor:pointer;background:#1d9e75;color:#fff;font-family:inherit}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:1.25rem}
+.stat{background:#fff;border:1px solid #e8ede8;border-radius:12px;padding:14px 16px;border-top:3px solid transparent}
+.stat.teal{border-top-color:#1d9e75}.stat.amber{border-top-color:#ef9f27}.stat.blue{border-top-color:#378add}.stat.coral{border-top-color:#d85a30}
+.stat-lbl{font-size:11px;color:#888;margin-bottom:6px}
+.stat-val{font-size:22px;font-weight:500;line-height:1;margin-bottom:3px}
+.stat.teal .stat-val{color:#0f6e56}.stat.amber .stat-val{color:#ba7517}.stat.blue .stat-val{color:#185fa5}.stat.coral .stat-val{color:#993c1d}
+.stat-hint{font-size:12px;color:#888}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.row3{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.panel{background:#fff;border:1px solid #e8ede8;border-radius:16px;overflow:hidden}
+.ph{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid #f0f4f0}
+.pt{font-size:13px;font-weight:500;color:#1a1a1a;display:flex;align-items:center;gap:7px}
+.badge{font-size:11px;background:#e1f5ee;color:#0f6e56;border-radius:20px;padding:2px 8px}
+.pa{font-size:12px;color:#1d9e75;cursor:pointer}
+.pb{padding:14px 18px}
+.tabs{display:flex;gap:3px;background:#f5f7f5;border-radius:20px;padding:3px;margin-bottom:12px}
+.tab{padding:5px 12px;border-radius:16px;font-size:12px;cursor:pointer;color:#888;font-family:inherit}
+.tab.on{background:#fff;color:#1d9e75;font-weight:500}
+.iitem{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #f0f4f0;align-items:flex-start}
+.iitem:last-child{border:none}
+.ico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.ico.w{background:#e6f1fb}.ico.d{background:#faeeda}.ico.c{background:#e1f5ee}
+.ititle{font-size:13px;color:#1a1a1a;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:210px}
+.imeta{font-size:11px;color:#888;display:flex;gap:8px;align-items:center}
+.pill{font-size:10px;font-weight:500;padding:2px 7px;border-radius:10px}
+.pill.p{background:#faeeda;color:#ba7517}.pill.v{background:#e1f5ee;color:#0f6e56}.pill.c{background:#fcebeb;color:#a32d2d}
+.council-g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pcard{background:#f9fbf9;border:1px solid #e8ede8;border-radius:12px;padding:12px 8px;text-align:center;cursor:pointer;transition:border-color .15s}
+.pcard:hover{border-color:#1d9e75}
+.pav{width:34px;height:34px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.pav.b{background:#e1f5ee}.pav.j{background:#e6f1fb}.pav.m{background:#faeeda}
+.pname{font-size:12px;font-weight:500;color:#1a1a1a;margin-bottom:2px}
+.prole{font-size:11px;color:#888;line-height:1.4}
+.logbox{background:#f9fbf9;border-radius:8px;padding:10px 12px;margin-top:12px;max-height:90px;overflow:hidden}
+.ll{margin-bottom:4px;font-size:11px;color:#888;font-family:monospace}
+.ll .ok{color:#1d9e75}.ll .warn{color:#ba7517}.ll .err{color:#a32d2d}
+.search-wrap{display:flex;gap:8px;margin-bottom:10px}
+.sinput{flex:1;padding:9px 14px;border-radius:20px;border:1px solid #d4e8d4;font-size:13px;background:#f9fbf9;color:#1a1a1a;font-family:inherit;outline:none}
+.sinput:focus{border-color:#1d9e75;background:#fff}
+.sugg{font-size:12px;color:#888}
+.sugg span{color:#1d9e75;cursor:pointer}
+.decay-rows{display:flex;flex-direction:column;gap:10px}
+.drow{display:flex;align-items:center;gap:10px}
+.dlbl{font-size:12px;color:#666;width:110px;flex-shrink:0}
+.dtrack{flex:1;height:5px;background:#f0f4f0;border-radius:3px;overflow:hidden}
+.dbar{height:100%;border-radius:3px;transition:width 1s ease}
+.dscore{font-size:11px;color:#888;width:32px;text-align:right;font-family:monospace}
+.upzone{border:1.5px dashed #c8dcc8;border-radius:12px;padding:22px 16px;text-align:center;cursor:pointer;margin-bottom:10px;transition:all .15s}
+.upzone:hover{border-color:#1d9e75;background:#f0f8f0}
+.uptxt{font-size:13px;color:#888;line-height:1.6}
+.uptxt strong{color:#1d9e75}
+.plist{display:flex;flex-direction:column;gap:7px}
+.pitem{display:flex;align-items:center;gap:10px;padding:9px 11px;background:#f9fbf9;border-radius:10px;border:1px solid #eef2ee}
+.pcheck{width:18px;height:18px;border-radius:50%;border:1.5px solid #ccc;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
+.pcheck.done{background:#1d9e75;border-color:#1d9e75;color:#fff}
+.pcheck.now{border-color:#ef9f27;color:#ef9f27}
+.ptext{font-size:13px;color:#888;flex:1}
+.ptext.done{color:#1a1a1a}.ptext.now{color:#ba7517;font-weight:500}
+.ptag{font-size:11px;padding:2px 8px;border-radius:10px}
+.ptag.done{background:#e1f5ee;color:#0f6e56}
+.ptag.now{background:#faeeda;color:#ba7517}
+.ptag.next{background:#f5f7f5;color:#888;border:1px solid #e8ede8}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="logo-area">
+      <div class="lotus">🌿</div>
+      <div><div class="brand">Wisdom Factory</div><div class="brand-sub">Knowledge Operating System</div></div>
+    </div>
+    <div class="top-btns">
+      <button class="btn-soft">🔗 Clip URL</button>
+      <button class="btn-main">＋ Ingest</button>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="stat teal"><div class="stat-lbl">Tổng nodes</div><div class="stat-val">1,247</div><div class="stat-hint">↑ 23 hôm nay</div></div>
+    <div class="stat amber"><div class="stat-lbl">Đã xác minh</div><div class="stat-val">892</div><div class="stat-hint">71.5% tin cậy</div></div>
+    <div class="stat blue"><div class="stat-lbl">Blueprints</div><div class="stat-val">7</div><div class="stat-hint">1 sẵn bán</div></div>
+    <div class="stat coral"><div class="stat-lbl">Cần xem lại</div><div class="stat-val">34</div><div class="stat-hint">↑ review due</div></div>
+  </div>
+  <div class="row2">
+    <div class="panel">
+      <div class="ph"><div class="pt">📥 Hàng đến <span class="badge">12 mới</span></div><div class="pa">Xem tất cả →</div></div>
+      <div class="pb">
+        <div class="tabs"><div class="tab on">Tất cả</div><div class="tab">Web</div><div class="tab">Clip</div><div class="tab">Tài liệu</div></div>
+        <div class="iitem"><div class="ico w">🌐</div><div style="flex:1;min-width:0"><div class="ititle">Amazon KDP chiến lược ngách 2026</div><div class="imeta"><span>amazon.com</span><span>3 phút</span><span class="pill p">Chờ xử lý</span></div></div></div>
+        <div class="iitem"><div class="ico c">📎</div><div style="flex:1;min-width:0"><div class="ititle">Docling multi-format parser</div><div class="imeta"><span>github.com</span><span>1 giờ</span><span class="pill v">Đã xác minh</span></div></div></div>
+        <div class="iitem"><div class="ico d">📄</div><div style="flex:1;min-width:0"><div class="ititle">OPC Framework — Phân tích chiến lược</div><div class="imeta"><span>linkedin.com</span><span>2 giờ</span><span class="pill c">Tranh luận</span></div></div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ph"><div class="pt">⚖️ Hội đồng thẩm tra</div><div class="pa">Chạy kiểm tra →</div></div>
+      <div class="pb">
+        <div class="council-g">
+          <div class="pcard"><div class="pav b">💰</div><div class="pname">Buffett</div><div class="prole">Margin of Safety · Moat</div></div>
+          <div class="pcard"><div class="pav j">📱</div><div class="pname">Jobs</div><div class="prole">Đơn giản · Giá trị</div></div>
+          <div class="pcard"><div class="pav m">🧠</div><div class="pname">Munger</div><div class="prole">Đảo ngược · Bậc 2</div></div>
+        </div>
+        <div class="logbox">
+          <div class="ll"><span class="ok">✓</span> KDP "gratitude journal" — trust 0.82</div>
+          <div class="ll"><span class="warn">⚠</span> Buffett: moat yếu, dễ bị sao chép</div>
+          <div class="ll"><span class="ok">✓</span> Munger: Temporal decay đã cấu hình</div>
+          <div class="ll"><span class="err">✗</span> Jobs: Cover chưa đủ rõ trong 3 giây</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row3">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="panel">
+        <div class="ph"><div class="pt">🔍 Tìm kiếm tri thức</div></div>
+        <div class="pb">
+          <div class="search-wrap"><input class="sinput" placeholder="Hỏi Wisdom... vd: ngách KDP nào đang tốt?"/><button class="btn-main" style="white-space:nowrap">Hỏi</button></div>
+          <div class="sugg">Gợi ý: <span>KDP blueprint</span> · <span>nodes sắp hết hạn</span> · <span>council review</span></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph"><div class="pt">⏳ Suy giảm tri thức</div><div class="pa">34 cần xem →</div></div>
+        <div class="pb">
+          <div class="decay-rows">
+            <div class="drow"><div class="dlbl">AI/Tech trends</div><div class="dtrack"><div class="dbar" style="width:45%;background:#d85a30"></div></div><div class="dscore">0.45</div></div>
+            <div class="drow"><div class="dlbl">Chiến lược KDP</div><div class="dtrack"><div class="dbar" style="width:72%;background:#ef9f27"></div></div><div class="dscore">0.72</div></div>
+            <div class="drow"><div class="dlbl">OPC Framework</div><div class="dtrack"><div class="dbar" style="width:88%;background:#1d9e75"></div></div><div class="dscore">0.88</div></div>
+            <div class="drow"><div class="dlbl">Nguyên tắc cốt lõi</div><div class="dtrack"><div class="dbar" style="width:97%;background:#1d9e75"></div></div><div class="dscore">0.97</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="panel">
+        <div class="ph"><div class="pt">⊕ Nạp nhanh</div></div>
+        <div class="pb">
+          <div class="upzone"><div style="font-size:24px;margin-bottom:8px">☁️</div><div class="uptxt">Kéo file vào đây<br>hoặc <strong>dán URL</strong></div></div>
+          <button class="btn-soft" style="width:100%;justify-content:center">👁 Wisdom Lens Clip</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph"><div class="pt">🚀 Tiến độ xây dựng</div></div>
+        <div class="pb">
+          <div class="plist">
+            <div class="pitem"><div class="pcheck done">✓</div><div class="ptext done">Core pipeline hoàn chỉnh</div><span class="ptag done">Xong</span></div>
+            <div class="pitem"><div class="pcheck done">✓</div><div class="ptext done">Docker + Backup tự động</div><span class="ptag done">Xong</span></div>
+            <div class="pitem"><div class="pcheck now">→</div><div class="ptext now">P-007 Web UI Dashboard</div><span class="ptag now">Đang làm</span></div>
+            <div class="pitem"><div class="pcheck"></div><div class="ptext">Blueprint Marketplace</div><span class="ptag next">Tiếp theo</span></div>
+            <div class="pitem"><div class="pcheck"></div><div class="ptext">Wisdom Lens Extension</div><span class="ptag next">Phase 2</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener('load',()=>{
+  document.querySelectorAll('.dbar').forEach(b=>{const w=b.style.width;b.style.width='0';setTimeout(()=>b.style.width=w,200)});
+  document.querySelectorAll('.tab').forEach(t=>{t.addEventListener('click',function(){this.closest('.tabs').querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));this.classList.add('on')})});
+});
+</script>
+</body>
+</html>
