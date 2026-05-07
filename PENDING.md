@@ -740,3 +740,43 @@ Wisdom Lens giai quyet triet de P-001:
 Tuong lai: Wisdom Lens = entry point chinh
 cho moi knowledge vao Wisdom ecosystem
 ```
+# APPEND VÀO PENDING.md — P-044, P-045
+
+---
+
+### [P-044] Firecrawl MCP — Nghiên cứu thay thế P-023
+- Mo ta: Dung firecrawl-mcp thay vi tu build wisdom_cleaner.py
+- Repo: github.com/nicholasoxford/firecrawl-mcp
+- Chuc nang: Scrape web -> clean Markdown tu dong
+- Neu dung duoc: P-023 wisdom_cleaner.py co the skip
+- Viec can lam:
+  1. Kiem tra license (commercial ok?)
+  2. Test thu voi 5 URLs khac nhau
+  3. So sanh output voi trafilatura
+  4. Quyet dinh: dung MCP hay tu build
+- Uu tien: Nghien cuu TRUOC khi build P-023
+
+### [P-045] n8n + Wisdom Integration
+- Mo ta: Ket noi n8n (da co san) voi Wisdom API
+- Sep da co n8n cai san -> khong can build automation tu dau
+- Use cases:
+  n8n workflow -> trigger POST /api/clip khi co content moi
+  Schedule ingest hang ngay qua n8n thay vi wisdom_cron.py
+  Webhook tu cac platform -> vao Wisdom INBOX
+- Lien ket: P-007 (can API endpoint truoc), P-015 wisdom_cron
+- Uu tien: Phase 2, sau P-007 API ready
+
+---
+
+## COMPLETED
+
+- [x] Nghien cuu 54 Claude Code resources
+- [x] Filter: firecrawl-mcp (P-044) + n8n integration (P-045)
+- [x] Xac dinh: multiplexers + agent frameworks -> Phase 3
+
+## Resources Bookmark (Dung Phase 3)
+- cmux.com — terminal cho multi-agent
+- claude-squad — team agents
+- ClawTeam — agent orchestration
+- autoresearch — tu dong nghien cuu
+- openlogs.dev — monitor agents (dung Phase 2)
