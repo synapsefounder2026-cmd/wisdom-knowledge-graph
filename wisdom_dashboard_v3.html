@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wisdom Factory — Knowledge OS</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;font-size:13px;background:#f5f7f5;color:#1a1a1a;min-height:100vh}
+.wrap{padding:1.5rem 2rem;max-width:800px;margin:0 auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+.logo-area{display:flex;align-items:center;gap:12px}
+.lotus{width:36px;height:36px;background:#e1f5ee;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px}
+.brand{font-size:16px;font-weight:500;color:#1a1a1a}
+.brand-sub{font-size:12px;color:#666}
+.top-btns{display:flex;gap:8px;align-items:center}
+.btn-soft{padding:7px 14px;border-radius:20px;border:1px solid #d4e8d4;font-size:13px;cursor:pointer;background:#fff;color:#555;font-family:inherit}
+.btn-soft:hover{background:#f0f8f0}
+.btn-main{padding:7px 16px;border-radius:20px;border:none;font-size:13px;font-weight:500;cursor:pointer;background:#1d9e75;color:#fff;font-family:inherit}
+.btn-main:hover{background:#178a65}
+.status-dot{width:7px;height:7px;border-radius:50%;background:#ccc;display:inline-block;margin-right:4px}
+.status-dot.ok{background:#1d9e75;box-shadow:0 0 0 2px #e1f5ee}
+.status-dot.err{background:#d85a30}
+.status-text{font-size:11px;color:#888}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:1.25rem}
+.stat{background:#fff;border:1px solid #e8ede8;border-radius:12px;padding:14px 16px;border-top:3px solid transparent;transition:opacity .3s}
+.stat.loading{opacity:.5}
+.stat.teal{border-top-color:#1d9e75}.stat.amber{border-top-color:#ef9f27}
+.stat.blue{border-top-color:#378add}.stat.coral{border-top-color:#d85a30}
+.stat-lbl{font-size:11px;color:#888;margin-bottom:6px}
+.stat-val{font-size:22px;font-weight:500;line-height:1;margin-bottom:3px}
+.stat.teal .stat-val{color:#0f6e56}.stat.amber .stat-val{color:#ba7517}
+.stat.blue .stat-val{color:#185fa5}.stat.coral .stat-val{color:#993c1d}
+.stat-hint{font-size:12px;color:#888}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.row3{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.panel{background:#fff;border:1px solid #e8ede8;border-radius:16px;overflow:hidden}
+.ph{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid #f0f4f0}
+.pt{font-size:13px;font-weight:500;color:#1a1a1a;display:flex;align-items:center;gap:7px}
+.badge{font-size:11px;background:#e1f5ee;color:#0f6e56;border-radius:20px;padding:2px 8px}
+.pa{font-size:12px;color:#1d9e75;cursor:pointer}
+.pb{padding:14px 18px}
+.tabs{display:flex;gap:3px;background:#f5f7f5;border-radius:20px;padding:3px;margin-bottom:12px}
+.tab{padding:5px 12px;border-radius:16px;font-size:12px;cursor:pointer;color:#888;font-family:inherit;border:none;background:none}
+.tab.on{background:#fff;color:#1d9e75;font-weight:500}
+.iitem{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #f0f4f0;align-items:flex-start}
+.iitem:last-child{border:none}
+.ico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.ico.w{background:#e6f1fb}.ico.d{background:#faeeda}.ico.c{background:#e1f5ee}
+.ititle{font-size:13px;color:#1a1a1a;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:210px}
+.imeta{font-size:11px;color:#888;display:flex;gap:8px;align-items:center}
+.pill{font-size:10px;font-weight:500;padding:2px 7px;border-radius:10px}
+.pill.p{background:#faeeda;color:#ba7517}.pill.v{background:#e1f5ee;color:#0f6e56}.pill.c{background:#fcebeb;color:#a32d2d}
+.council-g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pcard{background:#f9fbf9;border:1px solid #e8ede8;border-radius:12px;padding:12px 8px;text-align:center;cursor:pointer;transition:border-color .15s}
+.pcard:hover{border-color:#1d9e75}
+.pav{width:34px;height:34px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.pav.b{background:#e1f5ee}.pav.j{background:#e6f1fb}.pav.m{background:#faeeda}
+.pname{font-size:12px;font-weight:500;color:#1a1a1a;margin-bottom:2px}
+.prole{font-size:11px;color:#888;line-height:1.4}
+.logbox{background:#f9fbf9;border-radius:8px;padding:10px 12px;margin-top:12px;max-height:90px;overflow-y:auto}
+.ll{margin-bottom:4px;font-size:11px;color:#888;font-family:monospace}
+.ll .ok{color:#1d9e75}.ll .warn{color:#ba7517}.ll .err{color:#a32d2d}
+.search-wrap{display:flex;gap:8px;margin-bottom:10px}
+.sinput{flex:1;padding:9px 14px;border-radius:20px;border:1px solid #d4e8d4;font-size:13px;background:#f9fbf9;color:#1a1a1a;font-family:inherit;outline:none}
+.sinput:focus{border-color:#1d9e75;background:#fff}
+.sugg{font-size:12px;color:#888}
+.sugg span{color:#1d9e75;cursor:pointer}
+.search-results{margin-top:12px}
+.sr-item{padding:10px 12px;background:#f9fbf9;border-radius:8px;margin-bottom:6px;border:1px solid #eef2ee;cursor:pointer}
+.sr-item:hover{border-color:#1d9e75}
+.sr-title{font-size:13px;color:#1a1a1a;margin-bottom:3px}
+.sr-meta{font-size:11px;color:#888;display:flex;gap:8px}
+.decay-rows{display:flex;flex-direction:column;gap:10px}
+.drow{display:flex;align-items:center;gap:10px}
+.dlbl{font-size:12px;color:#666;width:110px;flex-shrink:0}
+.dtrack{flex:1;height:5px;background:#f0f4f0;border-radius:3px;overflow:hidden}
+.dbar{height:100%;border-radius:3px;transition:width 1s ease}
+.dscore{font-size:11px;color:#888;width:32px;text-align:right;font-family:monospace}
+.upzone{border:1.5px dashed #c8dcc8;border-radius:12px;padding:22px 16px;text-align:center;cursor:pointer;margin-bottom:10px;transition:all .15s}
+.upzone:hover{border-color:#1d9e75;background:#f0f8f0}
+.uptxt{font-size:13px;color:#888;line-height:1.6}
+.uptxt strong{color:#1d9e75}
+.url-input{width:100%;padding:9px 14px;border-radius:20px;border:1px solid #d4e8d4;font-size:13px;background:#f9fbf9;color:#1a1a1a;font-family:inherit;outline:none;margin-bottom:8px}
+.url-input:focus{border-color:#1d9e75;background:#fff}
+.plist{display:flex;flex-direction:column;gap:7px}
+.pitem{display:flex;align-items:center;gap:10px;padding:9px 11px;background:#f9fbf9;border-radius:10px;border:1px solid #eef2ee}
+.pcheck{width:18px;height:18px;border-radius:50%;border:1.5px solid #ccc;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
+.pcheck.done{background:#1d9e75;border-color:#1d9e75;color:#fff}
+.pcheck.now{border-color:#ef9f27;color:#ef9f27}
+.ptext{font-size:13px;color:#888;flex:1}
+.ptext.done{color:#1a1a1a}.ptext.now{color:#ba7517;font-weight:500}
+.ptag{font-size:11px;padding:2px 8px;border-radius:10px}
+.ptag.done{background:#e1f5ee;color:#0f6e56}
+.ptag.now{background:#faeeda;color:#ba7517}
+.ptag.next{background:#f5f7f5;color:#888;border:1px solid #e8ede8}
+.toast{position:fixed;bottom:20px;right:20px;background:#1a1a1a;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999}
+.toast.show{opacity:1}
+.empty-state{text-align:center;padding:20px;color:#888;font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="logo-area">
+      <div class="lotus">🌿</div>
+      <div>
+        <div class="brand">Wisdom Factory</div>
+        <div class="brand-sub">Knowledge Operating System</div>
+      </div>
+    </div>
+    <div class="top-btns">
+      <span id="health-indicator">
+        <span class="status-dot" id="health-dot"></span>
+        <span class="status-text" id="health-text">Đang kết nối...</span>
+      </span>
+      <button class="btn-soft" onclick="showIngest()">🔗 Clip URL</button>
+      <button class="btn-main" onclick="refreshAll()">↻ Làm mới</button>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="stat teal loading" id="stat-total">
+      <div class="stat-lbl">Tổng nodes</div>
+      <div class="stat-val" id="val-total">—</div>
+      <div class="stat-hint" id="hint-total">Đang tải...</div>
+    </div>
+    <div class="stat amber loading" id="stat-verified">
+      <div class="stat-lbl">Đã xác minh</div>
+      <div class="stat-val" id="val-verified">—</div>
+      <div class="stat-hint" id="hint-verified">Đang tải...</div>
+    </div>
+    <div class="stat blue loading" id="stat-blueprints">
+      <div class="stat-lbl">Blueprints</div>
+      <div class="stat-val" id="val-blueprints">—</div>
+      <div class="stat-hint" id="hint-blueprints">Đang tải...</div>
+    </div>
+    <div class="stat coral loading" id="stat-due">
+      <div class="stat-lbl">Cần xem lại</div>
+      <div class="stat-val" id="val-due">—</div>
+      <div class="stat-hint" id="hint-due">Đang tải...</div>
+    </div>
+  </div>
+  <div class="row2">
+    <div class="panel">
+      <div class="ph">
+        <div class="pt">📥 Hàng đến <span class="badge" id="inbox-count">...</span></div>
+        <div class="pa" onclick="loadInbox('all')">Làm mới →</div>
+      </div>
+      <div class="pb">
+        <div class="tabs">
+          <button class="tab on" onclick="loadInbox('all');setTab(this)">Tất cả</button>
+          <button class="tab" onclick="loadInbox('COMMUNITY');setTab(this)">Web</button>
+          <button class="tab" onclick="loadInbox('TACIT');setTab(this)">Tacit</button>
+          <button class="tab" onclick="loadInbox('ACADEMIC');setTab(this)">Học thuật</button>
+        </div>
+        <div id="inbox-list"><div class="empty-state">Đang tải...</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ph">
+        <div class="pt">⚖️ Hội đồng thẩm tra</div>
+        <div class="pa" onclick="showToast('Council đang phát triển — P-020')">Chạy →</div>
+      </div>
+      <div class="pb">
+        <div class="council-g">
+          <div class="pcard" onclick="showToast('Buffett: Circle of Competence, Margin of Safety')">
+            <div class="pav b">💰</div><div class="pname">Buffett</div>
+            <div class="prole">Margin of Safety · Moat</div>
+          </div>
+          <div class="pcard" onclick="showToast('Jobs: User value, Simplicity')">
+            <div class="pav j">📱</div><div class="pname">Jobs</div>
+            <div class="prole">Đơn giản · Giá trị</div>
+          </div>
+          <div class="pcard" onclick="showToast('Munger: Inversion, Second-order effects')">
+            <div class="pav m">🧠</div><div class="pname">Munger</div>
+            <div class="prole">Đảo ngược · Bậc 2</div>
+          </div>
+        </div>
+        <div class="logbox" id="council-log">
+          <div class="ll"><span class="ok">✓</span> Hệ thống sẵn sàng</div>
+          <div class="ll"><span class="warn">⚠</span> Council Logic đang phát triển (P-020)</div>
+          <div class="ll"><span class="ok">✓</span> Neo4j + Qdrant đã kết nối</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row3">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="panel">
+        <div class="ph"><div class="pt">🔍 Tìm kiếm tri thức</div></div>
+        <div class="pb">
+          <div class="search-wrap">
+            <input class="sinput" id="search-input"
+              placeholder="Hỏi Wisdom... vd: ngách KDP nào đang tốt?"
+              onkeydown="if(event.key==='Enter')doSearch()"/>
+            <button class="btn-main" onclick="doSearch()">Hỏi</button>
+          </div>
+          <div class="sugg">Gợi ý:
+            <span onclick="quickSearch('KDP blueprint')">KDP blueprint</span> ·
+            <span onclick="quickSearch('decay nodes')">nodes hết hạn</span> ·
+            <span onclick="quickSearch('OPC framework')">OPC framework</span>
+          </div>
+          <div id="search-results" class="search-results"></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph">
+          <div class="pt">⏳ Suy giảm tri thức</div>
+          <div class="pa" id="decay-due-link">Đang tải...</div>
+        </div>
+        <div class="pb">
+          <div class="decay-rows" id="decay-bars">
+            <div class="empty-state">Đang tải dữ liệu decay...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="panel">
+        <div class="ph"><div class="pt">⊕ Nạp nhanh</div></div>
+        <div class="pb">
+          <div class="upzone" onclick="document.getElementById('url-input').focus()">
+            <div style="font-size:24px;margin-bottom:8px">☁️</div>
+            <div class="uptxt">Dán URL bên dưới để nạp vào Wisdom</div>
+          </div>
+          <input class="url-input" id="url-input"
+            placeholder="https://..."
+            onkeydown="if(event.key==='Enter')ingestUrl()"/>
+          <button class="btn-main" onclick="ingestUrl()"
+            style="width:100%;border-radius:20px;justify-content:center">
+            Nạp vào Wisdom
+          </button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph"><div class="pt">🚀 Tiến độ xây dựng</div></div>
+        <div class="pb">
+          <div class="plist">
+            <div class="pitem">
+              <div class="pcheck done">✓</div>
+              <div class="ptext done">Core pipeline (P-004 → P-006)</div>
+              <span class="ptag done">Xong</span>
+            </div>
+            <div class="pitem">
+              <div class="pcheck done">✓</div>
+              <div class="ptext done">Backup tự động (P-039)</div>
+              <span class="ptag done">Xong</span>
+            </div>
+            <div class="pitem">
+              <div class="pcheck done">✓</div>
+              <div class="ptext done">Dashboard + API (P-007)</div>
+              <span class="ptag done">Xong</span>
+            </div>
+            <div class="pitem">
+              <div class="pcheck now">→</div>
+              <div class="ptext now">Blueprint Marketplace (P-009)</div>
+              <span class="ptag now">Tiếp theo</span>
+            </div>
+            <div class="pitem">
+              <div class="pcheck"></div>
+              <div class="ptext">Wisdom Lens Extension (P-043)</div>
+              <span class="ptag next">Phase 2</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const API='http://localhost:8000';
+function showToast(msg,duration=3000){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),duration)}
+function setTab(el){el.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on')}
+function formatDate(iso){if(!iso)return'';try{const d=new Date(iso);const diff=Math.floor((Date.now()-d)/60000);if(diff<60)return`${diff} phút trước`;if(diff<1440)return`${Math.floor(diff/60)} giờ trước`;return`${Math.floor(diff/1440)} ngày trước`;}catch{return iso.slice(0,10)}}
+function statusPill(s){const map={PENDING:['p','Chờ xử lý'],VERIFIED:['v','Đã xác minh'],CONTESTED:['c','Tranh luận'],SHADOW:['p','Shadow'],DEPRECATED:['c','Hết hạn']};const[cls,label]=map[s]||['p',s];return`<span class="pill ${cls}">${label}</span>`}
+function sourceIcon(type){const map={ACADEMIC:'📄',COMMUNITY:'🌐',TACIT:'💡',SYNTHETIC:'🤖',EXPERT:'👤',NEWS:'📰'};const cls={ACADEMIC:'d',COMMUNITY:'w',TACIT:'c',SYNTHETIC:'w',EXPERT:'c',NEWS:'w'};return`<div class="ico ${cls[type]||'w'}">${map[type]||'📎'}</div>`}
+async function checkHealth(){try{const r=await fetch(`${API}/api/health`,{signal:AbortSignal.timeout(3000)});const d=await r.json();const dot=document.getElementById('health-dot');const txt=document.getElementById('health-text');if(d.status==='ok'){dot.className='status-dot ok';const services=[d.neo4j?'Neo4j':'',d.qdrant?'Qdrant':'',d.ollama?'Ollama':''].filter(Boolean);txt.textContent=services.join(' · ')||'Connected';}else{dot.className='status-dot err';txt.textContent='Lỗi kết nối';}}catch{document.getElementById('health-dot').className='status-dot err';document.getElementById('health-text').textContent='API offline'}}
+async function loadStats(){try{const r=await fetch(`${API}/api/stats`);const d=await r.json();document.getElementById('val-total').textContent=d.total_nodes.toLocaleString();document.getElementById('hint-total').textContent='↑ hôm nay';document.getElementById('val-verified').textContent=d.verified.toLocaleString();document.getElementById('hint-verified').textContent=`${d.trust_rate}% tin cậy`;document.getElementById('val-blueprints').textContent=d.blueprints;document.getElementById('val-due').textContent=d.review_due;['stat-total','stat-verified','stat-blueprints','stat-due'].forEach(id=>document.getElementById(id).classList.remove('loading'));}catch(e){document.getElementById('val-total').textContent='—';document.getElementById('hint-total').textContent='API offline'}}
+async function loadInbox(filter='all'){const list=document.getElementById('inbox-list');list.innerHTML='<div class="empty-state">Đang tải...</div>';try{const url=filter==='all'?`${API}/api/inbox?limit=5`:`${API}/api/inbox?limit=5&status=${filter}`;const r=await fetch(url);const d=await r.json();document.getElementById('inbox-count').textContent=`${d.count} mới`;if(!d.items||d.items.length===0){list.innerHTML='<div class="empty-state">Chưa có node nào trong INBOX</div>';return;}list.innerHTML=d.items.map(item=>`<div class="iitem" onclick="showToast('${(item.title||'').replace(/'/g,"\\'")}')"> ${sourceIcon(item.source_type||'COMMUNITY')}<div style="flex:1;min-width:0"><div class="ititle">${item.title||item.url||'Không có tiêu đề'}</div><div class="imeta"><span>${item.domain||'general'}</span><span>${formatDate(item.created_at)}</span>${statusPill(item.status||'PENDING')}</div></div></div>`).join('');}catch(e){list.innerHTML='<div class="empty-state">Không thể kết nối API</div>'}}
+async function doSearch(){const q=document.getElementById('search-input').value.trim();if(!q)return;const results=document.getElementById('search-results');results.innerHTML='<div class="empty-state">Đang tìm kiếm...</div>';try{const r=await fetch(`${API}/api/search`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:q,limit:5})});const d=await r.json();if(!d.results||d.results.length===0){results.innerHTML='<div class="empty-state">Không tìm thấy kết quả</div>';return;}results.innerHTML=d.results.map(item=>`<div class="sr-item"><div class="sr-title">${item.title||'Không có tiêu đề'}</div><div class="sr-meta"><span>Trust: ${item.trust||'—'}</span>${statusPill(item.status||'PENDING')}<span>${item.domain||''}</span>${item.score?`<span>Score: ${item.score}</span>`:''}</div></div>`).join('');}catch(e){results.innerHTML='<div class="empty-state">Lỗi — kiểm tra API</div>'}}
+function quickSearch(q){document.getElementById('search-input').value=q;doSearch()}
+async function loadDecay(){try{const r=await fetch(`${API}/api/decay`);const d=await r.json();const container=document.getElementById('decay-bars');if(!d.domains||d.domains.length===0){container.innerHTML='<div class="empty-state">Chưa có dữ liệu decay</div>';return;}const colors=(v)=>v>=0.8?'#1d9e75':v>=0.5?'#ef9f27':'#d85a30';container.innerHTML=d.domains.slice(0,5).map(row=>{const trust=row.avg_trust?Math.round(row.avg_trust*100):0;const color=colors(row.avg_trust||0);return`<div class="drow"><div class="dlbl">${row.domain||'Unknown'}</div><div class="dtrack"><div class="dbar" style="width:${trust}%;background:${color}"></div></div><div class="dscore">${row.avg_trust?row.avg_trust.toFixed(2):'—'}</div></div>`}).join('');}catch(e){document.getElementById('decay-bars').innerHTML='<div class="empty-state">Không thể tải dữ liệu</div>'}}
+async function ingestUrl(){const url=document.getElementById('url-input').value.trim();if(!url){showToast('Vui lòng nhập URL');return;}if(!url.startsWith('http')){showToast('URL không hợp lệ');return;}showToast('Đang nạp...');try{const r=await fetch(`${API}/api/ingest`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url,source_type:'COMMUNITY',domain:'GENERAL'})});const d=await r.json();if(d.status==='ok'){showToast('✓ Đã nạp thành công!');document.getElementById('url-input').value='';setTimeout(refreshAll,1000);}else{showToast('Lỗi: '+(d.detail||'Không rõ'));}}catch(e){showToast('Không thể kết nối — uvicorn đang chạy chưa?')}}
+function showIngest(){document.getElementById('url-input').focus();document.getElementById('url-input').scrollIntoView({behavior:'smooth'})}
+async function refreshAll(){await Promise.all([checkHealth(),loadStats(),loadInbox('all'),loadDecay()]);showToast('✓ Đã cập nhật')}
+window.addEventListener('load',()=>{refreshAll();setInterval(refreshAll,30000)});
+</script>
+</body>
+</html>
