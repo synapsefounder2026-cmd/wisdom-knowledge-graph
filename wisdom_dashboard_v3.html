@@ -67,7 +67,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Ar
 .sugg{font-size:12px;color:#888}
 .sugg span{color:#1d9e75;cursor:pointer}
 .search-results{margin-top:12px}
-.sr-item{padding:10px 12px;background:#f9fbf9;border-radius:8px;margin-bottom:6px;border:1px solid #eef2ee;cursor:pointer}
+.sr-item{padding:10px 12px;background:#f9fbf9;border-radius:8px;margin-bottom:6px;border:1px solid #eef2ee}
 .sr-item:hover{border-color:#1d9e75}
 .sr-title{font-size:13px;color:#1a1a1a;margin-bottom:3px}
 .sr-meta{font-size:11px;color:#888;display:flex;gap:8px}
@@ -77,8 +77,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Ar
 .dtrack{flex:1;height:5px;background:#f0f4f0;border-radius:3px;overflow:hidden}
 .dbar{height:100%;border-radius:3px;transition:width 1s ease}
 .dscore{font-size:11px;color:#888;width:32px;text-align:right;font-family:monospace}
-.upzone{border:1.5px dashed #c8dcc8;border-radius:12px;padding:22px 16px;text-align:center;cursor:pointer;margin-bottom:10px;transition:all .15s}
-.upzone:hover{border-color:#1d9e75;background:#f0f8f0}
+.upzone{border:1.5px dashed #c8dcc8;border-radius:12px;padding:22px 16px;text-align:center;cursor:pointer;margin-bottom:10px;transition:all .2s}
+.upzone:hover,.upzone.dragover{border-color:#1d9e75;background:#f0f8f0}
 .uptxt{font-size:13px;color:#888;line-height:1.6}
 .uptxt strong{color:#1d9e75}
 .url-input{width:100%;padding:9px 14px;border-radius:20px;border:1px solid #d4e8d4;font-size:13px;background:#f9fbf9;color:#1a1a1a;font-family:inherit;outline:none;margin-bottom:8px}
@@ -119,26 +119,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Ar
     </div>
   </div>
   <div class="stats">
-    <div class="stat teal loading" id="stat-total">
-      <div class="stat-lbl">Tổng nodes</div>
-      <div class="stat-val" id="val-total">—</div>
-      <div class="stat-hint" id="hint-total">Đang tải...</div>
-    </div>
-    <div class="stat amber loading" id="stat-verified">
-      <div class="stat-lbl">Đã xác minh</div>
-      <div class="stat-val" id="val-verified">—</div>
-      <div class="stat-hint" id="hint-verified">Đang tải...</div>
-    </div>
-    <div class="stat blue loading" id="stat-blueprints">
-      <div class="stat-lbl">Blueprints</div>
-      <div class="stat-val" id="val-blueprints">—</div>
-      <div class="stat-hint" id="hint-blueprints">Đang tải...</div>
-    </div>
-    <div class="stat coral loading" id="stat-due">
-      <div class="stat-lbl">Cần xem lại</div>
-      <div class="stat-val" id="val-due">—</div>
-      <div class="stat-hint" id="hint-due">Đang tải...</div>
-    </div>
+    <div class="stat teal loading" id="stat-total"><div class="stat-lbl">Tổng nodes</div><div class="stat-val" id="val-total">—</div><div class="stat-hint" id="hint-total">Đang tải...</div></div>
+    <div class="stat amber loading" id="stat-verified"><div class="stat-lbl">Đã xác minh</div><div class="stat-val" id="val-verified">—</div><div class="stat-hint" id="hint-verified">Đang tải...</div></div>
+    <div class="stat blue loading" id="stat-blueprints"><div class="stat-lbl">Blueprints</div><div class="stat-val" id="val-blueprints">—</div><div class="stat-hint" id="hint-blueprints">Đang tải...</div></div>
+    <div class="stat coral loading" id="stat-due"><div class="stat-lbl">Cần xem lại</div><div class="stat-val" id="val-due">—</div><div class="stat-hint" id="hint-due">Đang tải...</div></div>
   </div>
   <div class="row2">
     <div class="panel">
@@ -163,18 +147,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Ar
       </div>
       <div class="pb">
         <div class="council-g">
-          <div class="pcard" onclick="showToast('Buffett: Circle of Competence, Margin of Safety')">
-            <div class="pav b">💰</div><div class="pname">Buffett</div>
-            <div class="prole">Margin of Safety · Moat</div>
-          </div>
-          <div class="pcard" onclick="showToast('Jobs: User value, Simplicity')">
-            <div class="pav j">📱</div><div class="pname">Jobs</div>
-            <div class="prole">Đơn giản · Giá trị</div>
-          </div>
-          <div class="pcard" onclick="showToast('Munger: Inversion, Second-order effects')">
-            <div class="pav m">🧠</div><div class="pname">Munger</div>
-            <div class="prole">Đảo ngược · Bậc 2</div>
-          </div>
+          <div class="pcard" onclick="showToast('Buffett: Circle of Competence, Margin of Safety')"><div class="pav b">💰</div><div class="pname">Buffett</div><div class="prole">Margin of Safety · Moat</div></div>
+          <div class="pcard" onclick="showToast('Jobs: User value, Simplicity')"><div class="pav j">📱</div><div class="pname">Jobs</div><div class="prole">Đơn giản · Giá trị</div></div>
+          <div class="pcard" onclick="showToast('Munger: Inversion, Second-order effects')"><div class="pav m">🧠</div><div class="pname">Munger</div><div class="prole">Đảo ngược · Bậc 2</div></div>
         </div>
         <div class="logbox" id="council-log">
           <div class="ll"><span class="ok">✓</span> Hệ thống sẵn sàng</div>
@@ -190,77 +165,43 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Ar
         <div class="ph"><div class="pt">🔍 Tìm kiếm tri thức</div></div>
         <div class="pb">
           <div class="search-wrap">
-            <input class="sinput" id="search-input"
-              placeholder="Hỏi Wisdom... vd: ngách KDP nào đang tốt?"
-              onkeydown="if(event.key==='Enter')doSearch()"/>
+            <input class="sinput" id="search-input" placeholder="Hỏi Wisdom..." onkeydown="if(event.key==='Enter')doSearch()"/>
             <button class="btn-main" onclick="doSearch()">Hỏi</button>
           </div>
-          <div class="sugg">Gợi ý:
-            <span onclick="quickSearch('KDP blueprint')">KDP blueprint</span> ·
-            <span onclick="quickSearch('decay nodes')">nodes hết hạn</span> ·
-            <span onclick="quickSearch('OPC framework')">OPC framework</span>
-          </div>
+          <div class="sugg">Gợi ý: <span onclick="quickSearch('KDP blueprint')">KDP blueprint</span> · <span onclick="quickSearch('decay nodes')">nodes hết hạn</span> · <span onclick="quickSearch('OPC framework')">OPC framework</span></div>
           <div id="search-results" class="search-results"></div>
         </div>
       </div>
       <div class="panel">
-        <div class="ph">
-          <div class="pt">⏳ Suy giảm tri thức</div>
-          <div class="pa" id="decay-due-link">Đang tải...</div>
-        </div>
-        <div class="pb">
-          <div class="decay-rows" id="decay-bars">
-            <div class="empty-state">Đang tải dữ liệu decay...</div>
-          </div>
-        </div>
+        <div class="ph"><div class="pt">⏳ Suy giảm tri thức</div><div class="pa" id="decay-due-link">Đang tải...</div></div>
+        <div class="pb"><div class="decay-rows" id="decay-bars"><div class="empty-state">Đang tải...</div></div></div>
       </div>
     </div>
     <div style="display:flex;flex-direction:column;gap:12px">
       <div class="panel">
         <div class="ph"><div class="pt">⊕ Nạp nhanh</div></div>
         <div class="pb">
-          <div class="upzone" onclick="document.getElementById('url-input').focus()">
-            <div style="font-size:24px;margin-bottom:8px">☁️</div>
-            <div class="uptxt">Dán URL bên dưới để nạp vào Wisdom</div>
+          <div class="upzone" id="dropzone"
+            onclick="document.getElementById('url-input').focus()"
+            ondragover="event.preventDefault();this.classList.add('dragover')"
+            ondragleave="this.classList.remove('dragover')"
+            ondrop="handleDrop(event)">
+            <div style="font-size:24px;margin-bottom:8px" id="drop-icon">☁️</div>
+            <div class="uptxt" id="drop-text">Kéo file vào đây<br>hoặc <strong>dán URL</strong></div>
           </div>
-          <input class="url-input" id="url-input"
-            placeholder="https://..."
-            onkeydown="if(event.key==='Enter')ingestUrl()"/>
-          <button class="btn-main" onclick="ingestUrl()"
-            style="width:100%;border-radius:20px;justify-content:center">
-            Nạp vào Wisdom
-          </button>
+          <input class="url-input" id="url-input" placeholder="https://..." onkeydown="if(event.key==='Enter')ingestUrl()"/>
+          <button class="btn-main" onclick="ingestUrl()" style="width:100%;border-radius:20px;justify-content:center">Nạp vào Wisdom</button>
         </div>
       </div>
       <div class="panel">
         <div class="ph"><div class="pt">🚀 Tiến độ xây dựng</div></div>
         <div class="pb">
           <div class="plist">
-            <div class="pitem">
-              <div class="pcheck done">✓</div>
-              <div class="ptext done">Core pipeline (P-004 → P-006)</div>
-              <span class="ptag done">Xong</span>
-            </div>
-            <div class="pitem">
-              <div class="pcheck done">✓</div>
-              <div class="ptext done">Backup tự động (P-039)</div>
-              <span class="ptag done">Xong</span>
-            </div>
-            <div class="pitem">
-              <div class="pcheck done">✓</div>
-              <div class="ptext done">Dashboard + API (P-007)</div>
-              <span class="ptag done">Xong</span>
-            </div>
-            <div class="pitem">
-              <div class="pcheck now">→</div>
-              <div class="ptext now">Blueprint Marketplace (P-009)</div>
-              <span class="ptag now">Tiếp theo</span>
-            </div>
-            <div class="pitem">
-              <div class="pcheck"></div>
-              <div class="ptext">Wisdom Lens Extension (P-043)</div>
-              <span class="ptag next">Phase 2</span>
-            </div>
+            <div class="pitem"><div class="pcheck done">✓</div><div class="ptext done">Core pipeline (P-004 → P-006)</div><span class="ptag done">Xong</span></div>
+            <div class="pitem"><div class="pcheck done">✓</div><div class="ptext done">Backup tự động (P-039)</div><span class="ptag done">Xong</span></div>
+            <div class="pitem"><div class="pcheck done">✓</div><div class="ptext done">Dashboard + API (P-007)</div><span class="ptag done">Xong</span></div>
+            <div class="pitem"><div class="pcheck now">→</div><div class="ptext now">Blueprint Marketplace (P-009)</div><span class="ptag now">Tiếp theo</span></div>
+            <div class="pitem"><div class="pcheck"></div><div class="ptext">Wisdom Lens Extension (P-043)</div><span class="ptag next">Phase 2</span></div>
           </div>
         </div>
       </div>
@@ -270,20 +211,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Ar
 <div class="toast" id="toast"></div>
 <script>
 const API='http://localhost:8000';
-function showToast(msg,duration=3000){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),duration)}
+function showToast(msg,d=3000){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),d)}
 function setTab(el){el.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on')}
-function formatDate(iso){if(!iso)return'';try{const d=new Date(iso);const diff=Math.floor((Date.now()-d)/60000);if(diff<60)return`${diff} phút trước`;if(diff<1440)return`${Math.floor(diff/60)} giờ trước`;return`${Math.floor(diff/1440)} ngày trước`;}catch{return iso.slice(0,10)}}
-function statusPill(s){const map={PENDING:['p','Chờ xử lý'],VERIFIED:['v','Đã xác minh'],CONTESTED:['c','Tranh luận'],SHADOW:['p','Shadow'],DEPRECATED:['c','Hết hạn']};const[cls,label]=map[s]||['p',s];return`<span class="pill ${cls}">${label}</span>`}
-function sourceIcon(type){const map={ACADEMIC:'📄',COMMUNITY:'🌐',TACIT:'💡',SYNTHETIC:'🤖',EXPERT:'👤',NEWS:'📰'};const cls={ACADEMIC:'d',COMMUNITY:'w',TACIT:'c',SYNTHETIC:'w',EXPERT:'c',NEWS:'w'};return`<div class="ico ${cls[type]||'w'}">${map[type]||'📎'}</div>`}
-async function checkHealth(){try{const r=await fetch(`${API}/api/health`,{signal:AbortSignal.timeout(3000)});const d=await r.json();const dot=document.getElementById('health-dot');const txt=document.getElementById('health-text');if(d.status==='ok'){dot.className='status-dot ok';const services=[d.neo4j?'Neo4j':'',d.qdrant?'Qdrant':'',d.ollama?'Ollama':''].filter(Boolean);txt.textContent=services.join(' · ')||'Connected';}else{dot.className='status-dot err';txt.textContent='Lỗi kết nối';}}catch{document.getElementById('health-dot').className='status-dot err';document.getElementById('health-text').textContent='API offline'}}
-async function loadStats(){try{const r=await fetch(`${API}/api/stats`);const d=await r.json();document.getElementById('val-total').textContent=d.total_nodes.toLocaleString();document.getElementById('hint-total').textContent='↑ hôm nay';document.getElementById('val-verified').textContent=d.verified.toLocaleString();document.getElementById('hint-verified').textContent=`${d.trust_rate}% tin cậy`;document.getElementById('val-blueprints').textContent=d.blueprints;document.getElementById('val-due').textContent=d.review_due;['stat-total','stat-verified','stat-blueprints','stat-due'].forEach(id=>document.getElementById(id).classList.remove('loading'));}catch(e){document.getElementById('val-total').textContent='—';document.getElementById('hint-total').textContent='API offline'}}
-async function loadInbox(filter='all'){const list=document.getElementById('inbox-list');list.innerHTML='<div class="empty-state">Đang tải...</div>';try{const url=filter==='all'?`${API}/api/inbox?limit=5`:`${API}/api/inbox?limit=5&status=${filter}`;const r=await fetch(url);const d=await r.json();document.getElementById('inbox-count').textContent=`${d.count} mới`;if(!d.items||d.items.length===0){list.innerHTML='<div class="empty-state">Chưa có node nào trong INBOX</div>';return;}list.innerHTML=d.items.map(item=>`<div class="iitem" onclick="showToast('${(item.title||'').replace(/'/g,"\\'")}')"> ${sourceIcon(item.source_type||'COMMUNITY')}<div style="flex:1;min-width:0"><div class="ititle">${item.title||item.url||'Không có tiêu đề'}</div><div class="imeta"><span>${item.domain||'general'}</span><span>${formatDate(item.created_at)}</span>${statusPill(item.status||'PENDING')}</div></div></div>`).join('');}catch(e){list.innerHTML='<div class="empty-state">Không thể kết nối API</div>'}}
-async function doSearch(){const q=document.getElementById('search-input').value.trim();if(!q)return;const results=document.getElementById('search-results');results.innerHTML='<div class="empty-state">Đang tìm kiếm...</div>';try{const r=await fetch(`${API}/api/search`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:q,limit:5})});const d=await r.json();if(!d.results||d.results.length===0){results.innerHTML='<div class="empty-state">Không tìm thấy kết quả</div>';return;}results.innerHTML=d.results.map(item=>`<div class="sr-item"><div class="sr-title">${item.title||'Không có tiêu đề'}</div><div class="sr-meta"><span>Trust: ${item.trust||'—'}</span>${statusPill(item.status||'PENDING')}<span>${item.domain||''}</span>${item.score?`<span>Score: ${item.score}</span>`:''}</div></div>`).join('');}catch(e){results.innerHTML='<div class="empty-state">Lỗi — kiểm tra API</div>'}}
+function formatDate(iso){if(!iso)return'';try{const d=new Date(iso),diff=Math.floor((Date.now()-d)/60000);if(diff<60)return diff+' phút trước';if(diff<1440)return Math.floor(diff/60)+' giờ trước';return Math.floor(diff/1440)+' ngày trước';}catch{return iso.slice(0,10)}}
+function statusPill(s){const m={PENDING:['p','Chờ xử lý'],VERIFIED:['v','Đã xác minh'],CONTESTED:['c','Tranh luận']};const[c,l]=m[s]||['p',s];return`<span class="pill ${c}">${l}</span>`}
+function srcIcon(t){const m={ACADEMIC:'📄',COMMUNITY:'🌐',TACIT:'💡',NEWS:'📰'};const c={ACADEMIC:'d',COMMUNITY:'w',TACIT:'c',NEWS:'w'};return`<div class="ico ${c[t]||'w'}">${m[t]||'📎'}</div>`}
+async function checkHealth(){try{const r=await fetch(`${API}/api/health`,{signal:AbortSignal.timeout(3000)});const d=await r.json();const dot=document.getElementById('health-dot'),txt=document.getElementById('health-text');if(d.status==='ok'){dot.className='status-dot ok';txt.textContent=[d.neo4j?'Neo4j':'',d.qdrant?'Qdrant':'',d.ollama?'Ollama':''].filter(Boolean).join(' · ');}else{dot.className='status-dot err';txt.textContent='Lỗi';}}catch{document.getElementById('health-dot').className='status-dot err';document.getElementById('health-text').textContent='API offline'}}
+async function loadStats(){try{const r=await fetch(`${API}/api/stats`);const d=await r.json();document.getElementById('val-total').textContent=d.total_nodes.toLocaleString();document.getElementById('val-verified').textContent=d.verified.toLocaleString();document.getElementById('hint-verified').textContent=d.trust_rate+'% tin cậy';document.getElementById('val-blueprints').textContent=d.blueprints;document.getElementById('val-due').textContent=d.review_due;['stat-total','stat-verified','stat-blueprints','stat-due'].forEach(id=>document.getElementById(id).classList.remove('loading'));}catch{document.getElementById('val-total').textContent='—'}}
+async function loadInbox(filter='all'){const list=document.getElementById('inbox-list');list.innerHTML='<div class="empty-state">Đang tải...</div>';try{const r=await fetch(filter==='all'?`${API}/api/inbox?limit=5`:`${API}/api/inbox?limit=5&status=${filter}`);const d=await r.json();document.getElementById('inbox-count').textContent=d.count+' mới';if(!d.items||!d.items.length){list.innerHTML='<div class="empty-state">Chưa có node nào</div>';return;}list.innerHTML=d.items.map(i=>`<div class="iitem">${srcIcon(i.source_type||'COMMUNITY')}<div style="flex:1;min-width:0"><div class="ititle">${i.title||i.url||'Không có tiêu đề'}</div><div class="imeta"><span>${i.domain||'general'}</span><span>${formatDate(i.created_at)}</span>${statusPill(i.status||'PENDING')}</div></div></div>`).join('');}catch{list.innerHTML='<div class="empty-state">Không thể kết nối API</div>'}}
+async function doSearch(){const q=document.getElementById('search-input').value.trim();if(!q)return;const res=document.getElementById('search-results');res.innerHTML='<div class="empty-state">Đang tìm...</div>';try{const r=await fetch(`${API}/api/search`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:q,limit:5})});const d=await r.json();if(!d.results||!d.results.length){res.innerHTML='<div class="empty-state">Không tìm thấy</div>';return;}res.innerHTML=d.results.map(i=>`<div class="sr-item"><div class="sr-title">${i.title||'Không có tiêu đề'}</div><div class="sr-meta"><span>Trust: ${i.trust||'—'}</span>${statusPill(i.status||'PENDING')}<span>${i.domain||''}</span></div></div>`).join('');}catch{res.innerHTML='<div class="empty-state">Lỗi kết nối</div>'}}
 function quickSearch(q){document.getElementById('search-input').value=q;doSearch()}
-async function loadDecay(){try{const r=await fetch(`${API}/api/decay`);const d=await r.json();const container=document.getElementById('decay-bars');if(!d.domains||d.domains.length===0){container.innerHTML='<div class="empty-state">Chưa có dữ liệu decay</div>';return;}const colors=(v)=>v>=0.8?'#1d9e75':v>=0.5?'#ef9f27':'#d85a30';container.innerHTML=d.domains.slice(0,5).map(row=>{const trust=row.avg_trust?Math.round(row.avg_trust*100):0;const color=colors(row.avg_trust||0);return`<div class="drow"><div class="dlbl">${row.domain||'Unknown'}</div><div class="dtrack"><div class="dbar" style="width:${trust}%;background:${color}"></div></div><div class="dscore">${row.avg_trust?row.avg_trust.toFixed(2):'—'}</div></div>`}).join('');}catch(e){document.getElementById('decay-bars').innerHTML='<div class="empty-state">Không thể tải dữ liệu</div>'}}
-async function ingestUrl(){const url=document.getElementById('url-input').value.trim();if(!url){showToast('Vui lòng nhập URL');return;}if(!url.startsWith('http')){showToast('URL không hợp lệ');return;}showToast('Đang nạp...');try{const r=await fetch(`${API}/api/ingest`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url,source_type:'COMMUNITY',domain:'GENERAL'})});const d=await r.json();if(d.status==='ok'){showToast('✓ Đã nạp thành công!');document.getElementById('url-input').value='';setTimeout(refreshAll,1000);}else{showToast('Lỗi: '+(d.detail||'Không rõ'));}}catch(e){showToast('Không thể kết nối — uvicorn đang chạy chưa?')}}
+async function loadDecay(){try{const r=await fetch(`${API}/api/decay`);const d=await r.json();const c=document.getElementById('decay-bars');if(!d.domains||!d.domains.length){c.innerHTML='<div class="empty-state">Chưa có dữ liệu</div>';return;}const col=v=>v>=0.8?'#1d9e75':v>=0.5?'#ef9f27':'#d85a30';c.innerHTML=d.domains.slice(0,5).map(row=>`<div class="drow"><div class="dlbl">${row.domain||'Unknown'}</div><div class="dtrack"><div class="dbar" style="width:${row.avg_trust?Math.round(row.avg_trust*100):0}%;background:${col(row.avg_trust||0)}"></div></div><div class="dscore">${row.avg_trust?row.avg_trust.toFixed(2):'—'}</div></div>`).join('');}catch{document.getElementById('decay-bars').innerHTML='<div class="empty-state">Không thể tải</div>'}}
+async function ingestUrl(){const url=document.getElementById('url-input').value.trim();if(!url){showToast('Nhập URL đi Sep');return;}if(!url.startsWith('http')){showToast('URL không hợp lệ');return;}showToast('Đang nạp...');try{const r=await fetch(`${API}/api/ingest`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url,source_type:'COMMUNITY',domain:'GENERAL'})});const d=await r.json();if(d.status==='ok'){showToast('✓ Nạp thành công!');document.getElementById('url-input').value='';setTimeout(refreshAll,1000);}else showToast('Lỗi: '+(d.detail||'Không rõ'));}catch{showToast('API offline?')}}
+async function handleDrop(e){e.preventDefault();const zone=document.getElementById('dropzone');zone.classList.remove('dragover');const files=e.dataTransfer.files,text=e.dataTransfer.getData('text/plain');if(files&&files.length>0){const file=files[0];document.getElementById('drop-icon').textContent='⏳';document.getElementById('drop-text').innerHTML=`Đang nạp: <strong>${file.name}</strong>`;const fd=new FormData();fd.append('file',file);fd.append('source_type','COMMUNITY');fd.append('domain','GENERAL');try{const r=await fetch(`${API}/api/upload`,{method:'POST',body:fd});const d=await r.json();if(d.status==='ok'){showToast('✓ Đã nạp: '+file.name);document.getElementById('drop-icon').textContent='✅';}else if(d.status==='duplicate'){showToast('⚠ File đã có trong Wisdom');document.getElementById('drop-icon').textContent='⚠️';}else showToast('Lỗi upload');}catch{showToast('Lỗi — kiểm tra API');document.getElementById('drop-icon').textContent='❌';}setTimeout(()=>{document.getElementById('drop-icon').textContent='☁️';document.getElementById('drop-text').innerHTML='Kéo file vào đây<br>hoặc <strong>dán URL</strong>';refreshAll();},2500);}else if(text&&text.startsWith('http')){document.getElementById('url-input').value=text;ingestUrl();}else showToast('Kéo file hoặc URL vào đây')}
 function showIngest(){document.getElementById('url-input').focus();document.getElementById('url-input').scrollIntoView({behavior:'smooth'})}
-async function refreshAll(){await Promise.all([checkHealth(),loadStats(),loadInbox('all'),loadDecay()]);showToast('✓ Đã cập nhật')}
+async function refreshAll(){await Promise.all([checkHealth(),loadStats(),loadInbox('all'),loadDecay()])}
 window.addEventListener('load',()=>{refreshAll();setInterval(refreshAll,30000)});
 </script>
 </body>
