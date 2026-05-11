@@ -103,3 +103,29 @@ OS: Windows 11, Git Bash terminal
 ## PRIORITY (Hom nay)
 P-007 Web UI → P-026 node_schema → P-029 WISDOM_VOICE
 → Xem PENDING.md de biet toan bo
+
+---
+## SOUL OF WISDOM — Triet ly Nen tang (P-040)
+
+**Explicit knowledge (99%)** = AI xu ly duoc
+**Tacit knowledge (1%)** = Moat that su cua Sep — khong AI nao co duoc
+
+Explicit: Quy trinh, checklist, framework, data
+Tacit:    Mui thi truong, giac kinh doanh, kinh nghiem song
+
+**Nguyen tac Above the Algorithm** (Sangeet Paul Choudary):
+- AI gioi o tang duoi (xu ly, phan tich, thuc thi)
+- Con nguoi phai o tang tren (dinh huong, phan quyet, thau hieu)
+- Wisdom = Amplifier cho tang tren — KHONG phai replacement
+
+**3 dieu AI khong the thue ngoai:**
+1. Thau hieu van hoa dia phuong (thi truong VN)
+2. Tin tuong tu cong dong (Sep la nguoi — AI la tool)
+3. Truc giac tu trai nghiem that (khong the copy)
+
+**Ap dung trong Wisdom:**
+- Moi output phai amplify judgment cua Sep, khong thay the
+- Tacit knowledge chi push vao wisdom_private khi Sep opt-in (RULE-E)
+- Persona 5 (The Intuition) = so hoa truc giac cua Sep — moat lon nhat
+
+**Quote:** Co the thue ngoai suy nghi. Khong the thue ngoai thau hieu.
