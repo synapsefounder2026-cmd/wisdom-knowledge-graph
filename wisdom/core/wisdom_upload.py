@@ -117,7 +117,7 @@ def extract_pdf(path: str) -> str:
     if not HAS_PDF:
         return "[PyPDF2 not installed]"
     reader = PdfReader(path)
-    text = [t for page in reader.pages if (t := page.extract_text())]
+    text = [t for page in reader.pages for t in [page.extract_text()] if t]
     if text and len(" ".join(text).strip()) > 50:
         return "\n".join(text)
     print("  Text-based failed, trying OCR...")
