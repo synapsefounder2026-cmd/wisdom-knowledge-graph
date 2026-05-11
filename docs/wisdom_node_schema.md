@@ -1,321 +1,355 @@
-# wisdom_node_schema.md — KnowledgeNode Properties Reference
-> Doc nay dinh nghia CHUAN HOA cho moi KnowledgeNode trong Wisdom.
-> Moi agent phai doc file nay truoc khi tao node moi.
-> Last updated: 2026-05-07
+# wisdom_node_schema.md
+> Doc truoc khi tao bat ky node nao | Updated: 2026-05-11 | P-026
 
 ---
 
-## 1. KnowledgeNode — Day du fields
+## NGUYEN TAC COT LOI
 
-```python
+**RULE-A**: Neo4j = SOURCE OF TRUTH. Qdrant = SEARCH INDEX.  
+Moi node phai ton tai trong Neo4j truoc, lay `elementId()` roi moi write Qdrant.
+
+**RULE-B**: Moi KnowledgeNode phai co du 7 fields bat buoc:  
+`trust_score` · `decay_lambda` · `valid_from` · `valid_until` · `epistemic_status` · `cultural_context` · `source_type`
+
+**RULE-C**: Decay formula: `trust_score(t) = base * exp(-lambda * age_days)`
+
+---
+
+## 4-LAYER ARCHITECTURE
+
+```
+INBOX (InboxItem)
+    ↓ [:PROMOTED_TO]
+RAW (RawSource / Video / Document / SocialPost)
+    ↓ [:DISTILLED_TO]
+WIKI (Concept / Rule / CaseStudy / Framework / Insight)
+    ↓ [:COMPILED_INTO]
+OUTBOX (Blueprint)
+```
+
+---
+
+## LAYER 1 — INBOX
+
+### InboxItem
+Diem vao duy nhat cho moi nguon du lieu chua xu ly.
+
+| Field | Type | Required | Default | Mo ta |
+|---|---|---|---|---|
+| id | String | ✅ | UUID | Unique identifier |
+| raw_content | String | ✅ | — | Noi dung thu |
+| source_url | String | ✅ | — | Nguon goc |
+| sha256_checksum | String | ✅ | — | Dedup hash |
+| ingested_at | DateTime | ✅ | now() | Thoi gian nhan |
+| epistemic_status | String | ✅ | UNVERIFIED | UNVERIFIED / PENDING / VERIFIED |
+| urgency | String | ✅ | med | low / med / high |
+| niche | String | ❌ | GLOBAL | Domain/topic |
+| auto_tags | List[String] | ❌ | [] | Tags tu dong |
+
+**Relationships:**
+- `(InboxItem)-[:PROMOTED_TO]->(RawSource)` — sau khi qua validation
+
+---
+
+## LAYER 2 — RAW
+
+### RawSource
+Node chuan hoa cho moi nguon du lieu sau khi promote tu Inbox.
+
+| Field | Type | Required | Default | Mo ta |
+|---|---|---|---|---|
+| id | String | ✅ | — | Unique ID |
+| content_hash | String | ✅ | SHA-256 | Dedup — UNIQUE constraint |
+| ingested_timestamp | DateTime | ✅ | now() | Thoi gian ingest |
+| source_url | String | ✅ | — | URL hoac path |
+| raw_content | String | ✅ | — | Noi dung (toi da 500 chars) |
+| qdrant_vector_id | String | ✅ | — | Bridge sang Qdrant (P-004) |
+| epistemic_status | String | ✅ | PENDING | PENDING / VERIFIED / REJECTED |
+| source_type | String | ✅ | — | VIDEO / DOCUMENT / SOCIAL / WEB |
+| migrated_from | String | ❌ | — | Ten node goc neu migrate |
+
+**Relationships:**
+- `(RawSource)-[:DISTILLED_TO]->(Concept|Rule|CaseStudy|Framework|Insight)`
+
+### Video *(subtype cua RawSource)*
+Tao boi `wisdom_ingest.py`. Bridge sang RawSource qua `[:PROMOTED_TO]`.
+
+| Field | Type | Required | Default | Mo ta |
+|---|---|---|---|---|
+| id | String | ✅ | MD5(url)[:12] | Content ID |
+| url | String | ✅ | — | YouTube/video URL |
+| title | String | ✅ | — | Tieu de video |
+| summary | String | ✅ | — | Tom tat 2-3 cau |
+| duration | Int | ❌ | 0 | Thoi luong (giay) |
+| language | String | ✅ | en | vi / en |
+| value_flywheel | String | ✅ | learning | learning/experience/earning/contribution/growth |
+| ingested_at | DateTime | ✅ | now() | — |
+| trust_score | Float | ✅ | 0.8 | RULE-B |
+| decay_lambda | Float | ✅ | 0.003 | RULE-B |
+| valid_from | DateTime | ✅ | now() | RULE-B |
+| valid_until | DateTime | ✅ | null | RULE-B |
+| epistemic_status | String | ✅ | PENDING | RULE-B |
+| cultural_context | String | ✅ | GLOBAL | RULE-B |
+| source_type | String | ✅ | VIDEO | RULE-B |
+
+### Document *(subtype cua RawSource)*
+Tao boi `wisdom_upload.py`. Ho tro PDF, DOCX, PPTX, XLSX, TXT, MD, EPUB, Audio, Video, Image.
+
+| Field | Type | Required | Default | Mo ta |
+|---|---|---|---|---|
+| id | String | ✅ | MD5(path+mtime)[:12] | Content ID |
+| filename | String | ✅ | — | Ten file |
+| path | String | ✅ | — | Duong dan day du |
+| title | String | ✅ | — | Tieu de doc |
+| summary | String | ✅ | — | Tom tat |
+| document_type | String | ✅ | other | book/article/report/lecture/note/data/other |
+| language | String | ✅ | en | vi / en |
+| value_flywheel | String | ✅ | learning | — |
+| ingested_at | DateTime | ✅ | now() | — |
+| trust_score | Float | ✅ | 0.8 | RULE-B |
+| decay_lambda | Float | ✅ | 0.003 | RULE-B |
+| valid_from | DateTime | ✅ | now() | RULE-B |
+| valid_until | DateTime | ✅ | null | RULE-B |
+| epistemic_status | String | ✅ | PENDING | RULE-B |
+| cultural_context | String | ✅ | GLOBAL | RULE-B |
+| source_type | String | ✅ | DOCUMENT | RULE-B |
+
+### SocialPost *(subtype cua RawSource)*
+Tao boi `wisdom_fb_ingest.py`.
+
+| Field | Type | Required | Default | Mo ta |
+|---|---|---|---|---|
+| id | String | ✅ | MD5(url)[:12] | Content ID |
+| url | String | ✅ | — | Post URL |
+| title | String | ✅ | — | Tieu de ngan |
+| summary | String | ✅ | — | Tom tat |
+| platform | String | ✅ | facebook | facebook / facebook_saved |
+| content_type | String | ✅ | unknown | educational/news/opinion/entertainment/promotion |
+| language | String | ✅ | vi | vi / en |
+| value_flywheel | String | ✅ | learning | — |
+| ingested_at | DateTime | ✅ | now() | — |
+| trust_score | Float | ✅ | 0.7 | RULE-B — thap hon Video/Doc |
+| decay_lambda | Float | ✅ | 0.003 | RULE-B |
+| valid_from | DateTime | ✅ | now() | RULE-B |
+| valid_until | DateTime | ✅ | null | RULE-B |
+| epistemic_status | String | ✅ | PENDING | RULE-B |
+| cultural_context | String | ✅ | GLOBAL | RULE-B |
+| source_type | String | ✅ | SOCIAL | RULE-B |
+
+---
+
+## LAYER 3 — WIKI
+
+Fields chung cho tat ca WIKI nodes (Concept, Rule, CaseStudy, Framework, Insight):
+
+| Field | Type | Required | Default | Mo ta |
+|---|---|---|---|---|
+| id | String | ✅ | MD5(name)[:12] | Unique ID |
+| name / title | String | ✅ | — | Ten node |
+| content | String | ✅ | — | Noi dung chinh |
+| trust_score | Float | ✅ | 0.7 | RULE-B — base trust |
+| decay_lambda | Float | ✅ | 0.003 | RULE-B — toc do decay |
+| valid_from | DateTime | ✅ | now() | RULE-B |
+| valid_until | DateTime | ✅ | null | RULE-B — null = khong het han |
+| epistemic_status | String | ✅ | PENDING | RULE-B: PENDING/VERIFIED/CONTRADICTED |
+| cultural_context | String | ✅ | GLOBAL | RULE-B: GLOBAL/VN/STARTUP/... |
+| source_type | String | ✅ | CONCEPT | RULE-B |
+| review_cadence | String | ❌ | weekly | daily/weekly/monthly/quarterly |
+| last_reviewed | DateTime | ❌ | now() | — |
+| next_review | DateTime | ❌ | — | Computed tu review_cadence |
+| red_team_score | Float | ❌ | null | Devil's Advocate score (P-020) |
+| ripeness_score | Float | ❌ | null | Do chin muoi de dua vao Blueprint |
+
+### Concept
+Node kien thuc co ban. Duoc tao tu key_concepts cua Ollama analysis.
+
+`source_type = 'CONCEPT'` | `trust_score default = 0.7`
+
+### Rule
+Nguyen tac / quy tac co the ap dung. Higher trust than raw Concept.
+
+`source_type = 'RULE'` | `trust_score default = 0.85`
+
+### CaseStudy
+Vi du thuc te. Gan voi cultural_context cu the.
+
+`source_type = 'CASE'` | `trust_score default = 0.75`
+
+### Framework
+Mo hinh tu duy / khung phan tich.
+
+`source_type = 'FRAMEWORK'` | `trust_score default = 0.8`
+
+### Insight
+Ket luan rut ra tu nhieu nguon. Ephemeral — decay nhanh hon.
+
+`source_type = 'INSIGHT'` | `decay_lambda default = 0.01`
+
+---
+
+## LAYER 4 — OUTBOX
+
+### Blueprint
+San pham dau ra — ban do tu duy, framework, product.
+
+| Field | Type | Required | Default | Mo ta |
+|---|---|---|---|---|
+| id | String | ✅ | UUID | Unique ID |
+| title | String | ✅ | — | Tieu de |
+| description | String | ✅ | — | Mo ta ngan |
+| wiki_nodes | List[String] | ✅ | [] | IDs cua WIKI nodes lien quan |
+| price | Float | ✅ | 0.0 | Gia ban (USD) |
+| status | String | ✅ | draft | draft / published / archived |
+| created_at | DateTime | ✅ | now() | — |
+| downloads | Int | ❌ | 0 | So luot tai |
+| rating | Float | ❌ | 0.0 | Diem danh gia |
+
+**Relationships:**
+- `(Blueprint)-[:DERIVED_FROM]->(Rule|Concept|Framework)`
+- `(Rule|Concept)-[:COMPILED_INTO]->(Blueprint)`
+
+---
+
+## QDRANT BRIDGE (P-004)
+
+Moi node trong Neo4j co vector tuong ung trong Qdrant.  
+Key bridge field trong Qdrant payload:
+
+```json
 {
-  # ── IDENTITY ──────────────────────────────────────────
-  "id":             str,      # UUID tu dong tao, khong thay doi
-  "title":          str,      # Tieu de ngan, ro rang, < 100 chars
-  "content":        str,      # Noi dung chinh da clean (sau wisdom_cleaner)
-  "content_hash":   str,      # SHA-256 cua content, dung cho dedup
-  "source_url":     str,      # URL nguon goc, None neu tacit knowledge
-  "created_at":     str,      # ISO 8601: "2026-05-07T14:30:00+07:00"
-  "updated_at":     str,      # ISO 8601, cap nhat moi lan chinh sua
-
-  # ── TRUST & DECAY ─────────────────────────────────────
-  "trust_score":    float,    # 0.0 → 1.0, tinh theo RULE-C
-  "decay_lambda":   float,    # He so suy giam, xem bang o duoi
-  "valid_from":     str,      # ISO date, ngay bat dau co hieu luc
-  "valid_until":    str|None, # ISO date, None = khong het han
-
-  # ── CLASSIFICATION ────────────────────────────────────
-  "epistemic_status": str,    # Xem enum ben duoi
-  "cultural_context": str,    # Xem enum ben duoi
-  "source_type":      str,    # Xem enum ben duoi
-  "domain":           str,    # vd: "MMO", "KDP", "AI", "Finance"
-  "content_type":     str,    # Xem enum ben duoi
-  "language":         str,    # "vi", "en", "ja"...
-
-  # ── CADENCE (P-011) ───────────────────────────────────
-  "review_cadence":   str,    # Xem enum ben duoi
-  "last_reviewed":    str|None,
-  "next_review":      str|None,
-  "review_count":     int,    # So lan da review, bat dau tu 0
-  "retention_score":  float,  # 0.0 → 1.0, SM-2 algorithm
-  "decay_on_skip":    bool,   # True = giam trust_score neu bo qua
-
-  # ── TEMPORAL (P-021) ──────────────────────────────────
-  "domain_ttl":       int,    # So ngay truoc khi trigger live search
-
-  # ── METADATA ──────────────────────────────────────────
-  "tags":           list[str],# ["KDP", "low-content", "Amazon"]
-  "author":         str|None, # Ten tac gia neu biet
-  "word_count":     int,      # So tu trong content
-  "embedding_id":   str|None, # ID trong Qdrant, None truoc khi index
+  "neo4j_node_id": "4:f237db68-...:39",  // elementId() tu Neo4j
+  "content_id":    "927477c89f3c",        // MD5 hash
+  "source_type":   "DOCUMENT",
+  "epistemic_status": "PENDING"
 }
 ```
 
----
-
-## 2. Enum Values
-
-### epistemic_status
-| Value | Y nghia | Khi nao dung |
-|-------|---------|--------------|
-| `PENDING` | Moi ingest, chua kiem tra | Default khi tao node |
-| `VERIFIED` | Da qua Council check | Sau khi Buffett/Jobs/Munger approve |
-| `CONTESTED` | Co mau thuan voi node khac | Khi CONTRADICTS relationship ton tai |
-| `SHADOW` | Hypothesis, can them bang chung | Suy luan, chua co nguon ro |
-| `DEPRECATED` | Het hieu luc, khong xoa | Khi valid_until da qua |
-
-### cultural_context
-| Value | Y nghia |
-|-------|---------|
-| `GLOBAL` | Ap dung toan cau |
-| `REGION_VN` | Chi ap dung tai Viet Nam |
-| `REGION_SEA` | Dong Nam A |
-| `REGION_SPECIFIC` | Vung cu the khac, ghi ro trong tags |
-
-### source_type
-| Value | Y nghia | trust_score mac dinh |
-|-------|---------|----------------------|
-| `ACADEMIC` | Nghien cuu khoa hoc, peer-reviewed | 0.90 |
-| `EXPERT` | Chuyen gia co ten tuoi, verified | 0.85 |
-| `NEWS` | Bao chi uy tin | 0.75 |
-| `COMMUNITY` | FB groups, forum, social | 0.60 |
-| `TACIT` | Kinh nghiem ca nhan Sep | 0.80 |
-| `SYNTHETIC` | Do AI tao ra, chua verify | 0.50 |
-| `BLUEPRINT` | Trich xuat tu Blueprint da ban | 0.85 |
-
-### content_type
-| Value | Y nghia |
-|-------|---------|
-| `CONCEPT` | Khai niem, dinh nghia |
-| `STRATEGY` | Chien luoc, phuong phap |
-| `TUTORIAL` | Huong dan tung buoc |
-| `CASE_STUDY` | Vi du thuc te |
-| `DATA` | So lieu, thong ke |
-| `OPINION` | Y kien ca nhan |
-| `NEWS_EVENT` | Su kien thoi su |
-| `TOOL` | Cong cu, phan mem |
-
-### review_cadence
-| Value | Tan suat | decay_lambda | Dung cho |
-|-------|----------|--------------|---------|
-| `daily` | Moi ngay | 0.05 | AI news, social trends, market price |
-| `weekly` | Moi tuan | 0.01 | Frameworks, tools, methods |
-| `monthly` | Moi thang | 0.003 | Core principles, strategies |
-| `archive` | Khong review | ~0 | History, math, timeless knowledge |
+**Collection mapping:**
+- `wisdom_knowledge` — default, tat ca public nodes
+- `wisdom_private_{uid}` — tacit knowledge cua Sep (RULE-E)
+- `wisdom_shadow` — nodes chua verified
 
 ---
 
-## 3. decay_lambda Mac dinh Theo Domain
+## DEDUP (P-012) — wisdom_dedup.py
 
-| Domain | decay_lambda | review_cadence | Ly do |
-|--------|-------------|----------------|-------|
-| AI/Tech news | 0.05 | daily | Thay doi hang ngay |
-| Social trends | 0.05 | daily | Xu huong nhanh tan |
-| Market price | 0.10 | daily | Thay doi theo gio |
-| KDP strategies | 0.02 | weekly | Amazon thay doi thuong xuyen |
-| Frameworks/Methods | 0.01 | weekly | Cap nhat theo quy |
-| Business principles | 0.003 | monthly | Kha ben vung |
-| OPC/MMO strategies | 0.005 | monthly | Thay doi cham |
-| Mathematics | 0.0001 | archive | Bat bien |
-| Historical facts | 0.0001 | archive | Bat bien |
-| Core principles | 0.001 | monthly | Rat ben vung |
-| Government policy VN | 0.03 | monthly | Thay doi theo chinh sach |
+### Checksum formula
+```python
+# KHONG phai SHA-256 cua url hoac content rieng le
+# MA LA SHA-256 cua (url + content[:500]) gop lai
+raw      = f"{url.strip()}{content.strip()[:500]}"
+checksum = hashlib.sha256(raw.encode('utf-8')).hexdigest()
+```
 
----
+### Flow chuan
+```python
+# BUOC 1 — Truoc ingest: check duplicate
+result = _dedup.check_and_register(url, content)
+if result["is_duplicate"]:
+    print(f"Da co: {result['existing_id']}")
+    return  # bo qua
 
-## 4. Neo4j Relationships
+# ... ingest binh thuong, lay neo4j_node_id ...
 
-```cypher
-# Lien ket tri thuc
-(:KnowledgeNode)-[:SUPPORTS {confidence: 0.85}]->(:KnowledgeNode)
-(:KnowledgeNode)-[:CONTRADICTS {confidence_diff: 0.02}]->(:KnowledgeNode)
-(:KnowledgeNode)-[:DERIVED_FROM {method: "synthesis"}]->(:KnowledgeNode)
-(:KnowledgeNode)-[:RELATED_TO {strength: 0.7}]->(:KnowledgeNode)
+# BUOC 2 — Sau ingest: register checksum
+_dedup.check_and_register(url, content, node_id=str(neo4j_node_id))
+# -> ghi sha256_checksum vao node trong Neo4j
+```
 
-# Blueprint
-(:KnowledgeNode)-[:COMPILED_INTO {order: 1}]->(:Blueprint)
-(:Blueprint)-[:REQUIRES]->(:KnowledgeNode)
+### Field duoc ghi vao node
+`sha256_checksum` — field bat buoc sau khi ingest thanh cong.  
+`check_duplicate()` tim kiem qua field nay: `WHERE n.sha256_checksum = $checksum`
 
-# Council
-(:KnowledgeNode)-[:INTERROGATED_BY {result: "PASS", score: 0.9}]->(:PersonaAgent)
-(:PersonaAgent)-[:FLAGGED {reason: "moat_weak"}]->(:KnowledgeNode)
+### Return format
+```python
+# Chua ton tai:
+{"is_duplicate": False, "checksum": "abc123..."}
 
-# User
-(:User)-[:REVIEWED {rating: "easy", date: "2026-05-07"}]->(:KnowledgeNode)
-(:User)-[:CREATED]->(:KnowledgeNode)
-(:User)-[:BOOKMARKED]->(:KnowledgeNode)
-
-# Temporal
-(:KnowledgeNode)-[:SUPERSEDES]->(:KnowledgeNode)
-(:KnowledgeNode)-[:UPDATED_FROM]->(:KnowledgeNode)
+# Da ton tai:
+{"is_duplicate": True, "existing_id": "...", "existing_title": "...", "ingested_at": "..."}
 ```
 
 ---
 
-## 5. Trust Score Calculation
+## DECAY FUNCTION (RULE-C) — wisdom_decay.py
 
 ```python
 import math
 
-def calc_trust_score(
-    base_score: float,
-    age_days: int,
-    decay_lambda: float,
-    review_count: int = 0,
-    retention_score: float = 0.5
-) -> float:
-    """
-    RULE-C: trust_score(t) = base * exp(-lambda * age_days)
-    Bonus: review_count va retention_score tang trust
-    """
-    # Base decay
-    decayed = base_score * math.exp(-decay_lambda * age_days)
-
-    # Review bonus: moi lan review tang 2% trust, toi da 20%
-    review_bonus = min(review_count * 0.02, 0.20)
-
-    # Retention bonus: retention cao -> trust ben hon
-    retention_bonus = retention_score * 0.05
-
-    final = min(decayed + review_bonus + retention_bonus, 1.0)
-    return round(final, 4)
+def compute_decay(base_score: float, decay_lambda: float, age_days: float) -> float:
+    return round(base_score * math.exp(-decay_lambda * age_days), 4)
 
 # Vi du:
-# Node moi (0 ngay): trust = 0.85
-# Sau 30 ngay, lambda=0.01: trust = 0.85 * exp(-0.3) = 0.629
-# Sau 30 ngay + 3 reviews: trust = 0.629 + 0.06 = 0.689
+# base=0.8, lambda=0.003, age=365 days -> trust = 0.8 * e^(-1.095) = 0.267
+# base=0.8, lambda=0.003, age=30  days -> trust = 0.8 * e^(-0.09)  = 0.731
 ```
 
----
+### Nguong trang thai
+| Score | Status | Action |
+|---|---|---|
+| >= 0.5 | Healthy | Giu nguyen |
+| 0.3 - 0.5 | Warning | Flag — can review |
+| < 0.3 | DEPRECATED | Tu dong set epistemic_status = DEPRECATED |
 
-## 6. Node Creation Template
+### decay_lambda theo domain (DOMAIN_DECAY)
+| Domain | lambda | Half-life | Vi du |
+|---|---|---|---|
+| tech_news | 0.05 | ~14 ngay | Tin tuc cong nghe |
+| mmo | 0.05 | ~14 ngay | MMO/kinh doanh online |
+| market | 0.05 | ~14 ngay | Gia ca, thi truong |
+| framework | 0.01 | ~69 ngay | Phuong phap luan |
+| methodology | 0.01 | ~69 ngay | Quy trinh |
+| principle | 0.003 | ~231 ngay | Nguyen tac nen tang |
+| science | 0.001 | ~693 ngay | Khoa hoc |
+| math | 0.0001 | ~6931 ngay | Toan hoc — vinh vien |
+| default | 0.003 | ~231 ngay | Mac dinh |
 
-```python
-from datetime import datetime, timedelta
-import uuid
+### Scheduled job
+```bash
+# Chay hang ngay
+python wisdom/core/wisdom_decay.py --run
 
-def create_node(
-    title: str,
-    content: str,
-    source_url: str = None,
-    source_type: str = "COMMUNITY",
-    domain: str = "GENERAL",
-    content_type: str = "CONCEPT",
-    cultural_context: str = "GLOBAL",
-    language: str = "vi"
-) -> dict:
-    """
-    Template tao KnowledgeNode moi.
-    Luon goi ham nay thay vi tao dict thu cong.
-    """
-    # Lay decay_lambda tu domain
-    DECAY_MAP = {
-        "AI": 0.05, "KDP": 0.02, "MMO": 0.005,
-        "Finance": 0.03, "General": 0.01
-    }
-    decay_lambda = DECAY_MAP.get(domain, 0.01)
+# Xem bao cao khong update
+python wisdom/core/wisdom_decay.py --report
 
-    # Lay review_cadence tu decay_lambda
-    if decay_lambda >= 0.05:
-        cadence = "daily"
-    elif decay_lambda >= 0.01:
-        cadence = "weekly"
-    elif decay_lambda >= 0.001:
-        cadence = "monthly"
-    else:
-        cadence = "archive"
-
-    # Trust score mac dinh theo source_type
-    TRUST_MAP = {
-        "ACADEMIC": 0.90, "EXPERT": 0.85, "NEWS": 0.75,
-        "COMMUNITY": 0.60, "TACIT": 0.80, "SYNTHETIC": 0.50
-    }
-    base_trust = TRUST_MAP.get(source_type, 0.60)
-
-    now = datetime.now()
-    next_review = {
-        "daily": now + timedelta(days=1),
-        "weekly": now + timedelta(weeks=1),
-        "monthly": now + timedelta(days=30),
-        "archive": None
-    }.get(cadence)
-
-    return {
-        "id": str(uuid.uuid4()),
-        "title": title,
-        "content": content,
-        "content_hash": None,  # wisdom_dedup.py tu tinh
-        "source_url": source_url,
-        "created_at": now.isoformat(),
-        "updated_at": now.isoformat(),
-        "trust_score": base_trust,
-        "decay_lambda": decay_lambda,
-        "valid_from": now.date().isoformat(),
-        "valid_until": None,
-        "epistemic_status": "PENDING",
-        "cultural_context": cultural_context,
-        "source_type": source_type,
-        "domain": domain,
-        "content_type": content_type,
-        "language": language,
-        "review_cadence": cadence,
-        "last_reviewed": None,
-        "next_review": next_review.isoformat() if next_review else None,
-        "review_count": 0,
-        "retention_score": 0.5,
-        "decay_on_skip": True,
-        "domain_ttl": 30,
-        "tags": [],
-        "author": None,
-        "word_count": len(content.split()),
-        "embedding_id": None,
-    }
+# Test truoc khi chay that
+python wisdom/core/wisdom_decay.py --dry-run
 ```
 
+### Fields duoc update boi decay job
+- `trust_score` — gia tri moi sau decay
+- `epistemic_status` — co the chuyen sang DEPRECATED
+- `last_decay_at` — timestamp lan decay gan nhat
+
 ---
 
-## 7. Validation Rules
+## EPISTEMIC STATUS FLOW
 
-```python
-# Bat buoc check truoc khi ghi Neo4j
-def validate_node(node: dict) -> tuple[bool, list[str]]:
-    errors = []
-
-    if not node.get("title") or len(node["title"]) > 100:
-        errors.append("title: bat buoc, < 100 chars")
-
-    if not node.get("content") or len(node["content"]) < 10:
-        errors.append("content: bat buoc, > 10 chars")
-
-    if not 0.0 <= node.get("trust_score", -1) <= 1.0:
-        errors.append("trust_score: phai tu 0.0 den 1.0")
-
-    if node.get("epistemic_status") not in [
-        "PENDING", "VERIFIED", "CONTESTED", "SHADOW", "DEPRECATED"
-    ]:
-        errors.append("epistemic_status: gia tri khong hop le")
-
-    if node.get("source_type") not in [
-        "ACADEMIC", "EXPERT", "NEWS", "COMMUNITY", "TACIT", "SYNTHETIC", "BLUEPRINT"
-    ]:
-        errors.append("source_type: gia tri khong hop le")
-
-    return len(errors) == 0, errors
+```
+UNVERIFIED (InboxItem moi)
+    ↓ auto-promote sau basic check
+PENDING (RawSource / Wiki nodes moi tao)
+    ↓ background validation job (RULE-D)
+VERIFIED (vao Global Pool)
+    ↓ neu xuat hien contradiction (RULE-F)
+CONTRADICTED (tao CONTRADICTS node, khong xoa)
 ```
 
----
-
-## 8. Lien ket Quan trong
-
-- RULE-B trong CLAUDE.md — bat buoc co du fields
-- RULE-C trong CLAUDE.md — cong thuc decay
-- P-011 — Cadence + Spaced Repetition (SM-2)
-- P-020 — Council Logic (INTERROGATED_BY relationship)
-- P-021 — Temporal Axis (domain_ttl field)
-- wisdom_schema.py — Python class implementation
-- wisdom_decay.py — Decay function implementation
-- wisdom_dedup.py — content_hash calculation
+**RULE-F**: Mau thuan → tao `[:CONTRADICTS]` relationship.  
+**Khong bao gio xoa node**. Chi them CONTRADICTED status.
 
 ---
-*wisdom_node_schema.md — Doc truoc khi tao bat ky node nao*
-*Generated: 2026-05-07 | P-026 COMPLETED*
+
+## CHECKLIST TRUOC KHI TAO NODE
+
+- [ ] `strip_emoji()` cho moi text field
+- [ ] `encoding='utf-8'` cho moi `open()`
+- [ ] `try/except` cho moi DB call
+- [ ] Write Neo4j TRUOC — lay `elementId()` — THEN write Qdrant
+- [ ] Du 7 RULE-B fields
+- [ ] `check_duplicate()` TRUOC khi ingest
+- [ ] `register_checksum()` SAU khi ingest thanh cong
+
+---
+
+*Xem them: docs/WISDOM_ARCHITECTURE.md | docs/WISDOM_VOICE.md | CLAUDE.md*
