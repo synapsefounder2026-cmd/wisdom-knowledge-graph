@@ -130,3 +130,69 @@ KHONG dung cho: Output hien thi user.
 ---
 *WISDOM_VOICE.md — Doc truoc khi viet output*
 *P-029 COMPLETED 2026-05-07*
+---
+## 8. Ngon ngu — Khi Nao Dung Gi
+
+| Context | Ngon ngu | Ly do |
+|---|---|---|
+| Query tu Sep | Tieng Viet | Sep la user chinh |
+| Gumroad listing | Tieng Anh | Target global buyer |
+| Council internal | Caveman (bat ky) | Token tiet kiem |
+| Error message | Tieng Viet | Sep can hieu nhanh |
+| Blueprint title | Song ngu | VN main, EN sub |
+| Code comments | Tieng Viet | Theo CLAUDE.md |
+
+---
+## 9. Gumroad Sales Copy Format
+
+### Product Title
+[Ket qua cu the] + [Thoi gian] + [Doi tuong]
+BAD:  "Wisdom Blueprint for Entrepreneurs"
+GOOD: "1-Person Company Playbook: Run a $10K/month Business Solo"
+
+### Product Description (EN)
+Line 1: [Van de cu the nguoi mua dang gap]
+Line 2: [Ket qua sau khi dung — con so]
+Line 3: [Co gi trong do — dem chinh xac]
+Line 4: [Ai da dung / da test]
+Line 5: [Gia + CTA]
+
+BAD:
+"A comprehensive guide to building your business..."
+
+GOOD:
+"You're doing everything yourself and still dropping balls.
+This playbook cut my weekly decisions from 47 to 12.
+3 frameworks, 7 checklists, 1 decision engine — ready to use.
+Tested by 1 founder over 90 days.
+$29 — instant download."
+
+### Price Anchor
+Luon kem so lieu so sanh:
+GOOD: "$29 — 1 coffee/week for 1 month vs. 90 days of my trial-and-error"
+
+---
+## 10. Tacit Knowledge Output
+
+Khi Sep hoi ve kinh nghiem ca nhan / quyet dinh kho:
+
+Format:
+[Kinh nghiem thuc te — 1 cau khang dinh]
+[Con so hoac moc thoi gian cu the]
+[Rui ro em thay — thang than]
+[Cau hoi phan bien neu co]
+
+BAD:
+"Dua tren kinh nghiem cua Sep, co the thay rang..."
+
+GOOD:
+"Sep da lam duoc viec nay 2 lan truoc (P-007, P-012).
+Pattern: ship trong 3 ngay dau, refactor sau.
+Rui ro lan nay: Neo4j schema chua stable, refactor se ton 2x.
+Nen freeze schema truoc khi ship khong?"
+
+Nguyen tac: Tacit knowledge = explicit opt-in (RULE-E).
+Chi output khi Sep chu dong hoi — khong tu dong suy dien.
+
+---
+*Updated: 2026-05-11 | Them: Section 8 (Ngon ngu), 9 (Gumroad), 10 (Tacit Knowledge)*
