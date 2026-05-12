@@ -966,3 +966,37 @@ Mọi thứ khác là Phase 2-3
 - Sovereign Stack = concept dung, timing sai
 - Sep chua co buyer -> chua can "sovereign infrastructure"
 - Uu tien tuyet doi van la: PayPal verify -> Gumroad ship
+
+### [P-059-PREP] Aegis Pre-conditions — Can lam TRUOC khi unlock
+- [ ] Download DroneRF dataset -> ingest Neo4j (source: public IEEE)
+- [ ] Legal review: DroneSploit + C-UAS operations tai VN
+- [ ] BOM estimate: Rogers PCB + FLIR + VESC + STM32
+- [ ] Latency budget doc: Radar->classify->intercept < 500ms target
+- [ ] Test location scouting (1-2 dia diem VN)
+- [ ] Wokwi: STM32 + SimpleFOC sandbox test
+Status: Chuan bi song song, KHONG doi Gumroad
+
+---
+### [P-059-PREP] Aegis Pre-conditions — Chuan bi song song, KHONG doi Gumroad
+
+**Muc tieu:** Khi 10 Gumroad sales hit -> bat dau Aegis ngay, khong mat thoi gian chuan bi.
+
+- [ ] DroneRF dataset — download tu IEEE, ingest vao Neo4j
+      Source: https://github.com/DroneRF/DroneRF (public, MIT)
+- [ ] Legal review — DroneSploit + C-UAS operations tai VN
+      Cu the: Luat An ninh mang 2018 + Nghi dinh 36/2008
+      Thay the: Net gun / Ramming drone (khong co legal risk tuong tu)
+- [ ] BOM estimate — list components + gia JLC-PCB
+      Key items: Rogers 4350B PCB, FLIR Lepton, VESC, STM32, ESP32
+- [ ] Latency budget doc — Radar->classify->intercept < 500ms
+      Map: scan_time + signal_proc + classify + mavlink + spinup + liftoff
+- [ ] Test location scouting — 1-2 dia diem tai VN
+      Options: san bay bo hoang, khu cong nghiep, xin phep cuc hang khong
+- [ ] Wokwi sandbox — STM32 + SimpleFOC simulation truoc khi order PCB
+
+**Phan cong:**
+- Anti: DroneRF research + BOM estimate
+- Claude: Wokwi spec + latency budget doc (khi Sep san sang)
+- Sep: Legal opinion + test location
+
+**Trigger unlock P-059:** 10 Gumroad sales confirmed.
