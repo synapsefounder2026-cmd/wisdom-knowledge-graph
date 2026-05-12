@@ -744,7 +744,7 @@ cho moi knowledge vao Wisdom ecosystem
 
 ---
 
-### [P-044] Firecrawl MCP — Nghiên cứu thay thế P-023
+### [P-044] Firecrawl MCP — SKIP (AGPL-3.0, khong dung cho commercial)
 - Mo ta: Dung firecrawl-mcp thay vi tu build wisdom_cleaner.py
 - Repo: github.com/nicholasoxford/firecrawl-mcp
 - Chuc nang: Scrape web -> clean Markdown tu dong
@@ -849,3 +849,120 @@ git push origin main
 2. P-026 wisdom_node_schema.md — 1 session
 3. P-029 WISDOM_VOICE.md — 1 session
 4. Connect dashboard vao FastAPI backend
+# APPEND VÀO PENDING.md — Session 2026-05-11 (Buổi trưa)
+
+---
+
+## ĐÁNH GIÁ 7 INSIGHTS ANTIGRAVITY — Kết luận Claude
+
+### Insights đúng, làm ngay:
+- Moat = Tổ chức + Network effect (không phải tính năng)
+- Knowledge + Social Graph → Wisdom đang làm đúng (P-005 done)
+- OPC vision đúng hướng
+
+### Insights đúng, làm Phase 2-3:
+- agentmemory + hermes-agent → P-052, sau khi có user
+- Chiến lược Black Box → bảo vệ IP khi code đủ unique
+- Affiliate SaaS B2B (Kyma API) → validate market trước
+- 1 triệu OPC → đích đến, không phải điểm xuất phát
+
+### Cảnh báo:
+- FAANG 196 Tacit Knowledge → chỉ ingest nguồn open (MIT/Apache/arXiv)
+- KHÔNG scrape Glassdoor/LeetCode → ToS violation
+
+---
+
+## EXECUTION ROADMAP — Ưu tiên tuyệt đối
+
+### Hôm nay (2-3 giờ):
+1. Hoàn thiện Gumroad product
+   - Upload KDP_BLUEPRINT_SPEC.md
+   - Set giá $49 Early Bird (gốc $199)
+   - Thêm description EN/VN
+   - Upload cover image
+   - Publish
+2. Share link cho 3-5 người quen test
+
+### Tuần này:
+3. Collect feedback từ buyer đầu tiên
+4. Iterate SPEC.md theo feedback thực tế
+5. Commit tất cả lên GitHub
+
+### Tháng tới:
+6. 10 buyers → đủ data để build Blueprint #2
+7. Research agentmemory + Kyma API
+8. Phase 2: VPS Hetzner CX32 ($14/tháng)
+
+---
+
+## NGUYÊN TẮC CHỐT (Không thay đổi)
+
+```
+Ship trước → Collect feedback → Iterate
+Không có user = Không có moat
+P-009 Gumroad hôm nay là bước số 1
+Mọi thứ khác là Phase 2-3
+```
+
+---
+
+## Tasks mới:
+
+### [P-056] Gumroad KDP Blueprint — SHIP TODAY
+- Upload KDP_BLUEPRINT_SPEC.md
+- Giá: $49 Early Bird / gốc $199
+- Description: EN + VN song ngữ
+- Cover: wisdom_blueprint_cover.svg
+- Deadline: Hôm nay
+
+### [P-057] agentmemory Integration Research
+- Repo: github.com/NousResearch/hermes-agent
+- Repo: agentmemory (search GitHub)
+- Chỉ đọc README — không implement ngay
+- Uu tien: Phase 2, sau khi có 10 buyers
+
+### [P-058] Kyma API — B2B Affiliate Research  
+- Mo ta: API gateway cho affiliate B2B SaaS
+- Validate market trước khi build
+- Uu tien: Phase 3
+
+### [NOTE] FAANG 196 — Legal Warning
+- KHÔNG scrape Glassdoor/LeetCode
+- Chỉ dùng nguồn: GitHub MIT/Apache, arXiv, MIT OpenCourseWare
+- Vi phạm ToS = rủi ro pháp lý cho commercial product
+
+---
+
+*Cập nhật: 2026-05-11 | Buổi trưa | Claude validation*
+
+### [P-059] Project Aegis — Sovereign Defense System [FROZEN]
+
+---
+
+*Last updated: 2026-05-11 | Buổi chiều | Antigravity preservation*
+
+---
+## SESSION 2026-05-12 Buoi chieu — Antigravity Strategic Handover
+
+### [P-060] Gmail Intelligence Agent — CAN BUILD
+- Mo ta: Doc email hang ngay -> tao INBOX nodes tu do
+- Stack: Gmail API (OAuth) + wisdom_cleaner.py + ingest pipeline
+- Use case: KDP notifications, business emails, newsletters
+- Privacy: Chi ingest email Sep opt-in ro rang (RULE-E)
+- Uu tien: Phase 2, sau Gumroad
+
+### [P-061] Docmost Evaluation — PHASE 2
+- Mo ta: Self-hosted Notion thay the
+- Chi evaluate sau khi co 10 buyers
+- Hien tai: Git + Markdown = du tot
+
+### FROZEN (them vao danh sach):
+- InsForge — Phase 3 (sau 50+ users)
+- FreeMoCap — Khong trong roadmap Wisdom
+- SigDigger, RuView, Map3D — Defense tools, khong phai OPC OS
+- RPG SVO Pro — Aegis trigger chua unlock
+
+### NOTE CHIEN LUOC 2026-05-12:
+- Sovereign Stack = concept dung, timing sai
+- Sep chua co buyer -> chua can "sovereign infrastructure"
+- Uu tien tuyet doi van la: PayPal verify -> Gumroad ship

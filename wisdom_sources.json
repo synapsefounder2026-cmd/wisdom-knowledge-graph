@@ -1,0 +1,54 @@
+{
+  "_comment": "Wisdom Auto-Ingest Sources — them URL vao day, cron job se tu dong ingest",
+  "_usage": "python wisdom/core/wisdom_cron.py --ingest-sources",
+
+  "youtube": [
+    {
+      "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "label": "Sample — thay bang video thuc",
+      "enabled": false,
+      "cadence": "weekly",
+      "domain": "learning"
+    }
+  ],
+
+  "websites": [
+    {
+      "url": "https://vnexpress.net/kinh-doanh",
+      "label": "VNExpress Kinh doanh",
+      "enabled": true,
+      "cadence": "daily",
+      "domain": "market"
+    },
+    {
+      "url": "https://techcrunch.com",
+      "label": "TechCrunch",
+      "enabled": true,
+      "cadence": "daily",
+      "domain": "tech_news"
+    }
+  ],
+
+  "academic": [
+    {
+      "url": "https://arxiv.org/search/?searchtype=all&query=one+person+company+AI&start=0",
+      "label": "arXiv — OPC + AI research",
+      "enabled": false,
+      "cadence": "weekly",
+      "domain": "science"
+    }
+  ],
+
+  "rss": [
+    {
+      "url": "https://feeds.feedburner.com/oreilly/radar",
+      "label": "O'Reilly Radar",
+      "enabled": false,
+      "cadence": "daily",
+      "domain": "tech_news"
+    }
+  ],
+
+  "_cadence_options": ["daily", "weekly", "monthly"],
+  "_domain_options": ["tech_news", "market", "mmo", "framework", "principle", "science", "learning"]
+}
