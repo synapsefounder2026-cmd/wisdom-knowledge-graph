@@ -1,7 +1,6 @@
 {
   "_comment": "Wisdom Auto-Ingest Sources — them URL vao day, cron job se tu dong ingest",
   "_usage": "python wisdom/core/wisdom_cron.py --ingest-sources",
-
   "youtube": [
     {
       "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
@@ -11,7 +10,6 @@
       "domain": "learning"
     }
   ],
-
   "websites": [
     {
       "url": "https://vnexpress.net/kinh-doanh",
@@ -26,9 +24,22 @@
       "enabled": true,
       "cadence": "daily",
       "domain": "tech_news"
+    },
+    {
+      "url": "https://cafef.vn",
+      "label": "CafeF Tai chinh",
+      "enabled": true,
+      "cadence": "daily",
+      "domain": "market"
+    },
+    {
+      "url": "https://arxiv.org/search/?searchtype=all&query=one+person+company+AI",
+      "label": "arXiv OPC+AI",
+      "enabled": true,
+      "cadence": "weekly",
+      "domain": "science"
     }
   ],
-
   "academic": [
     {
       "url": "https://arxiv.org/search/?searchtype=all&query=one+person+company+AI&start=0",
@@ -38,7 +49,6 @@
       "domain": "science"
     }
   ],
-
   "rss": [
     {
       "url": "https://feeds.feedburner.com/oreilly/radar",
@@ -48,7 +58,18 @@
       "domain": "tech_news"
     }
   ],
-
-  "_cadence_options": ["daily", "weekly", "monthly"],
-  "_domain_options": ["tech_news", "market", "mmo", "framework", "principle", "science", "learning"]
+  "_cadence_options": [
+    "daily",
+    "weekly",
+    "monthly"
+  ],
+  "_domain_options": [
+    "tech_news",
+    "market",
+    "mmo",
+    "framework",
+    "principle",
+    "science",
+    "learning"
+  ]
 }
