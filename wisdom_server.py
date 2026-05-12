@@ -211,6 +211,17 @@ async def get_decay():
             at_risk_nodes = [dict(r) for r in at_risk]
 
         driver.close()
+        # Domains breakdown cho dashboard
+        domains_result = s.run("""
+            MATCH (n)
+            WHERE n.trust_score IS NOT NULL AND n.source_type IS NOT NULL
+            RETURN n.source_type AS domain,
+                   count(n) AS count,
+                   avg(n.trust_score) AS avg_trust
+            ORDER BY avg_trust ASC
+        """)
+        domains = [dict(r) for r in domains_result]
+
         return {
             "total":      result["total"] if result else 0,
             "avg_score":  round(result["avg_score"] or 0, 3) if result else 0,
@@ -218,6 +229,7 @@ async def get_decay():
             "warning":    result["warning"] if result else 0,
             "deprecated": result["deprecated"] if result else 0,
             "at_risk":    at_risk_nodes,
+            "domains":    domains,
         }
     except Exception as e:
         return {"total": 0, "healthy": 0, "warning": 0, "deprecated": 0, "error": str(e)}
