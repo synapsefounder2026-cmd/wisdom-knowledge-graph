@@ -185,43 +185,28 @@ async def get_decay():
         driver = get_driver()
         with driver.session() as s:
             result = s.run("""
-                MATCH (n)
-                WHERE n.trust_score IS NOT NULL
-                RETURN
-                    count(n) AS total,
-                    avg(n.trust_score) AS avg_score,
+                MATCH (n) WHERE n.trust_score IS NOT NULL
+                RETURN count(n) AS total, avg(n.trust_score) AS avg_score,
                     sum(CASE WHEN n.trust_score >= 0.5 THEN 1 ELSE 0 END) AS healthy,
                     sum(CASE WHEN n.trust_score >= 0.3 AND n.trust_score < 0.5 THEN 1 ELSE 0 END) AS warning,
                     sum(CASE WHEN n.trust_score < 0.3 THEN 1 ELSE 0 END) AS deprecated
             """).single()
-
-            # 5 nodes sap het han nhat
-            at_risk = s.run("""
-                MATCH (n)
-                WHERE n.trust_score IS NOT NULL
+            at_risk_nodes = [dict(r) for r in s.run("""
+                MATCH (n) WHERE n.trust_score IS NOT NULL
                 AND n.epistemic_status <> 'DEPRECATED'
                 AND (n.title IS NOT NULL OR n.filename IS NOT NULL)
-                RETURN
-                    coalesce(n.title, n.filename, 'Untitled') AS title,
-                    n.trust_score AS trust_score,
-                    coalesce(n.source_type, 'UNKNOWN') AS source_type
-                ORDER BY n.trust_score ASC
-                LIMIT 5
-            """)
-            at_risk_nodes = [dict(r) for r in at_risk]
-
+                RETURN coalesce(n.title, n.filename, 'Untitled') AS title,
+                       n.trust_score AS trust_score,
+                       coalesce(n.source_type, 'UNKNOWN') AS source_type
+                ORDER BY n.trust_score ASC LIMIT 5
+            """)]
+            domains = [dict(r) for r in s.run("""
+                MATCH (n) WHERE n.trust_score IS NOT NULL AND n.source_type IS NOT NULL
+                RETURN n.source_type AS domain, count(n) AS count,
+                       avg(n.trust_score) AS avg_trust
+                ORDER BY avg_trust ASC
+            """)]
         driver.close()
-        # Domains breakdown cho dashboard
-        domains_result = s.run("""
-            MATCH (n)
-            WHERE n.trust_score IS NOT NULL AND n.source_type IS NOT NULL
-            RETURN n.source_type AS domain,
-                   count(n) AS count,
-                   avg(n.trust_score) AS avg_trust
-            ORDER BY avg_trust ASC
-        """)
-        domains = [dict(r) for r in domains_result]
-
         return {
             "total":      result["total"] if result else 0,
             "avg_score":  round(result["avg_score"] or 0, 3) if result else 0,
