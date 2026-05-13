@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wisdom Galaxy — Knowledge Graph</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'DM Sans', sans-serif; background: #05071a; color: #e8eaf6; overflow: hidden; height: 100vh; }
+
+/* Starfield */
+#starfield { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+/* Main layout */
+#app { position: relative; z-index: 1; height: 100vh; display: flex; flex-direction: column; }
+
+/* Topbar */
+#topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .75rem 1.5rem;
+  background: rgba(5,7,26,.85);
+  border-bottom: .5px solid rgba(255,255,255,.08);
+  backdrop-filter: blur(20px);
+  flex-shrink: 0;
+}
+.logo { font-size: 16px; font-weight: 500; color: #e8eaf6; letter-spacing: -.02em; }
+.logo span { color: #7c6fff; }
+#stats-bar { display: flex; gap: 1.5rem; }
+.stat-item { font-size: 11px; color: rgba(232,234,246,.5); }
+.stat-item b { color: #e8eaf6; font-weight: 500; }
+
+/* Controls */
+#controls {
+  display: flex; align-items: center; gap: 8px;
+  padding: .6rem 1.5rem;
+  background: rgba(5,7,26,.6);
+  border-bottom: .5px solid rgba(255,255,255,.06);
+  flex-shrink: 0; flex-wrap: wrap;
+}
+.ctrl-btn {
+  font-size: 11px; padding: 5px 12px; border-radius: 100px;
+  border: .5px solid rgba(255,255,255,.15);
+  background: rgba(255,255,255,.05);
+  color: rgba(232,234,246,.7); cursor: pointer;
+  transition: all .2s;
+}
+.ctrl-btn:hover { background: rgba(255,255,255,.1); color: #e8eaf6; }
+.ctrl-btn.active { background: rgba(124,111,255,.25); border-color: rgba(124,111,255,.5); color: #c8c0ff; }
+.ctrl-sep { width: .5px; height: 18px; background: rgba(255,255,255,.1); margin: 0 4px; }
+#search-input {
+  font-size: 11px; padding: 5px 12px; border-radius: 100px;
+  border: .5px solid rgba(255,255,255,.15);
+  background: rgba(255,255,255,.05);
+  color: #e8eaf6; outline: none; width: 160px;
+}
+#search-input::placeholder { color: rgba(232,234,246,.3); }
+
+/* Graph canvas */
+#graph-wrap { flex: 1; position: relative; overflow: hidden; }
+#graph-svg { width: 100%; height: 100%; }
+
+/* Tooltip */
+#tooltip {
+  position: absolute; pointer-events: none;
+  background: rgba(8,12,40,.95);
+  border: .5px solid rgba(255,255,255,.15);
+  border-radius: 12px; padding: 12px 16px;
+  font-size: 12px; color: #e8eaf6;
+  max-width: 220px; display: none;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px rgba(0,0,0,.5);
+}
+.tt-title { font-size: 13px; font-weight: 500; margin-bottom: 6px; }
+.tt-row { display: flex; justify-content: space-between; gap: 12px; margin-top: 3px; }
+.tt-label { color: rgba(232,234,246,.5); font-size: 11px; }
+.tt-value { font-size: 11px; }
+.tt-status { font-size: 10px; padding: 2px 8px; border-radius: 100px; margin-top: 6px; display: inline-block; }
+.st-verified { background: rgba(74,222,128,.15); color: #4ade80; }
+.st-pending  { background: rgba(251,191,36,.12); color: #fbbf24; }
+
+/* Side panel */
+#side-panel {
+  position: absolute; right: 16px; top: 16px;
+  width: 240px;
+  background: rgba(8,12,40,.92);
+  border: .5px solid rgba(255,255,255,.1);
+  border-radius: 16px; padding: 16px;
+  backdrop-filter: blur(20px);
+  font-size: 12px;
+  transition: opacity .3s;
+}
+#side-panel h3 { font-size: 13px; font-weight: 500; margin-bottom: 12px; color: #e8eaf6; }
+.legend-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.legend-label { font-size: 11px; color: rgba(232,234,246,.7); }
+.legend-count { margin-left: auto; font-size: 10px; color: rgba(232,234,246,.4); }
+
+.sep-line { border: none; border-top: .5px solid rgba(255,255,255,.06); margin: 10px 0; }
+
+.edge-item { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
+.edge-line { height: 2px; width: 20px; border-radius: 1px; flex-shrink: 0; }
+.edge-label { font-size: 11px; color: rgba(232,234,246,.6); }
+
+/* Loading */
+#loading {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 12px;
+  background: #05071a; z-index: 10;
+}
+.load-ring {
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 2px solid rgba(124,111,255,.2);
+  border-top-color: #7c6fff;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.load-text { font-size: 13px; color: rgba(232,234,246,.5); }
+
+/* Selected node info */
+#node-detail {
+  position: absolute; left: 16px; bottom: 16px;
+  background: rgba(8,12,40,.92);
+  border: .5px solid rgba(255,255,255,.1);
+  border-radius: 16px; padding: 16px;
+  backdrop-filter: blur(20px);
+  font-size: 12px; max-width: 260px;
+  display: none;
+}
+#node-detail h4 { font-size: 13px; font-weight: 500; margin-bottom: 8px; }
+.nd-row { display: flex; justify-content: space-between; margin: 4px 0; }
+.nd-key { color: rgba(232,234,246,.5); font-size: 11px; }
+.nd-val { font-size: 11px; font-weight: 500; }
+</style>
+</head>
+<body>
+
+<canvas id="starfield"></canvas>
+
+<div id="app">
+  <div id="topbar">
+    <div class="logo">Wisdom<span>.</span> Galaxy</div>
+    <div id="stats-bar">
+      <div class="stat-item">Nodes: <b id="s-nodes">—</b></div>
+      <div class="stat-item">Edges: <b id="s-edges">—</b></div>
+      <div class="stat-item">Selected: <b id="s-selected">—</b></div>
+    </div>
+    <a href="/" style="font-size:12px;color:rgba(232,234,246,.5);text-decoration:none;">← Dashboard</a>
+  </div>
+
+  <div id="controls">
+    <button class="ctrl-btn active" onclick="filterType('all',this)">All</button>
+    <button class="ctrl-btn" onclick="filterType('VIDEO',this)">Video</button>
+    <button class="ctrl-btn" onclick="filterType('DOCUMENT',this)">Document</button>
+    <button class="ctrl-btn" onclick="filterType('CONCEPT',this)">Concept</button>
+    <button class="ctrl-btn" onclick="filterType('WEB',this)">Web</button>
+    <button class="ctrl-btn" onclick="filterType('BLUEPRINT',this)">Blueprint</button>
+    <div class="ctrl-sep"></div>
+    <button class="ctrl-btn active" id="btn-clusters" onclick="toggleClusters(this)">Nebula clusters</button>
+    <button class="ctrl-btn" onclick="resetZoom()">Reset zoom</button>
+    <div class="ctrl-sep"></div>
+    <input id="search-input" type="text" placeholder="🔍 Tìm node..." oninput="searchNodes(this.value)">
+  </div>
+
+  <div id="graph-wrap">
+    <svg id="graph-svg"></svg>
+    <div id="tooltip"></div>
+    <div id="node-detail"></div>
+
+    <div id="side-panel">
+      <h3>Node types</h3>
+      <div id="legend-list"></div>
+      <hr class="sep-line">
+      <h3 style="margin-bottom:10px">Relationships</h3>
+      <div class="edge-item"><div class="edge-line" style="background:#a78bfa"></div><div class="edge-label">HAS_CONCEPT</div></div>
+      <div class="edge-item"><div class="edge-line" style="background:#4ade80;opacity:.7"></div><div class="edge-label">HAS_TAG</div></div>
+      <div class="edge-item"><div class="edge-line" style="background:#fbbf24"></div><div class="edge-label">COMPILED_INTO</div></div>
+      <div class="edge-item"><div class="edge-line" style="background:#f472b6;border-top:1px dashed"></div><div class="edge-label">DISTILLED_TO</div></div>
+      <div class="edge-item"><div class="edge-line" style="background:#fb7185"></div><div class="edge-label">CONTRADICTS</div></div>
+    </div>
+  </div>
+
+  <div id="loading">
+    <div class="load-ring"></div>
+    <div class="load-text">Loading Knowledge Galaxy...</div>
+  </div>
+</div>
+
+<script>
+const API = 'http://localhost:8000';
+
+const TYPE_COLOR = {
+  VIDEO:     '#5b9cf6',
+  DOCUMENT:  '#4ade80',
+  CONCEPT:   '#a78bfa',
+  RULE:      '#fbbf24',
+  BLUEPRINT: '#f472b6',
+  WEB:       '#34d399',
+  SOCIAL:    '#e879f9',
+  INBOX:     '#94a3b8',
+  Tag:       '#64748b',
+};
+
+const REL_COLOR = {
+  HAS_CONCEPT:   'rgba(167,139,250,.45)',
+  HAS_TAG:       'rgba(74,222,128,.35)',
+  COMPILED_INTO: 'rgba(251,191,36,.6)',
+  DISTILLED_TO:  'rgba(74,222,128,.55)',
+  DERIVED_FROM:  'rgba(251,191,36,.4)',
+  CONTRADICTS:   'rgba(248,113,113,.8)',
+  REFERRED_BY:   'rgba(148,163,184,.4)',
+  PROMOTED_TO:   'rgba(96,165,250,.45)',
+};
+
+const CLUSTER_COLORS = [
+  '#5b9cf6','#a78bfa','#4ade80','#fbbf24','#f472b6','#34d399'
+];
+
+let allNodes = [], allEdges = [];
+let simulation, svgSel, linkSel, nodeSel, clusterSel;
+let showClusters = true;
+let currentFilter = 'all';
+let zoom;
+
+// Starfield
+const cvs = document.getElementById('starfield');
+const ctx = cvs.getContext('2d');
+let stars = [];
+function initStarfield() {
+  cvs.width = window.innerWidth; cvs.height = window.innerHeight;
+  stars = Array.from({length:250}, ()=>({
+    x: Math.random()*cvs.width, y: Math.random()*cvs.height,
+    r: Math.random()*1.3+.2,
+    a: Math.random(),
+    da: (Math.random()*.007+.002)*(Math.random()<.5?1:-1),
+    hue: [220,260,200,300,180][Math.floor(Math.random()*5)]
+  }));
+}
+function animateStars() {
+  ctx.clearRect(0,0,cvs.width,cvs.height);
+  stars.forEach(s=>{
+    s.a = Math.max(.05,Math.min(1,s.a+s.da));
+    if(s.a<=.05||s.a>=1) s.da*=-1;
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fillStyle = `hsla(${s.hue},80%,85%,${s.a})`;
+    ctx.fill();
+    // Twinkle glow for bright stars
+    if(s.a > .7 && s.r > 1) {
+      ctx.beginPath();
+      ctx.arc(s.x,s.y,s.r*2.5,0,Math.PI*2);
+      ctx.fillStyle = `hsla(${s.hue},80%,85%,${s.a*.15})`;
+      ctx.fill();
+    }
+  });
+  requestAnimationFrame(animateStars);
+}
+window.addEventListener('resize', initStarfield);
+initStarfield(); animateStars();
+
+// Load data
+async function loadGraph() {
+  try {
+    const r = await fetch(`${API}/api/graph?limit=100`);
+    const d = await r.json();
+    allNodes = d.nodes || [];
+    allEdges = d.edges || [];
+    document.getElementById('s-nodes').textContent = allNodes.length;
+    document.getElementById('s-edges').textContent = allEdges.length;
+    buildLegend();
+    renderGraph();
+    document.getElementById('loading').style.display = 'none';
+  } catch(e) {
+    document.getElementById('loading').innerHTML =
+      '<div style="color:#fb7185;font-size:13px">⚠ Cannot connect to API<br><small style="opacity:.6">Make sure wisdom_server.py is running</small></div>';
+  }
+}
+
+function buildLegend() {
+  const counts = {};
+  allNodes.forEach(n => {
+    const t = n.source_type || n.type || 'UNKNOWN';
+    counts[t] = (counts[t]||0)+1;
+  });
+  const list = document.getElementById('legend-list');
+  list.innerHTML = Object.entries(counts).map(([t,c])=>`
+    <div class="legend-item">
+      <div class="legend-dot" style="background:${TYPE_COLOR[t]||'#888'};box-shadow:0 0 6px ${TYPE_COLOR[t]||'#888'}55"></div>
+      <div class="legend-label">${t}</div>
+      <div class="legend-count">${c}</div>
+    </div>
+  `).join('');
+}
+
+// Assign clusters by source_type
+function getCluster(node) {
+  const map = {VIDEO:0,DOCUMENT:1,CONCEPT:2,RULE:3,BLUEPRINT:4,WEB:5,SOCIAL:2,INBOX:2,Tag:2};
+  return map[node.source_type] ?? map[node.type] ?? 2;
+}
+
+function renderGraph() {
+  const wrap = document.getElementById('graph-wrap');
+  const W = wrap.clientWidth, H = wrap.clientHeight;
+  const svg = d3.select('#graph-svg');
+  svg.selectAll('*').remove();
+
+  zoom = d3.zoom().scaleExtent([.1,4]).on('zoom', e => {
+    g.attr('transform', e.transform);
+  });
+  svg.call(zoom);
+
+  const g = svg.append('g');
+
+  // Defs: glow filters
+  const defs = svg.append('defs');
+  Object.entries(TYPE_COLOR).forEach(([type, color]) => {
+    const f = defs.append('filter').attr('id', `glow-${type}`);
+    f.append('feGaussianBlur').attr('stdDeviation','3').attr('result','blur');
+    const merge = f.append('feMerge');
+    merge.append('feMergeNode').attr('in','blur');
+    merge.append('feMergeNode').attr('in','SourceGraphic');
+  });
+
+  // Nebula cluster backgrounds
+  const clusterG = g.append('g').attr('class','clusters');
+  clusterSel = clusterG;
+
+  const nodes = allNodes.map(d=>({...d, cluster: getCluster(d)}));
+  const nodeMap = {};
+  nodes.forEach(n => nodeMap[n.id] = n);
+
+  const links = allEdges
+    .filter(e => nodeMap[e.source] && nodeMap[e.target])
+    .map(e => ({...e, source: e.source, target: e.target}));
+
+  // Force simulation
+  simulation = d3.forceSimulation(nodes)
+    .force('link', d3.forceLink(links).id(d=>d.id).distance(d=>{
+      if(d.relationship==='COMPILED_INTO') return 60;
+      if(d.relationship==='HAS_CONCEPT') return 80;
+      return 90;
+    }).strength(.4))
+    .force('charge', d3.forceManyBody().strength(d=>
+      d.source_type==='BLUEPRINT'?-400:d.source_type==='RULE'?-300:-150
+    ))
+    .force('center', d3.forceCenter(W/2, H/2))
+    .force('collision', d3.forceCollide(d=>nodeRadius(d)+8))
+    .force('cluster', clusterForce(nodes));
+
+  // Links
+  linkSel = g.append('g').attr('class','links')
+    .selectAll('line').data(links).enter().append('line')
+    .attr('stroke', d => REL_COLOR[d.relationship] || 'rgba(255,255,255,.15)')
+    .attr('stroke-width', d =>
+      d.relationship==='COMPILED_INTO'?2:
+      d.relationship==='DISTILLED_TO'?1.5:.7)
+    .attr('stroke-dasharray', d =>
+      d.relationship==='DISTILLED_TO'?'4 3':
+      d.relationship==='CONTRADICTS'?'2 2':null);
+
+  // Nodes
+  nodeSel = g.append('g').attr('class','graph-nodes')
+    .selectAll('g').data(nodes).enter().append('g')
+    .attr('cursor','pointer')
+    .call(d3.drag()
+      .on('start',(e,d)=>{ if(!e.active) simulation.alphaTarget(.3).restart(); d.fx=d.x;d.fy=d.y; })
+      .on('drag', (e,d)=>{ d.fx=e.x; d.fy=e.y; })
+      .on('end',  (e,d)=>{ if(!e.active) simulation.alphaTarget(0); d.fx=null;d.fy=null; })
+    )
+    .on('mouseover', showTooltip)
+    .on('mousemove', moveTooltip)
+    .on('mouseout',  hideTooltip)
+    .on('click', selectNode);
+
+  // Outer glow ring
+  nodeSel.append('circle')
+    .attr('r', d=>nodeRadius(d)*2.2)
+    .attr('fill', d=>{
+      const c = TYPE_COLOR[d.source_type]||TYPE_COLOR[d.type]||'#888';
+      return c+'18';
+    });
+
+  // Main circle
+  nodeSel.append('circle')
+    .attr('r', d=>nodeRadius(d))
+    .attr('fill', d => TYPE_COLOR[d.source_type]||TYPE_COLOR[d.type]||'#888')
+    .attr('opacity', d=>d.status==='VERIFIED'?1:.75)
+    .attr('stroke', d=>d.status==='VERIFIED'?'rgba(255,255,255,.6)':'transparent')
+    .attr('stroke-width',.8)
+    .attr('filter', d=>`url(#glow-${d.source_type||'CONCEPT'})`);
+
+  // Inner bright core
+  nodeSel.append('circle')
+    .attr('r', d=>nodeRadius(d)*.45)
+    .attr('fill','white')
+    .attr('opacity',.4);
+
+  // Label
+  nodeSel.append('text')
+    .text(d=>{
+      const l = d.label||'';
+      return l.length>16 ? l.slice(0,15)+'…' : l;
+    })
+    .attr('text-anchor','middle')
+    .attr('dy', d=>nodeRadius(d)+13)
+    .attr('font-size',9)
+    .attr('fill','rgba(220,225,255,.65)')
+    .attr('pointer-events','none');
+
+  // Tick
+  simulation.on('tick', ()=>{
+    linkSel
+      .attr('x1',d=>d.source.x).attr('y1',d=>d.source.y)
+      .attr('x2',d=>d.target.x).attr('y2',d=>d.target.y);
+    nodeSel.attr('transform',d=>`translate(${d.x},${d.y})`);
+    if(showClusters) drawNebulae(nodes, clusterG);
+  });
+
+  svgSel = svg;
+}
+
+function nodeRadius(d) {
+  const base = {BLUEPRINT:18,RULE:14,VIDEO:12,DOCUMENT:11,WEB:9}[d.source_type]||7;
+  return base + (d.trust_score||.7)*6;
+}
+
+// Soft cluster force
+function clusterForce(nodes) {
+  const centers = {0:{x:200,y:200},1:{x:500,y:150},2:{x:700,y:400},3:{x:350,y:500},4:{x:150,y:450},5:{x:600,y:550}};
+  return alpha => {
+    nodes.forEach(d=>{
+      const c = centers[d.cluster]||centers[2];
+      d.vx += (c.x - d.x) * .015 * alpha;
+      d.vy += (c.y - d.y) * .015 * alpha;
+    });
+  };
+}
+
+function drawNebulae(nodes, g) {
+  g.selectAll('ellipse').remove();
+  const clusters = d3.group(nodes, d=>d.cluster);
+  clusters.forEach((ns, ci) => {
+    if(ns.length < 2) return;
+    const xs = ns.filter(n=>n.x).map(n=>n.x);
+    const ys = ns.filter(n=>n.y).map(n=>n.y);
+    if(!xs.length) return;
+    const cx = d3.mean(xs), cy = d3.mean(ys);
+    const rx = Math.max(60, d3.deviation(xs)||60)*1.8;
+    const ry = Math.max(50, d3.deviation(ys)||50)*1.8;
+    const color = CLUSTER_COLORS[ci%CLUSTER_COLORS.length];
+    g.append('ellipse')
+      .attr('cx',cx).attr('cy',cy)
+      .attr('rx',rx).attr('ry',ry)
+      .attr('fill', color+'12')
+      .attr('stroke', color+'20')
+      .attr('stroke-width',.5);
+  });
+}
+
+// Tooltip
+function showTooltip(e, d) {
+  const tip = document.getElementById('tooltip');
+  const color = TYPE_COLOR[d.source_type]||'#888';
+  tip.innerHTML = `
+    <div class="tt-title" style="color:${color}">${d.label||'Untitled'}</div>
+    <div class="tt-row"><span class="tt-label">Type</span><span class="tt-value">${d.source_type||d.type||'—'}</span></div>
+    <div class="tt-row"><span class="tt-label">Trust</span><span class="tt-value">${(d.trust_score||0).toFixed(3)}</span></div>
+    <div class="tt-row"><span class="tt-label">Connections</span><span class="tt-value">${countConnections(d.id)}</span></div>
+    <span class="tt-status ${d.status==='VERIFIED'?'st-verified':'st-pending'}">${d.status||'PENDING'}</span>
+  `;
+  tip.style.display = 'block';
+  moveTooltip(e);
+  // Dim others
+  nodeSel.attr('opacity', n=>isConnected(d.id,n.id)?1:.15);
+  linkSel.attr('opacity', l=>l.source.id===d.id||l.target.id===d.id?1:.08);
+}
+function moveTooltip(e) {
+  const tip = document.getElementById('tooltip');
+  const wrap = document.getElementById('graph-wrap');
+  const rect = wrap.getBoundingClientRect();
+  let x = e.clientX - rect.left + 14;
+  let y = e.clientY - rect.top - 10;
+  if(x + 230 > wrap.clientWidth) x -= 244;
+  tip.style.left = x+'px'; tip.style.top = y+'px';
+}
+function hideTooltip() {
+  document.getElementById('tooltip').style.display = 'none';
+  nodeSel.attr('opacity',1);
+  linkSel.attr('opacity',1);
+}
+
+function countConnections(id) {
+  return allEdges.filter(e=>e.source===id||e.target===id).length;
+}
+function isConnected(a, b) {
+  return a===b || allEdges.some(e=>(e.source===a&&e.target===b)||(e.target===a&&e.source===b));
+}
+
+function selectNode(e, d) {
+  document.getElementById('s-selected').textContent = d.label||d.id;
+  const panel = document.getElementById('node-detail');
+  const color = TYPE_COLOR[d.source_type]||'#888';
+  panel.style.display = 'block';
+  panel.innerHTML = `
+    <h4 style="color:${color}">${d.label||'Untitled'}</h4>
+    <div class="nd-row"><span class="nd-key">ID</span><span class="nd-val" style="font-size:10px;opacity:.6">${d.id}</span></div>
+    <div class="nd-row"><span class="nd-key">Type</span><span class="nd-val">${d.source_type||d.type}</span></div>
+    <div class="nd-row"><span class="nd-key">Trust score</span><span class="nd-val">${(d.trust_score||0).toFixed(4)}</span></div>
+    <div class="nd-row"><span class="nd-key">Status</span><span class="nd-val">${d.status}</span></div>
+    <div class="nd-row"><span class="nd-key">Connections</span><span class="nd-val">${countConnections(d.id)}</span></div>
+  `;
+}
+
+// Filter
+function filterType(type, btn) {
+  currentFilter = type;
+  document.querySelectorAll('.ctrl-btn').forEach(b=>{
+    if(['All','Video','Document','Concept','Web','Blueprint'].includes(b.textContent))
+      b.classList.remove('active');
+  });
+  btn.classList.add('active');
+  if(!nodeSel) return;
+  nodeSel.attr('opacity', d=>type==='all'||d.source_type===type||d.type===type?1:.06);
+  linkSel.attr('opacity', d=>
+    type==='all'||
+    (d.source.source_type===type||d.source.type===type)||
+    (d.target.source_type===type||d.target.type===type)?1:.04
+  );
+}
+
+// Clusters toggle
+function toggleClusters(btn) {
+  showClusters = !showClusters;
+  btn.classList.toggle('active', showClusters);
+  if(!showClusters && clusterSel) clusterSel.selectAll('ellipse').remove();
+}
+
+// Search
+function searchNodes(q) {
+  if(!nodeSel) return;
+  if(!q) { nodeSel.attr('opacity',1); linkSel.attr('opacity',1); return; }
+  const ql = q.toLowerCase();
+  nodeSel.attr('opacity', d=>(d.label||'').toLowerCase().includes(ql)?1:.08);
+  linkSel.attr('opacity',.06);
+}
+
+// Reset zoom
+function resetZoom() {
+  if(!svgSel||!zoom) return;
+  svgSel.transition().duration(600).call(zoom.transform, d3.zoomIdentity);
+}
+
+loadGraph();
+</script>
+</body>
+</html>

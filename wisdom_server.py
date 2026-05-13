@@ -357,6 +357,36 @@ async def upload_file(file: UploadFile = File(...)):
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
+
+@app.get("/api/graph")
+async def get_graph(limit: int = 80):
+    try:
+        driver = get_driver()
+        with driver.session() as s:
+            nodes = [dict(r) for r in s.run(
+                "MATCH (n) WHERE n.title IS NOT NULL OR n.name IS NOT NULL "
+                "RETURN coalesce(n.id, toString(elementId(n))) AS id, "
+                "coalesce(n.title, n.name, 'Untitled') AS label, "
+                "coalesce(n.trust_score, 0.7) AS trust_score, "
+                "coalesce(n.epistemic_status, 'PENDING') AS status, "
+                "coalesce(n.source_type, 'CONCEPT') AS source_type, "
+                "labels(n)[0] AS type LIMIT $limit",
+                limit=limit
+            )]
+            edges = [dict(r) for r in s.run(
+                "MATCH (a)-[r]->(b) "
+                "WHERE (a.title IS NOT NULL OR a.name IS NOT NULL) "
+                "AND (b.title IS NOT NULL OR b.name IS NOT NULL) "
+                "RETURN coalesce(a.id, toString(elementId(a))) AS source, "
+                "coalesce(b.id, toString(elementId(b))) AS target, "
+                "type(r) AS relationship LIMIT 300"
+            )]
+        driver.close()
+        return {"nodes": nodes, "edges": edges,
+                "total_nodes": len(nodes), "total_edges": len(edges)}
+    except Exception as e:
+        return {"nodes": [], "edges": [], "error": str(e)}
+
 if __name__ == "__main__":
     print("\n" + "="*50)
     print("  WISDOM FACTORY SERVER")
