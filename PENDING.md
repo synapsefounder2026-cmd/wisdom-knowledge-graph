@@ -1044,3 +1044,38 @@ Wisdom vs ca 2:
 - Unique moat: Knowledge -> Blueprint -> Revenue (ho khong co)
 - Marketing angle: "First Engine, not Second Brain"
 - OPC OS cho Founder muon ra tien, khong chi knowledge worker
+
+---
+## SESSION 2026-05-13 — Landing Page + Community Ecosystem
+
+### [P-065] Wisdom Landing Page — Gumroad Pre-sell
+- Mo ta: Landing page HTML don gian, ro rang, convert tot
+- Hero message: "Bien kien thuc cua ban thanh thu nhap"
+- Flow: [Nap tri thuc] -> [AI ket noi] -> [Tao Blueprint] -> [Ban duoc]
+- CTA chinh: "Bat dau mien phi" + "Xem demo"
+- Stack: HTML/CSS thuan, khong framework, deploy Gumroad hoac GitHub Pages
+- Uu tien: LAM NGAY
+
+### [P-066] Community Ecosystem Roadmap
+- Phase 1 (sau Gumroad): FB Group private "OPC Vietnam" cho buyers
+- Phase 2 (10 buyers): YouTube + TikTok + Wisdom Weekly newsletter
+- Phase 3 (50+ users): Forum Discourse self-hosted + Community Blueprint Marketplace + Affiliate 10%
+- Phase 4 (200+ users): OPC Cohort 8 tuan + Global OPC network
+
+### [P-067] Competitive Positioning
+- Lumina Wiki: Research tool, khong co business output
+- Obsidian PKM: Manual, khong co memory/auto-ingest
+- Wisdom unique moat: Knowledge -> Blueprint -> Revenue
+- Marketing angle: "First Engine, not Second Brain"
+- Target: OPC Founder muon ra tien, khong chi knowledge worker
+- Tagline VN: "Bien kien thuc cua ban thanh thu nhap"
+- Tagline EN: "Your knowledge. Your blueprint. Your income."
+
+### [P-068] Galaxy Knowledge Graph — Dashboard Integration
+- Mo ta: Force-directed + Vector cluster visualization
+- Stack: D3.js (da co trong stack) + /api/graph endpoint
+- Node: size = trust_score, opacity = epistemic_status, color = source_type
+- Edge: color = relationship type
+- Cluster: Qdrant cosine similarity -> vung mau mo
+- Interactions: click, hover, zoom, filter, search
+- Uu tien: PHASE 2, sau Gumroad
