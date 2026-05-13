@@ -1000,3 +1000,47 @@ Status: Chuan bi song song, KHONG doi Gumroad
 - Sep: Legal opinion + test location
 
 **Trigger unlock P-059:** 10 Gumroad sales confirmed.
+
+---
+## SESSION 2026-05-13 — Competitive Analysis & Research Discovery
+
+### [P-063] Research Discovery — Lumina-inspired Scoring
+- Mo ta: Wisdom query tra ve relevance score ro rang cho moi ket qua
+- Inspired by: Lumina Wiki Research Discover (269 fetches, scored + ranked)
+- Tinh nang:
+  1. Moi ket qua query co _score numeric (Qdrant cosine similarity)
+  2. Ly do ro rang: "Khop cao vi overlap concept X, Y"
+  3. Phan loai: replayable / partial / stale
+  4. Buoc tiep theo: "Nen ingest them" hoac "Da du data"
+- wisdom_sources.json: them category "research" (arXiv, PubMed, Semantic Scholar)
+- Auto-score theo query similarity
+- Output format (WISDOM_VOICE compliant):
+  [score] Title — Ly do ngan
+  Buoc tiep: [hanh dong cu the]
+- Lien ket: P-035 Open Access Research, wisdom_query.py
+- Trigger: Sau Gumroad buyer dau tien
+- Priority: PHASE 2
+
+### [P-064] wisdom_query.py — Score Output Upgrade
+- Mo ta: Hien tai query chi tra ve nodes, chua co relevance score
+- Can them: _score tu Qdrant + explanation tu Ollama
+- Pattern hoc tu Lumina: score 0.45 = "khop trung binh", 0.96 = "rat sat"
+- Output theo WISDOM_VOICE: so lieu cu the, khong "kha phu hop"
+- Trigger: Lam truoc P-063
+- Priority: PHASE 2
+
+### COMPETITIVE INTEL 2026-05-13
+Lumina Wiki (tronghieu/lumina-wiki):
+- Diem manh: Research discovery, auto-scoring, paper ranking
+- Diem yeu: File-based, khong co DB, khong co business output
+- Bai hoc: Scoring pattern, "khong can cham soc" = key marketing message
+
+Obsidian PKM + Claude:
+- Diem manh: Familiar UX, Evergreen Notes concept
+- Diem yeu: Manual, no memory, no auto-ingest, no revenue layer
+- Bai hoc: MOC concept -> co the apply cho Blueprint structure
+
+Wisdom vs ca 2:
+- Unique moat: Knowledge -> Blueprint -> Revenue (ho khong co)
+- Marketing angle: "First Engine, not Second Brain"
+- OPC OS cho Founder muon ra tien, khong chi knowledge worker
