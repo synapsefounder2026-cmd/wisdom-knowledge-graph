@@ -151,7 +151,7 @@ def query_inverse(concept: str):
                 MATCH (target)
                 WHERE toLower(coalesce(target.title, target.name, ''))
                       CONTAINS toLower($concept)
-                MATCH path = (ancestor)-[:LEADS_TO|SUPPORTS|CAUSES|HAS_CONCEPT*1..5]->(target)
+                MATCH path = (ancestor)-[:DERIVED_FROM|DISTILLED_TO|HAS_CONCEPT|REFERRED_BY|COMPILED_INTO*1..5]->(target)
                 WHERE ancestor <> target
                 RETURN
                     [node in nodes(path) |
