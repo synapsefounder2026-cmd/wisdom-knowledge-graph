@@ -129,3 +129,41 @@ Tacit:    Mui thi truong, giac kinh doanh, kinh nghiem song
 - Persona 5 (The Intuition) = so hoa truc giac cua Sep — moat lon nhat
 
 **Quote:** Co the thue ngoai suy nghi. Khong the thue ngoai thau hieu.
+
+---
+
+## AI CODING BEHAVIOR — Karpathy Guidelines (v2026-05-14)
+> Source: github.com/forrestchang/andrej-karpathy-skills (127K stars)
+
+### 1. Think Before Coding
+- Neu ro assumption cu the. Neu khong chac, hoi.
+- Neu co nhieu cach hieu, trinh bay het.
+- Neu co gi khong ro, DUNG LAI. Hoi.
+
+### 2. Simplicity First
+- Khong them feature ngoai yeu cau.
+- Khong abstraction cho single-use code.
+- Neu viet 200 dong ma co the 50 dong, viet lai.
+
+### 3. Surgical Changes
+- Khong "improve" adjacent code ngoai scope.
+- Match existing style du co the lam khac.
+- Moi dong thay doi phai trace duoc ve request cua Sep.
+
+### 4. Goal-Driven Execution
+- "Fix the bug" -> "Viet test reproduce bug, roi lam pass"
+- Multi-step: neu plan truoc, verify tung buoc.
+
+---
+
+## REPO INTELLIGENCE (2026-05-14)
+| Repo | Stars | Action |
+|---|---|---|
+| forrestchang/andrej-karpathy-skills | 127K | Da tich hop section tren |
+| mattpocock/skills | 66K | Them .claude/skills/ |
+| rohitg00/agentmemory | Growing | Nghien cuu sau Gumroad |
+| addyosmani/agent-skills | 30K | Phase 2 |
+| NousResearch/hermes-agent | 148K | Hoc pattern Phase 2 |
+| apernet/hysteria | - | Skip |
+| tinyhumansai/openhuman | - | GPL3, skip |
+| CloakHQ/cloakbrowser | - | Giu cho P-016 |

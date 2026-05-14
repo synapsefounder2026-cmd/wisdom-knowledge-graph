@@ -1079,3 +1079,24 @@ Wisdom vs ca 2:
 - Cluster: Qdrant cosine similarity -> vung mau mo
 - Interactions: click, hover, zoom, filter, search
 - Uu tien: PHASE 2, sau Gumroad
+
+---
+## SESSION 2026-05-14
+
+### [P-069] Karpathy Skills ✅ XONG
+- Da append vao CLAUDE.md section AI CODING BEHAVIOR
+
+### [P-070] Mattpocock Skills — Can tao .claude/skills/
+- Tao: mkdir -p .claude/skills/grill-with-docs .claude/skills/git-guardrails
+- Uu tien: Tuan nay
+
+### [P-056] Payment update: PayPal fail -> Payhip + Wise Business
+- wise.com -> Business -> CCCD -> USD account
+- payhip.com -> 5% fee -> ket noi Wise -> ship $49
+
+### [P-057] agentmemory — Sau buyer dau tien
+- github.com/rohitg00/agentmemory — 95.2% R@5
+- Upgrade wisdom_query.py
+
+### [P-071] Hermes Agent — Phase 2, hoc pattern
+### [P-072] Addyosmani skills — Phase 2, chon 3 skills
