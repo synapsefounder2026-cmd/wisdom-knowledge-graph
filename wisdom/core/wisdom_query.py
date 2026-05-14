@@ -5,6 +5,7 @@ Tim kiem knowledge da luu trong Neo4j + Qdrant bang ngon ngu tu nhien.
 Usage:
     python wisdom_query.py "what is commitment in relationships"
     python wisdom_query.py "video ve tinh yeu"
+    python wisdom_query.py --inverse "trust"
 """
 
 import requests
@@ -54,7 +55,7 @@ def get_embedding(text):
 
 
 def search_qdrant(query, top_k=TOP_K):
-    query = strip_emoji(query)  # EP-001 fix
+    query = strip_emoji(query)
     print("Searching vectors: '%s'" % query)
     try:
         client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT)
@@ -89,7 +90,7 @@ def search_qdrant(query, top_k=TOP_K):
 
 
 def search_neo4j_by_concept(concept):
-    concept = strip_emoji(concept)  # EP-001 fix
+    concept = strip_emoji(concept)
     print("Graph searching concept: '%s'" % concept)
     try:
         driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASS))
@@ -124,6 +125,138 @@ def search_neo4j_by_concept(concept):
         return []
 
 
+# ── P-073: Inverse Knowledge Search (Dark Matter) ────────────────────────────
+def query_inverse(concept: str):
+    """
+    Traverse NGUOC Neo4j graph de tim chuoi suy luan dan den concept.
+    Thay vi hoi "X la gi?" -> hoi "Chuoi nao dan den X?"
+
+    Usage: python wisdom_query.py --inverse "trust"
+    """
+    concept = strip_emoji(concept)
+    print("\n" + "="*60)
+    print("  WISDOM INVERSE SEARCH — Dark Matter Layer")
+    print("  Concept: '%s'" % concept)
+    print("  Tim: Chuoi suy luan nao dan den concept nay?")
+    print("="*60 + "\n")
+
+    try:
+        driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASS))
+        chains = []
+
+        with driver.session() as session:
+
+            # --- Query 1: Tim ancestor nodes dan den concept nay ---
+            result = session.run("""
+                MATCH (target)
+                WHERE toLower(coalesce(target.title, target.name, ''))
+                      CONTAINS toLower($concept)
+                MATCH path = (ancestor)-[:LEADS_TO|SUPPORTS|CAUSES|HAS_CONCEPT*1..5]->(target)
+                WHERE ancestor <> target
+                RETURN
+                    [node in nodes(path) |
+                        coalesce(node.title, node.name, node.filename, '')] as chain,
+                    [rel in relationships(path) | type(rel)] as rel_types,
+                    length(path) as depth,
+                    target.summary as target_summary
+                ORDER BY depth
+                LIMIT 10
+            """, concept=concept)
+
+            for record in result:
+                chains.append({
+                    "chain": record["chain"],
+                    "rel_types": record["rel_types"],
+                    "depth": record["depth"],
+                    "target_summary": record["target_summary"]
+                })
+
+            # --- Query 2: Tim concept co cung HAS_CONCEPT container ---
+            siblings = session.run("""
+                MATCH (c:Concept)
+                WHERE toLower(c.name) CONTAINS toLower($concept)
+                MATCH (source)-[:HAS_CONCEPT]->(c)
+                MATCH (source)-[:HAS_CONCEPT]->(sibling:Concept)
+                WHERE sibling <> c
+                RETURN
+                    coalesce(source.title, source.name) as source_title,
+                    c.name as target_concept,
+                    collect(DISTINCT sibling.name) as related_concepts
+                LIMIT 5
+            """, concept=concept)
+
+            sibling_list = []
+            for record in siblings:
+                sibling_list.append({
+                    "source": record["source_title"],
+                    "related": record["related_concepts"]
+                })
+
+        driver.close()
+
+        # --- In ket qua ---
+        if chains:
+            print("Chuoi suy luan dan den '%s':\n" % concept)
+            for i, c in enumerate(chains, 1):
+                steps = " → ".join([s for s in c["chain"] if s])
+                rels  = " / ".join(c["rel_types"])
+                print("  [Chain %d — depth %d]" % (i, c["depth"]))
+                print("  %s" % steps)
+                print("  Quan he: %s" % rels)
+                if c["target_summary"]:
+                    print("  Tom tat: %s" % c["target_summary"][:120])
+                print()
+        else:
+            print("  Khong tim thay chuoi suy luan nao trong graph.")
+            print("  Goi y: Ingest them content lien quan den '%s'" % concept)
+            print("         Hoac concept chua co LEADS_TO/SUPPORTS/CAUSES edges.\n")
+
+        if sibling_list:
+            print("Concepts lien quan (cung nguon):")
+            for s in sibling_list:
+                related = ", ".join(s["related"][:5])
+                print("  [%s] → %s" % (s["source"], related))
+            print()
+
+        # --- Tong hop voi Ollama neu co chains ---
+        if chains:
+            context = "\n".join([
+                "Chain %d: %s" % (i+1, " → ".join([s for s in c["chain"] if s]))
+                for i, c in enumerate(chains[:3])
+            ])
+            print("Generating synthesis...")
+            prompt = """You are Wisdom AI. A user wants to understand the reasoning chain behind a concept.
+
+Concept: %s
+
+Reasoning chains found in knowledge graph:
+%s
+
+Explain in 3-5 sentences: What is the reasoning path that leads to this concept?
+Answer in Vietnamese if the concept is Vietnamese, otherwise English.""" % (concept, context)
+
+            try:
+                response = requests.post(
+                    "%s/api/generate" % OLLAMA_BASE,
+                    json={"model": OLLAMA_MODEL, "prompt": prompt, "stream": False},
+                    timeout=120
+                )
+                answer = response.json().get("response", "")
+                if answer:
+                    print("\nWisdom Synthesis:")
+                    print("-"*60)
+                    print(answer)
+                    print("-"*60)
+            except Exception as e:
+                print("  Ollama ERROR: %s" % e)
+
+        print("\nFound %d reasoning chain(s) for '%s'\n" % (len(chains), concept))
+
+    except Exception as e:
+        print("  Neo4j ERROR: %s" % e)
+
+
+# ── Forward query (giu nguyen) ────────────────────────────────────────────────
 def ask_ollama(question, context):
     print("Generating answer with %s..." % OLLAMA_MODEL)
     prompt = """You are Wisdom AI assistant. Answer the user's question based on the knowledge base context below.
@@ -145,20 +278,17 @@ Answer in the same language as the question (Vietnamese or English):""" % (conte
 
 
 def query(question):
-    question = strip_emoji(question)  # EP-001 fix
+    question = strip_emoji(question)
     print("\n" + "="*60)
     print("  WISDOM QUERY")
     print("  Q: %s" % question)
     print("="*60 + "\n")
 
-    # 1. Vector search
     vector_results = search_qdrant(question)
 
-    # 2. Graph search
     first_word = question.split()[0] if question else ""
     graph_results = search_neo4j_by_concept(first_word)
 
-    # 3. Build context
     context_parts = []
     seen_ids = set()
 
@@ -191,7 +321,6 @@ def query(question):
                     )
                 )
 
-    # 4. Generate answer
     if context_parts:
         context = "\n\n---\n\n".join(context_parts[:3])
         answer = ask_ollama(question, context)
@@ -205,6 +334,18 @@ def query(question):
     print("\nFound %d unique source(s)\n" % len(seen_ids))
 
 
+# ── Entry point ───────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    question = " ".join(sys.argv[1:]) if len(sys.argv) > 1 else "What did you learn from the videos?"
-    query(question)
+    args = sys.argv[1:]
+
+    if not args:
+        question = "What did you learn from the videos?"
+        query(question)
+    elif args[0] == "--inverse" and len(args) > 1:
+        # Dark Matter mode: traverse nguoc
+        concept = " ".join(args[1:])
+        query_inverse(concept)
+    else:
+        # Forward mode: query thuong
+        question = " ".join(args)
+        query(question)
