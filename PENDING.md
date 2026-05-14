@@ -1100,3 +1100,9 @@ Wisdom vs ca 2:
 
 ### [P-071] Hermes Agent — Phase 2, hoc pattern
 ### [P-072] Addyosmani skills — Phase 2, chon 3 skills
+
+---
+## SESSION 2026-05-14 — Dark Matter
+
+### [P-073] query_inverse() — XONG ✅
+### [P-074] chain_of_thought field — SAU P-003

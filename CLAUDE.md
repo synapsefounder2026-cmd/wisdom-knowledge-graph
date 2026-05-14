@@ -167,3 +167,11 @@ Tacit:    Mui thi truong, giac kinh doanh, kinh nghiem song
 | apernet/hysteria | - | Skip |
 | tinyhumansai/openhuman | - | GPL3, skip |
 | CloakHQ/cloakbrowser | - | Giu cho P-016 |
+
+---
+
+## INVERSE KNOWLEDGE SEARCH — Dark Matter Layer (v2026-05-14)
+Chi them 1 function: query_inverse() trong wisdom_query.py
+KHONG build: RDT, LCoT pipeline, multi-solver.
+Usage: python wisdom_query.py --inverse "concept"
+RULE-I: Luu ca ket luan lan chuan suy luan khi ingest.
