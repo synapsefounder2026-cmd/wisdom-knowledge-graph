@@ -34,3 +34,6 @@ download
 .env
 .wisdom_errors.json
 backups/
+tiktok_cookies.txt
+*.bak
+*.cookies.txt
