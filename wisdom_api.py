@@ -1,6 +1,6 @@
 """
 wisdom_api.py — FastAPI Backend cho Wisdom Dashboard
-Connect: Neo4j + Qdrant -> wisdom_dashboard_v2.html
+Connect: Neo4j + Qdrant -> wisdom_dashboard_v3.html
 Run: uvicorn wisdom_api:app --reload --port 8000
 """
 
@@ -58,10 +58,10 @@ app.add_middleware(
 )
 
 # Serve static files (dashboard)
-if os.path.exists("wisdom_dashboard_v2.html"):
+if os.path.exists("wisdom_dashboard_v3.html"):
     @app.get("/")
     async def dashboard():
-        return FileResponse("wisdom_dashboard_v2.html")
+        return FileResponse("wisdom_dashboard_v3.html")
 
 # ── HELPERS ────────────────────────────────────────────────
 def neo4j_query(cypher: str, params: dict = None):

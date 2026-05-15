@@ -46,6 +46,32 @@ Nhiệm vụ của Claude trong các phiên tới là xây dựng một đườn
 38. cocoindex — Động cơ Agent
 39. freeCodeCamp — Học code
 40. stable-diffusion-webui — Vẽ ảnh AI Local
+41. sgoudelis/ground-station — Theo dõi vệ tinh & Radio (Aerospace/Hard-tech Blueprint)
+42. agentmemory — Giải pháp nén ngữ cảnh và bộ nhớ vĩnh cửu cho AI Agent (Tiết kiệm 52% token).
+43. nousresearch/hermes-agent — Framework cốt lõi xây dựng AI Agent có workflow, kỹ năng và trí nhớ.
+44. brokermr810/QuantDinger — AI Quant Operating System (Hệ điều hành Giao dịch Định lượng AI tự động toàn phần).
+45. DeepTutor — Agent-Native Personalized Learning Assistant (Hệ sinh thái học tập tự trị với Book Engine và TutorBots).
+46. MediaPipe + TouchDesigner — Real-time Spatial/Creative Coding (Theo dõi mặt/tay 60FPS để tạo giao diện AR không cần kính).
+47. MIT 6.S191 (introtodeeplearning.com) — Khóa học Deep Learning tinh hoa của MIT (Frontier LLMs, RLHF, Multimodal).
+48. Alishahryar1/free-claude-code — Proxy trung gian cho phép dùng Claude Code qua NVIDIA API (Tiết kiệm chi phí API Anthropic).
+49. minhnv0807/fullstack-mkt-skills — Hệ thống 28 Skill Fullstack Marketing tối ưu cho kỷ nguyên AI (Personal Brand, AI Avatar).
+50. gaiavn-dev/GUTENBERG — AI Editorial Workbench (OCR, bóc tách và dịch tài liệu scan hàng loạt, chạy Fully-Local qua Ollama).
+51. hoangnb24/skills — Kho tài liệu và skillsets tối ưu cho AI Agent vận hành đa tác vụ.
+52. thedotmack/claude-mem — Giải pháp trí nhớ dài hạn (74k stars) sử dụng SQLite/ChromaDB để AI không bao giờ quên dự án cũ.
+53. congminh1254/shopee-sdk — Shopee Open Platform API V2 SDK (TypeScript) cho phép build bot tự động quản lý gian hàng Shopee.
+54. zubair-trabzada/ai-legal-claude — Hệ thống 5 Agent pháp lý song song (Review hợp đồng, NDA, rủi ro, báo cáo PDF chuyên nghiệp).
+55. Hmbown/DeepSeek-TUI — Quán quân tuần (21k stars). Coding agent terminal cho DeepSeek V4 (Rust), context 1 triệu token.
+56. Matt Pocock/skills — Bộ kỹ năng TypeScript tinh hoa từ tác giả Total TypeScript.
+57. Ruflo (Claude Flow) — Hệ thống thần kinh 100+ agent tự tổ chức (Swarm), học từ task thành công.
+58. Tauric Research/TradingAgents — Framework đa agent giao dịch tài chính (Analyst, Trader, Portfolio Manager).
+59. Addy Osmani/agent-skills — Bộ kỹ năng chuẩn Production từ kỹ sư Google Chrome (Spec -> Ship).
+60. Alibaba AIDC/Pixelle-Video — Engine tự động làm video ngắn từ kịch bản đến TTS/Nhạc qua ComfyUI.
+61. PageIndex — RAG kiểu mới không cần Vector DB, đạt 98.7% chính xác trên FinanceBench.
+62. DocuSeal — Bản mã nguồn mở thay thế DocuSign (Ký số, form PDF, 14 ngôn ngữ).
+63. dexter — Agent nghiên cứu tài chính tự trị (WhatsApp integration).
+64. jcode — Coding agent harness bằng Rust, nhẹ hơn 6 lần so với Claude Code.
+65. Hugging Face/smolagents — Thư viện xây dựng AI Agent siêu nhẹ (code-first approach), cho phép Agent tự viết và chạy mã Python để giải quyết task.
+66. NawfalMotii79/PLFM_RADAR — Blueprint Radar quân sự mã nguồn mở (10.5 GHz Phased Array). Bao gồm đầy đủ: PCB, FPGA Verilog code, và Python GUI. Một "Sovereign Deep-tech" cực hiếm.
 
 ## ⚙️ Execution Plan for Claude (Kế hoạch Thực thi)
 
