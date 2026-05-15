@@ -427,6 +427,7 @@ def generate_report(days: int = 7, send_mail: bool = False) -> str:
 
     print("[4/4] Building report...")
     report_md = build_markdown_report(nodes, synthesis, stats, all_concepts, days)
+    report_md += get_output_rate_section()
 
     # Save file
     filename  = f"wisdom_report_{datetime.now().strftime('%Y%m%d')}.md"
@@ -451,6 +452,77 @@ def generate_report(days: int = 7, send_mail: bool = False) -> str:
         send_email(subject, report_md, REPORT_EMAIL)
 
     return filepath
+
+
+def get_output_rate_section() -> str:
+    """
+    Tinh output rate va tao section cho Weekly Report.
+    Creator > 30% | Curator 10-30% | Hoarder < 10%
+    """
+    try:
+        from neo4j import GraphDatabase as _GD
+        driver = _GD.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASS))
+        with driver.session() as s:
+            r = s.run("""
+                MATCH (n) WHERE n:Video OR n:Document
+                RETURN
+                    count(n) AS total,
+                    sum(CASE WHEN n.epistemic_status = 'VERIFIED' THEN 1 ELSE 0 END) AS verified,
+                    sum(CASE WHEN n.epistemic_status = 'PENDING' THEN 1 ELSE 0 END) AS pending,
+                    sum(CASE WHEN coalesce(n.reuse_count,0) > 0 THEN 1 ELSE 0 END) AS used
+            """).single()
+        driver.close()
+        total    = r["total"]    or 0
+        verified = r["verified"] or 0
+        pending  = r["pending"]  or 0
+        used     = r["used"]     or 0
+        rate     = round(used / verified, 2) if verified > 0 else 0.0
+    except Exception:
+        return ""
+
+    if total < 5:
+        status = "EARLY STAGE — Ingest them content truoc"
+        icon   = "📌"
+        advice = "Hay bat dau ingest it nhat 10 videos/docs."
+    elif rate >= 0.3:
+        status = "CREATOR MODE"
+        icon   = "OK"
+        advice = "Wisdom dang hoat dong dung muc dich. Tiep tuc output!"
+    elif rate >= 0.1:
+        status = "CURATOR WARNING"
+        icon   = "!!"
+        advice = (f"Ban co {pending} nodes PENDING chua verify. "
+                  f"Chay: python wisdom_verify.py")
+    else:
+        status = "HOARDER ALERT"
+        icon   = "!!"
+        advice = (f"Ban co {total} nodes nhung chi dung {used}. "
+                  f"Collector Fallacy dang xay ra. "
+                  f"Hay verify va output ngay: python wisdom_verify.py")
+
+    lines = [
+        "",
+        "## Output Health Check",
+        "",
+        f"| Metric | Value |",
+        f"|--------|-------|",
+        f"| Total nodes | {total} |",
+        f"| Verified | {verified} |",
+        f"| Pending | {pending} |",
+        f"| Nodes used for output | {used} |",
+        f"| **Output Rate** | **{rate*100:.0f}%** (target > 30%) |",
+        f"| **Status** | **{icon} {status}** |",
+        "",
+        f"> {advice}",
+        "",
+        "**3 kieu user — Ban dang o dau?**",
+        "- Creator (> 30%): Viet, day, ap dung, ra quyet dinh tu Wisdom",
+        "- Curator (10-30%): Sap xep dep nhung chua produce output",
+        "- Hoarder (< 10%):  Luu nhieu, dung 0 — nghia dia thong tin",
+        "",
+        f"*Verify nodes: `python wisdom/core/wisdom_verify.py`*",
+    ]
+    return "\n".join(lines)
 
 
 if __name__ == "__main__":
