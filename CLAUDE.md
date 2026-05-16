@@ -271,3 +271,76 @@ INPUT → ARCHIVIST (ingest + extract) → ANALYST (cluster + validate)
 Thang 1: 3 blueprints x 10 buyers x $29-49 avg = ~$1,200
 Thang 2: 6 blueprints x 20 buyers x $39-79 avg = ~$5,000
 Thang 3: Marketplace mo + commission = scaling
+
+---
+
+## WISDOM INGEST WISHLIST — 8 Domains x 5 URLs (v2026-05-16)
+> Curated by Antigravity. ~2,000 wiki nodes khi ingest xong.
+> Thu tu uu tien: OPC → Monetization → Mindset → AI Tools → VN Local → Content → Finance
+
+### DOMAIN 1 — OPC Operations (Tuan 1)
+1. https://www.youtube.com/@DanKoe           — OPC model originator, 500+ videos
+2. https://www.justinwelsh.me/               — $5M OPC, documented SOPs
+3. https://www.youtube.com/@CodieBSanchez    — Business acquisition, OPC model
+4. https://www.indiehackers.com/interviews   — 3000+ revenue-validated interviews
+5. https://thedankoe.com/letters             — Dark matter OPC thinking
+
+### DOMAIN 2 — Knowledge Management (Tuan 2)
+1. https://fortelabs.com/blog/               — BASB creator, output-focused
+2. https://zettelkasten.de/posts/            — Nguon goc Zettelkasten
+3. https://www.youtube.com/@TiagoForte       — BASB methodology thuc chien
+4. https://www.youtube.com/@linkingyourthinking — Obsidian workflows
+5. https://fs.blog/mental-models/            — Munger/Buffett mental models
+
+### DOMAIN 3 — Monetization (Tuan 1)
+1. https://www.gumroad.com/discover          — Best-selling products thuc te
+2. https://www.indiehackers.com/products?revenue=1000- — $1K+/month verified
+3. https://www.youtube.com/@GrahamStephan   — $10M OPC income streams
+4. https://convertkit.com/resources/blog    — Creator economy case studies
+5. https://www.payhip.com/blog/             — VN-friendly + case studies
+
+### DOMAIN 4 — AI Tools & Automation (Tuan 3)
+1. https://www.youtube.com/@NickSaraev      — n8n + AI automation OPC
+2. https://www.youtube.com/@AIJasonZ        — Claude workflow thuc chien
+3. https://github.com/n8n-io/n8n/tree/master/packages/nodes-base/nodes
+4. https://ollama.com/library               — Local AI models + benchmarks
+5. https://www.youtube.com/@RileyBrown_     — Solopreneur AI stack
+
+### DOMAIN 5 — Mindset & Decision Making (Tuan 2)
+1. https://fs.blog/great-talks/             — Munger/Buffett/Bezos speeches
+2. https://paulgraham.com/articles.html     — 221 essays, dense tacit knowledge
+3. https://www.youtube.com/@TheKnowledgeProject — Mental models thuc te
+4. https://nav.al/                          — Naval: specific knowledge OPC
+5. https://www.berkshirehathaway.com/letters/letters.html — Buffett letters
+
+### DOMAIN 6 — Vietnam Market (Tuan 3)
+1. https://thuvienphapluat.vn/              — Phap luat VN chinh thuc
+2. https://www.youtube.com/@congtyluatvn   — Phap ly kinh doanh ca nhan VN
+3. https://vnexpress.net/kinh-doanh/khoi-nghiep — OPC VN case studies
+4. https://topdev.vn/blog/                 — IT freelancer VN market
+5. https://kienthucthuevietnam.com/         — Thue ca nhan kinh doanh VN
+
+### DOMAIN 7 — Content & Personal Branding (Tuan 4)
+1. https://www.youtube.com/@JustinWelsh    — LinkedIn OS, $8M solopreneur
+2. https://www.youtube.com/@TheFutur       — Personal brand for creative OPC
+3. https://www.ship30for30.com/blog        — Writing to sell methodology
+4. https://www.youtube.com/@JayClouse      — Creator economy systems
+5. https://creatoreconomy.so/              — Industry data 2026
+
+### DOMAIN 8 — Financial Intelligence (Tuan 4)
+1. https://www.bench.co/blog/             — P&L, cash flow for solopreneur
+2. https://www.youtube.com/@GrahamStephan — OPC financial model
+3. https://hurdlr.com/blog/               — Freelancer tax/expense
+4. https://www.accountingcoach.com/       — P&L fundamentals free
+5. https://gdt.gov.vn/                    — Tong cuc Thue VN chinh thuc
+
+### Target: ~2,000 wiki nodes
+Domain          | Est. nodes
+OPC Operations  | ~300
+Monetization    | ~250
+AI Tools        | ~400
+Mindset         | ~300
+Knowledge Mgmt  | ~200
+Vietnam Local   | ~150
+Content/Brand   | ~200
+Finance OPC     | ~150

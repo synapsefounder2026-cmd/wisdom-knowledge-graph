@@ -1155,3 +1155,43 @@ Business Intelligence Graph THAY Legal Document Graph:
   - Legal data VN khong public → rui ro phap ly
   - Business/competitor intelligence = cung technology, khong rui ro
   - Target: OPC owners can theo doi nganh, khong phai luat su
+
+---
+## SESSION 2026-05-16 — Ingest Wishlist 8 Domains
+
+### [P-108] Domain 1 OPC — Ingest Tuan 1 (URGENT)
+Channels/URLs:
+  youtube.com/@DanKoe → python wisdom_channel_ingest.py "URL" --limit 20
+  youtube.com/@CodieBSanchez → --limit 20
+  indiehackers.com/interviews → P-107 crawler
+  thedankoe.com/letters → P-089 web ingest
+Target: 50+ nodes tuan nay
+
+### [P-109] Domain 3 Monetization — Ingest Tuan 1
+  youtube.com/@GrahamStephan → --limit 15
+  payhip.com/blog → P-089 web ingest
+  indiehackers.com/products?revenue=1000- → crawler
+Target: 30+ nodes
+
+### [P-110] Domain 5 Mindset — Ingest Tuan 2
+  paulgraham.com/articles.html → 221 articles, P-089 web ingest
+  nav.al → Naval essays
+  berkshirehathaway.com/letters → Buffett letters
+Target: 50+ nodes (high quality, dense knowledge)
+
+### [P-111] Domain 4 AI Tools — Ingest Tuan 3
+  youtube.com/@NickSaraev → --limit 20
+  youtube.com/@AIJasonZ → --limit 20
+  youtube.com/@RileyBrown_ → --limit 15
+Target: 60+ nodes
+
+### [P-112] Domain 6 Vietnam — Ingest Tuan 3 (MOAT)
+  thuvienphapluat.vn → phap luat kinh doanh ca nhan
+  vnexpress.net/kinh-doanh/khoi-nghiep → 50 bai
+  topdev.vn/blog → IT freelancer VN
+Target: 30+ nodes (unique local knowledge = moat)
+
+### SCRIPT INGEST NHANH — Chay sang mai
+python wisdom/core/wisdom_channel_ingest.py \
+  "https://www.youtube.com/@DanKoe" --limit 20 --model small --dry-run
+# Preview truoc, neu OK bo --dry-run de ingest that
