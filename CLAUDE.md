@@ -195,3 +195,79 @@ Dung cho Payoneer:
   Business name : Synapse Network
   Website URL   : https://synapsenetwork.io
   Business type : Individual / Freelancer
+
+---
+
+## BLUEPRINT FACTORY — Chien luoc san pham (v2026-05-16)
+> Wisdom = Nha may tao blueprints. Moi 100 videos ingest = 1 blueprint ban duoc.
+> Nguon: Antigravity analysis + 2 case studies + phan bien thuc te
+
+### Dinh nghia Blueprint
+Blueprint = Tri thuc duoc cau truc thanh san pham ban duoc
+  - Khong chi la PDF — la LIVING DOCUMENT (wiki nodes trong Neo4j)
+  - Tu dong update khi co thong tin moi (ARCHIVIST)
+  - Evidence-based: phai co case studies thuc te
+  - Validation Gate: Sep tu chay thu truoc khi publish
+
+### 5 Nguon Tao Blueprints
+1. YouTube channels (da co pipeline) → wisdom_whisper.py
+2. GitHub awesome-* repos → wisdom_code_scout.py (P-010)
+3. Newsletters/Substack → Playwright MCP crawl
+4. Reddit (r/SideProject, r/EntrepreneurRideAlong) → Tavily search
+5. IndieHackers interviews → 3000+ revenue-validated cases
+
+### Pipeline Tu Dong
+INPUT → ARCHIVIST (ingest + extract) → ANALYST (cluster + validate)
+     → SCRIBE (write structure) → VALIDATION GATE (Sep review)
+     → PUBLISH tren Wisdom Marketplace
+
+### Blueprint Structure (bat buoc)
+1. Overview & outcomes (ket qua cu the)
+2. Prerequisites (can gi truoc)
+3. Step-by-step workflow
+4. Tools & stack (co links)
+5. Common mistakes (tu Dark Matter analysis)
+6. Real examples (co citations tu KB)
+7. Estimated ROI / timeline (validated)
+
+### Phan bien quan trong
+- Legal Graph Blueprint: TRANH thi truong VN (data khong public)
+  → Thay bang "Business Intelligence Graph" (data public, khong rui ro)
+- Validation Gate: moi blueprint Sep phai tu chay thu 1 lan truoc khi ban
+  → Tranh refund + bao ve reputation
+
+### Wisdom Blueprint Advantages
+1. Living Documents: tu dong update khi co info moi
+2. Graph-powered Recommendation: match blueprint voi profile user
+3. Evidence-based: chi ban proven playbooks, khong ban ly thuyet
+
+---
+
+## BLUEPRINT ROADMAP — 10 San pham cu the (v2026-05-16)
+
+### Tuan nay (data da co san)
+| # | Blueprint | Gia | Tool | Status |
+|---|-----------|-----|------|--------|
+| 1 | YouTube OPC Pipeline Setup | $29 | wisdom_whisper.py | LAM NGAY |
+| 2 | FreeLLM API Zero-Cost AI Stack | $19 | SW-002 | LAM NGAY |
+| 3 | Wisdom Knowledge OS Starter | $49 | Wisdom itself | FLAGSHIP |
+
+### Thang 1 (sau 10 nodes verified)
+| # | Blueprint | Gia | Nguon |
+|---|-----------|-----|-------|
+| 4 | OPC AI Stack 2026 | $39 | awesome-* repos |
+| 5 | MCP Server Quick Start | $39 | wisdom_mcp.py |
+| 6 | IndieHacker $1K MRR Patterns | $79 | 50 interviews |
+
+### Thang 2
+| # | Blueprint | Gia | Nguon |
+|---|-----------|-----|-------|
+| 7 | AI Agent Weekend Build Kit | $49 | Case 2 pattern |
+| 8 | Hidden Connection Finder | $79 | Neo4j Cypher |
+| 9 | Competitor Intelligence Graph | $99 | BettaFish pattern |
+| 10 | Vietnam OPC Legal Guide | $99 | VN market unique |
+
+### Revenue projection (conservative)
+Thang 1: 3 blueprints x 10 buyers x $29-49 avg = ~$1,200
+Thang 2: 6 blueprints x 20 buyers x $39-79 avg = ~$5,000
+Thang 3: Marketplace mo + commission = scaling

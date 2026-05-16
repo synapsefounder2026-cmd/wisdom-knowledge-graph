@@ -1106,3 +1106,52 @@ Wisdom vs ca 2:
 
 ### [P-073] query_inverse() — XONG ✅
 ### [P-074] chain_of_thought field — SAU P-003
+
+---
+## SESSION 2026-05-16 — Blueprint Factory Strategy
+
+### [P-103] Blueprint #1 — YouTube OPC Pipeline ($29) — LAM NGAY
+- Noi dung: Huong dan setup wisdom_whisper.py + wisdom_ingest.py
+- Format: 5 trang PDF + README
+- Validation: Sep tu chay thu pipeline voi 3 videos truoc khi ban
+- Publish: Payhip (sau khi co Payoneer)
+- Thoi gian: 2-3 gio viet doc
+
+### [P-104] Blueprint #2 — FreeLLM API Zero-Cost Stack ($19) — LAM NGAY
+- Noi dung: Setup FreeLLMAPI + tich hop Wisdom
+- Format: 3 trang + config files
+- Validation: Chay duoc tren may Sep
+- Publish: Payhip cung voi Blueprint #1
+
+### [P-105] Blueprint #3 — Wisdom Starter Kit ($49) — FLAGSHIP
+- Noi dung: Toan bo Wisdom setup + quickstart + first blueprint
+- Format: INSTALLATION.md + QUICKSTART.md + video walkthrough
+- Day la san pham chinh de demo cho 3 buyers dau tien
+- Publish: Sau khi co Payoneer + test voi 3 buyers
+
+### [P-106] Blueprint Marketplace trong Dashboard — Phase 2
+- Them tab "Marketplace" vao wisdom_dashboard_v4.html
+- User upload blueprint → Sep review → publish
+- Wisdom lay 30% commission
+- Mo khoa: Sau 10 paying users
+
+### [P-107] IndieHackers Crawler — Thang 1
+- Crawl indiehackers.com/interviews (filter: revenue > $1K/month)
+- Extract: business model, stack, time to revenue, mistakes
+- 100 interviews = "OPC Revenue Playbook Blueprint" ($79)
+- Tool: Playwright MCP + wisdom_web_ingest.py (P-089)
+
+### NGUON INGEST CHO BLUEPRINT (Priority)
+YouTube channels can ingest ngay:
+  OPC/Solopreneur: @CodieBSanchez, @AliAbdaal, @TheFutur
+  AI Tools:        @AIJasonZ, @NickSaraev, @MatthewBerman
+  Technical:       @Fireship, @TechWithTim, @IndieHackers
+
+Reddit can crawl:
+  r/SideProject, r/EntrepreneurRideAlong, r/SaaS, r/ChatGPT
+
+### PHAN BIEN DA CHOT
+Business Intelligence Graph THAY Legal Document Graph:
+  - Legal data VN khong public → rui ro phap ly
+  - Business/competitor intelligence = cung technology, khong rui ro
+  - Target: OPC owners can theo doi nganh, khong phai luat su
