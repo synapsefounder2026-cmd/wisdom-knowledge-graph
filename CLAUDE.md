@@ -175,3 +175,23 @@ Chi them 1 function: query_inverse() trong wisdom_query.py
 KHONG build: RDT, LCoT pipeline, multi-solver.
 Usage: python wisdom_query.py --inverse "concept"
 RULE-I: Luu ca ket luan lan chuan suy luan khi ingest.
+
+---
+
+## DOMAIN & IDENTITY (v2026-05-15)
+Domain    : synapsenetwork.io (Namecheap, 1 year từ Jan 15 2026)
+Owner     : Nguyen — 23B3 Le Quang Dinh, Ho Chi Minh City, VN
+Account   : Tamnd
+GitHub    : synapsefounder2026-cmd
+Product   : Wisdom Factory — OPC Knowledge OS
+
+URLs ke hoach:
+  synapsenetwork.io          → Landing page chinh
+  app.synapsenetwork.io      → Wisdom Dashboard
+  api.synapsenetwork.io      → Wisdom API
+  docs.synapsenetwork.io     → INSTALLATION + QUICKSTART
+
+Dung cho Payoneer:
+  Business name : Synapse Network
+  Website URL   : https://synapsenetwork.io
+  Business type : Individual / Freelancer
