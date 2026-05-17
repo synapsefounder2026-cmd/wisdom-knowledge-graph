@@ -8,20 +8,24 @@
 ## 👁️ LỚP 1: CẢM BIẾN (THE EYES)
 - **Radar PLFM (Golden Node 66):** 10.5 GHz Phased Array, tầm xa 20km.
   - *Files:* `blueprints/PLFM_RADAR/4_Schematics`, `9_Firmware`.
+  - *SDR Processing:* Tích hợp `gnuradio/gnuradio` để lọc nhiễu tín hiệu (Clutter) và trích xuất Doppler mục tiêu.
 - **Optical Fusion (Camera):** Camera nhiệt (Thermal) + Camera Zoom quang học.
   - *Blueprints:* `TUM-DFT/Radar-Camera-Fusion`.
 
-## 🕸️ LỚP 2: KẾT NỐI (THE NERVOUS SYSTEM)
+## 🕸️ LỚP 2: KẾT NỐI & ĐIỀU KHIỂN (THE NERVOUS SYSTEM & GCS)
 - **Wireless Serial Gateway:** `esp-link` chạy trên ESP32. Biến Radar Serial thành WiFi.
 - **Fast Roaming WiFi:** Hệ điều hành OpenWRT (802.11r) đảm bảo Drone không rớt mạng khi bay xa.
 - **Data Router:** `mavlink-router` để điều phối lệnh từ Radar đến bầy đàn Drone.
+- **Ground Control Station (GCS):** `mavlink/qgroundcontrol` (QGC) - Trạm mặt đất chuẩn quân sự để Sếp giám sát radar và bầy Drone qua giao diện bản đồ.
 
 ## 🧠 LỚP 3: TRÍ TUỆ NHÂN TẠO (THE BRAIN)
 - **Signal Analysis:** `Micro-Doppler-Classification` để phân loại Drone vs Chim vs Động vật.
-- **Vision Recognition:** `YOLOv8` để xác nhận mục tiêu bằng hình ảnh.
-- **Autonomous Guidance:** `iq_gnc` (Guidance, Navigation, Control) để Drone tự động "đón bắn" mục tiêu.
+- **Vision Recognition & Training Data:** Thay vì dùng ảnh 2D tĩnh, Aegis sẽ được huấn luyện bằng bộ dữ liệu **AirSim360** (Unreal Engine 5). Đây là bộ data hoàn hảo để AI học cách "nhìn" không gian 3 chiều. Lõi nhận diện mục tiêu vẫn sử dụng `YOLOv8`.
+- **Autonomous SLAM:** Tích hợp `UZ-SLAMLab/ORB_SLAM3` để Drone vẽ bản đồ 3D và né vật cản theo thời gian thực (Giúp bay luồn lách khi bị phá sóng đứt GPS).
+- **Autonomous Guidance:** `iq_gnc` (Guidance, Navigation, Control) để Drone tự động "đón bắn" mục tiêu dựa trên dữ liệu không gian.
 
-## 🚀 LỚP 4: ĐỘNG LỰC HỌC (THE LEGS)
+## 🚀 LỚP 4: HỆ ĐIỀU HÀNH & ĐỘNG LỰC HỌC (THE FLIGHT STACK)
+- **Flight Controller OS:** `PX4/PX4-Autopilot` - Bộ não lõi (BSD License) xử lý cân bằng PID và tương thích trực tiếp với hệ sinh thái ROS2/AI.
 - **Propulsion:** `PCB-Motor` (Carl Bugeja) - In động cơ lên thân máy bay để giảm trọng lượng.
 - **Motor Control:** `SimpleFOC` & `VESC` cho tốc độ và độ chính xác cực cao.
 - **High-Speed Frame:** Thiết kế khung Drone Interceptor in 3D chịu lực cao.

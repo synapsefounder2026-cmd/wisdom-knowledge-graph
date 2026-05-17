@@ -72,6 +72,8 @@ Nhiệm vụ của Claude trong các phiên tới là xây dựng một đườn
 64. jcode — Coding agent harness bằng Rust, nhẹ hơn 6 lần so với Claude Code.
 65. Hugging Face/smolagents — Thư viện xây dựng AI Agent siêu nhẹ (code-first approach), cho phép Agent tự viết và chạy mã Python để giải quyết task.
 66. NawfalMotii79/PLFM_RADAR — Blueprint Radar quân sự mã nguồn mở (10.5 GHz Phased Array). Bao gồm đầy đủ: PCB, FPGA Verilog code, và Python GUI. Một "Sovereign Deep-tech" cực hiếm.
+67. flyingzhao/PyEVM — Thuật toán Eulerian Video Magnification (EVM). Chìa khóa phá vỡ rào cản vật lý: Khuếch đại vi rung động ánh sáng/khúc xạ nhiệt để dùng Camera thường (RGB Smartphone) quan sát được khí gas tàng hình và luồng hơi nóng (Schlieren effect).
+68. k-m-irfan/microexpression_recognition — Framework nhận diện Vi biểu cảm (Micro-expressions) siêu tinh tế thời gian thực bằng PyTorch/OpenCV. Vũ khí Behavioral AI bắt phản ứng của đám đông.
 
 ## ⚙️ Execution Plan for Claude (Kế hoạch Thực thi)
 
