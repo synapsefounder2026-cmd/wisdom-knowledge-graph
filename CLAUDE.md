@@ -344,3 +344,11 @@ Knowledge Mgmt  | ~200
 Vietnam Local   | ~150
 Content/Brand   | ~200
 Finance OPC     | ~150
+
+---
+
+## SW-013: Everything Claude Code (ECC)
+> 182K stars | Anthropic Hackathon Winner | MIT
+> AgentShield scan: Grade A 100/100 — Cleared for launch!
+
+npx ecc-agentshield scan   # Security scan ($0, 5 phut)

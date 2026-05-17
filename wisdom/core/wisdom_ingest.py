@@ -60,7 +60,7 @@ def strip_emoji(text: str) -> str:
 # ── Config ────────────────────────────────────────────────────────────────────
 OLLAMA_BASE   = "http://localhost:11434"
 OLLAMA_MODEL  = "llama3.1:8b"
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
+GEMINI_API_KEY = os.environ.get("GEMINI_KEY_1", os.environ.get("GEMINI_API_KEY", ""))
 GEMINI_MODEL  = "gemini-2.0-flash"
 GEMINI_URL    = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
 NEO4J_URI     = "bolt://localhost:7687"

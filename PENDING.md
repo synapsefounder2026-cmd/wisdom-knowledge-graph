@@ -1195,3 +1195,12 @@ Target: 30+ nodes (unique local knowledge = moat)
 python wisdom/core/wisdom_channel_ingest.py \
   "https://www.youtube.com/@DanKoe" --limit 20 --model small --dry-run
 # Preview truoc, neu OK bo --dry-run de ingest that
+
+---
+## SESSION 2026-05-16 — ECC
+
+### [P-113] AgentShield Scan — XONG ✅
+Grade A 100/100 — No security issues. Cleared for buyer launch.
+
+### [P-114] Hoc 5 ECC Skills — Tuan nay
+tdd-workflow, strategic-compact, systematic-debug

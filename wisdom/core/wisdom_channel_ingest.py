@@ -257,36 +257,60 @@ def ingest_channel(
             continue
 
         try:
-            # Dung wisdom_whisper → wisdom_ingest pipeline
-            whisper_script = os.path.join(os.path.dirname(__file__), "wisdom_whisper.py")
-            ingest_script  = os.path.join(os.path.dirname(__file__), "wisdom_ingest.py")
+            # Tim scripts theo nhieu duong dan
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            repo_dir = os.path.dirname(base_dir)
 
-            if os.path.exists(whisper_script) and os.path.exists(ingest_script):
-                # Full pipeline: whisper → ingest
+            whisper_script = None
+            ingest_script  = None
+            for d in [base_dir, repo_dir, os.path.join(repo_dir, "wisdom", "core")]:
+                w = os.path.join(d, "wisdom_whisper.py")
+                i = os.path.join(d, "wisdom_ingest.py")
+                if os.path.exists(w): whisper_script = w
+                if os.path.exists(i): ingest_script  = i
+
+            timeout_sec = 1200  # 20 phut cho video dai
+
+            if whisper_script and ingest_script:
+                print(f"  Using whisper pipeline...")
                 result = subprocess.run(
                     [sys.executable, whisper_script,
                      video_url, "--model", model_size, "--ingest"],
                     capture_output=True, text=True,
-                    timeout=600, encoding="utf-8",
+                    timeout=timeout_sec, encoding="utf-8", errors="replace",
                 )
                 if result.returncode == 0:
-                    print(f"  OK: Ingested successfully")
+                    print(f"  OK: Ingested via whisper")
+                    success += 1
+                else:
+                    print(f"  Whisper fail, trying ingest direct...")
+                    result2 = subprocess.run(
+                        [sys.executable, ingest_script, video_url],
+                        capture_output=True, text=True,
+                        timeout=timeout_sec, encoding="utf-8", errors="replace",
+                    )
+                    if result2.returncode == 0:
+                        print(f"  OK: Ingested via ingest.py")
+                        success += 1
+                    else:
+                        print(f"  FAIL: {result2.stderr[-150:]}")
+                        failed += 1
+            elif ingest_script:
+                print(f"  Using ingest.py directly...")
+                result = subprocess.run(
+                    [sys.executable, ingest_script, video_url],
+                    capture_output=True, text=True,
+                    timeout=timeout_sec, encoding="utf-8",
+                )
+                if result.returncode == 0:
+                    print(f"  OK: Ingested")
                     success += 1
                 else:
                     print(f"  FAIL: {result.stderr[-150:]}")
                     failed += 1
             else:
-                # Fallback: chi dung ingest
-                result = subprocess.run(
-                    [sys.executable, ingest_script, video_url],
-                    capture_output=True, text=True,
-                    timeout=600, encoding="utf-8",
-                )
-                if result.returncode == 0:
-                    success += 1
-                else:
-                    failed += 1
-                    print(f"  FAIL: {result.stderr[-150:]}")
+                print(f"  FAIL: Khong tim thay wisdom_ingest.py")
+                failed += 1
 
         except subprocess.TimeoutExpired:
             print(f"  TIMEOUT (600s)")
@@ -296,7 +320,7 @@ def ingest_channel(
             failed += 1
 
         # Delay giua cac video
-        if i < total and delay > 0:
+        if isinstance(i, int) and i < total and delay > 0:
             print(f"  Waiting {delay}s...")
             time.sleep(delay)
 
