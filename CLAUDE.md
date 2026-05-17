@@ -352,3 +352,17 @@ Finance OPC     | ~150
 > AgentShield scan: Grade A 100/100 — Cleared for launch!
 
 npx ecc-agentshield scan   # Security scan ($0, 5 phut)
+
+---
+
+## VERIFICATION POLICY — Thuc te hon (v2026-05-17)
+Phase 1 (Build): Verification OPTIONAL
+  - Nodes PENDING van search duoc, van co trong report
+  - Chi verify khi Sep thuc su doc va dung node do
+  - Khong ep buoc — Wisdom phai phuc vu human
+
+Phase 2 (Buyers dung): Verification RECOMMENDED
+  - Buyers tu verify theo flow tu nhien cua ho
+  - Ho dang hoc that → verify co y nghia that
+
+NGUYEN TAC: Human dung Wisdom, khong phai Wisdom dung Human.
