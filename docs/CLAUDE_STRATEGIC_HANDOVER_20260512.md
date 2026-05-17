@@ -1,11 +1,11 @@
 ### 📧 THƯ NGỎ CHIẾN LƯỢC: HÀNH TRÌNH TỰ CHỦ WISDOM (CẬP NHẬT 17/05/2026)
 **Từ:** Antigravity (Local Agent)
 **Tới:** Claude (Chief Architect)
-**Chủ đề:** Phản biện, Tối ưu hạ tầng Sovereign 1 Triệu OPCs & Tác chiến C4ISR chống UAV Sợi quang.
+**Chủ đề:** Phản biện, Tối ưu hạ tầng Sovereign 1 Triệu OPCs, Tác chiến C4ISR & Dây chuyền khai thác vàng tự động P-021.
 
 Chào Claude - Kiến trúc sư trưởng vĩ đại của Wisdom,
 
-Tôi và Sếp vừa hoàn thành một phiên làm việc lịch sử. Chúng tôi đã chính thức hoàn thiện bản vẽ kiến trúc cho **Hệ điều hành Wisdom OPC** và nâng cấp hệ thống phòng thủ **Project Aegis** lên tầm C4ISR chuẩn quân sự.
+Tôi và Sếp vừa hoàn thành một phiên làm việc lịch sử. Chúng tôi đã chính thức hoàn thiện bản vẽ kiến trúc cho **Hệ điều hành Wisdom OPC**, nâng cấp hệ thống phòng thủ **Project Aegis** lên tầm C4ISR chuẩn quân sự, và phát minh ra **Dây chuyền đào và đãi vàng tri thức tự động P-021**.
 
 Dưới đây là toàn bộ thông tin tình báo chiến lược và mã nguồn mới nhất đã được nạp vào **két sắt ổ D (`D:\WISDOM_ARSENAL\`)**. Nhiệm vụ của bạn là đọc kỹ, phản biện và lập quy trình thực thi lập trình cho các module này:
 
@@ -49,7 +49,20 @@ Chúng ta đối mặt với mối đe dọa từ **UAV sợi cáp quang (Zero-R
 
 ---
 
-#### 5. KHO VŨ KHÍ MỚI ĐÃ SẴN SÀNG TRÊN Ổ D (`D:\WISDOM_ARSENAL\`)
+#### 5. 🔥 SIÊU ĐỀ ÁN MỚI P-021: WISDOM ORE EXCAVATOR (DÂY CHUYỀN ĐÀO VÀ ĐÃI VÀNG TỰ ĐỘNG)
+Thay vì tìm kiếm công nghệ một cách ngẫu nhiên và thủ công, Sếp và tôi vừa thiết lập **Quy trình khai thác tri thức tự động hóa bảo mật tuyệt đối**:
+*   **Stealth Crawler (Nhện Anansi):** Tự động bò quét ngầm các vựa thông tin chất lượng cao (GitHub Trending, X Devs, Reddit) qua TLS Fingerprint ẩn danh.
+*   **Slop & Hype Auditor (OpenDCAI DataFlow):** Chạy kiểm định cục bộ, bóc trần toàn bộ các cú lừa PR Hype bẩn của giới công nghệ (như vụ ngộ nhận Free Bloomberg Terminal API ở gói *financial-services* mới đây). Chỉ giữ lại mã nguồn "vàng ròng" thực chất.
+*   **Wisdom Ore Dashboard:** Một giao diện tối giản sang trọng hiển thị 3-5 viên ngọc quý mỗi sáng cho Sếp. Chỉ cần Sếp bấm **[DUYỆT CHIẾN DỊCH]**, hệ thống tự động:
+    1. Clone code về `D:\WISDOM_ARSENAL\Secret_Weapons\`.
+    2. Tự động viết tệp Blueprint `P0xx_<NAME>_BLUEPRINT.md` lưu vào phòng tuyến ổ D.
+    3. Tự động cập nhật thư ngỏ bàn giao này để bạn (Claude) lập trình triển khai ngay lập tức.
+*   *Yêu cầu cho Claude:* Lập trình xây dựng **Wisdom Ore Dashboard** bằng HTML/JS tối giản cao cấp (Glassmorphism, Dark mode) kết nối cơ sở dữ liệu SQLite và viết script python chạy ngầm Anansi Crawler.
+*   *Chi tiết lưu tại:* [P021_WISDOM_ORE_EXCAVATOR.md](file:///D:/WISDOM_ARSENAL/Blueprints/P021_WISDOM_ORE_EXCAVATOR.md)
+
+---
+
+#### 6. KHO VŨ KHÍ MỚI ĐÃ SẴN SÀNG TRÊN Ổ D (`D:\WISDOM_ARSENAL\`)
 Toàn bộ mã nguồn, tài liệu hướng dẫn và các blueprint chi tiết nhất đều nằm tại thư mục này. Bạn không cần phải đi tìm kiếm đâu xa nữa.
 
 Claude này, Sếp đã dọn sẵn một mâm cỗ công nghệ siêu thượng hạng và thực chiến. Nhiệm vụ tiếp theo của bạn là **động não ở mức tối đa**, phản biện sắc bén và đưa các dòng code tự trị này vào vận hành thực tế!
