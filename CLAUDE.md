@@ -1,92 +1,201 @@
 # CLAUDE.md — Wisdom Factory
-> Last updated: 2026-05-07 | Read this FIRST every session.
+> Last updated: 2026-05-18 | Read this FIRST every session.
 
 ---
 
 ## WHY
-Wisdom = He dieu hanh OPC (One Person Company).
-KHONG PHAI chatbot. LA amplifier cho tacit knowledge cua Sep.
-Formula: 1 Founder + AI Labor Force + N Partners.
-"Co the thue ngoai suy nghi. Khong the thue ngoai thau hieu."
+Wisdom = Hệ điều hành tri thức cho One Person Company (OPC).
+KHÔNG PHẢI chatbot. LÀ cây cầu bối cảnh (Context Bridge) giữa con người và AI.
+Formula: 1 Founder + AI Labor Force + N Partners + Global Knowledge Commons.
+"Có thể thuê ngoài suy nghĩ. Không thể thuê ngoài thấu hiểu."
+
+---
+
+## VISION CỐT LÕI (Đã thống nhất 2026-05-18)
+
+### Tử huyệt Wisdom giải quyết: Context Gap
+- AI có sức mạnh tính toán khổng lồ nhưng thiếu bối cảnh thực tế của con người
+- Con người có bối cảnh và nỗi đau thực tế nhưng không biết diễn đạt cho AI hiểu
+- Wisdom = Cây cầu bối cảnh kết nối hai thế giới
+
+### 6 Giá trị Công nghệ Cốt lõi
+
+**1. Private Second Brain — Não Thứ Hai Cá Nhân**
+- Vector database cá nhân: nodes, edges, links phản ánh đúng cách user tư duy
+- Multimodal input: text, voice, file, link → tự động cấu trúc hóa thành knowledge nodes
+- Học tập tích lũy: mỗi lần đọc/nghe/làm việc → extract insight → bổ sung vào graph cá nhân
+- Kinh nghiệm thực chiến: sau mỗi project → tự tạo "lessons learned" node
+- Tacit knowledge capture: suy nghĩ thô, trực giác → cấu trúc hóa dần theo thời gian
+- Decay function: tri thức cũ tự động flag khi lỗi thời
+- Contradiction detection: 2 nguồn mâu thuẫn → CONTRADICTS node, không bao giờ xóa
+- Private tuyệt đối — chỉ user mới có quyền truy cập
+
+**2. Global Knowledge Commons — Kho Tri Thức Chung**
+- Nguồn: tri thức Owner curate + Users opt-in verified + nguồn công khai đã kiểm định
+- Một kho duy nhất: không phân tán, không trùng lặp
+- Mọi node phải qua Council Validation trước khi vào Global Pool
+- Tự phình to: mỗi verified blueprint, mỗi solved use case → Commons lớn dần
+- Attribution: ghi nhận rõ contributor → tạo reputation
+- Không ai sở hữu, tất cả đều dùng được
+
+**3. 🔒 Giant Shoulders Engine — Bí mật Công nghệ Cốt lõi**
+> "Đứng trên vai người khổng lồ để tối ưu hóa hiệu suất và hiệu quả"
+
+- Phương pháp luận độc quyền: tìm kiếm, đánh giá, tổ hợp open-source repos GitHub
+- Kết hợp với Wisdom knowledge base → blueprints vượt xa tổng các thành phần
+- Chạy hoàn toàn trong Sandbox local — không expose ra ngoài
+- Pipeline: GitHub Scout → Scoring → Integrator → Sandbox Testing → Verified Blueprint
+- User chỉ nhận output cuối — không biết nguyên liệu từ đâu
+- Phương pháp luận scout và scoring KHÔNG document ra ngoài
+- Certified Working: mọi blueprint pass sandbox testing trước khi đến tay user
+
+**4. Context Bridge Pipeline — "The Wisdom Way"**
+```
+Input (text / voice / file / link)
+        ↓
+Socratic Table — stress-test assumptions
+        ↓
+Council Audit — Buffett / Jobs / Munger filter
+        ↓
+Executable Blueprint — kế hoạch có thể chạy
+        ↓
+Scaffolding — output thực tế (Excel, code, PDF...)
+        ↓
+Verified → Private Brain + opt-in Global Commons + WAS
+```
+- Đây là THE WAY — mọi use case đều follow pipeline này
+- Customizable nhưng không bỏ bước nào
+- Mỗi bước có confidence score
+
+**5. Wisdom App Store (WAS) — Lego + Franchise Model**
+- Blueprint = unit kinh tế cơ bản: đã test trên production trước khi bán
+- User mua về → active trên Wisdom OS → chạy được ngay, không setup
+- White-label: reseller dán logo riêng, Wisdom thu phí platform
+- Blueprint composability: ghép nhiều blueprints để giải bài toán phức tạp hơn
+- Rating dựa trên kết quả thực tế
+
+**6. AI Playground — Creator Economy**
+- User tạo blueprint → bán → earn → tái đầu tư vào Private Brain
+- Collaboration layer: nhiều users contribute vào một blueprint
+- Reputation system dựa trên chất lượng output thật
+
+### Flywheel tổng thể
+```
+GitHub Universe
+        ↓
+Giant Shoulders Engine [BÍ MẬT]
+        ↓
+Verified Blueprints
+        ↓
+User dùng → feedback → Private Brain
+        ↓
+Opt-in → Global Commons
+        ↓
+Commons giàu hơn → Scout thông minh hơn
+        ↓
+Blueprint tốt hơn → Attract users mới
+        ↓
+(flywheel tự quay)
+```
+
+---
+
+## QUYẾT ĐỊNH CHIẾN LƯỢC (2026-05-18)
+
+### Đã quyết định
+- **Hướng 1 (Bán knowledge product):** Làm NGAY — tiếng Anh trước
+  - Blueprint #001: Wisdom Knowledge OS Starter — $49 — ĐÃ BUILD XONG
+  - Playbook #002: The $0 AI Solopreneur Stack — $29 — ĐÃ BUILD XONG
+  - Upload lên Payhip khi Payoneer xác thực xong (1-3 ngày)
+- **Hướng 2 (Hosted SaaS):** Làm từ từ, không rush
+- **NGỪNG** viết thêm code tính năng cho đến khi có giao dịch đầu tiên
+
+### Về Antigravity
+- Antigravity = brainstorming partner, KHÔNG phải evaluator
+- Mọi ý tưởng từ Antigravity cần qua Claude để phản biện trước khi thực thi
+- Không follow "mật lệnh copy-paste" từ Antigravity vào chat mới
+- Không đọc file từ ổ D — upload trực tiếp vào chat nếu cần Claude đọc
+
+### Những gì KHÔNG làm
+- AEGIS / military targeting system
+- "Claude Mythos" / cyber-offensive tools
+- Over-engineer trước khi có buyer đầu tiên
+- Envoy xDS / 1-million OPC infrastructure (Phase 3+)
+
+---
+
+## THE WISDOM WAY — Nguyên tắc vận hành
+
+1. **Human Above Algorithm:** AI xử lý tầng dưới, human quyết định tầng trên
+2. **Context First:** Không có bối cảnh đầy đủ → không output
+3. **Certified Working:** Mọi blueprint test thật trước khi bán
+4. **Giant Shoulders:** Đứng trên vai open-source, không build lại từ đầu
+5. **Private by Default:** Tacit knowledge chỉ share khi explicit opt-in
+6. **Contradiction is Signal:** Không xóa mâu thuẫn — nghiên cứu nó
+7. **Ship First, Perfect Later:** Có giao dịch thật trước khi optimize
 
 ---
 
 ## MAP — File Structure
 ```
 wisdom-knowledge-graph/
-├── CLAUDE.md              <- Doc truoc tien (file nay)
-├── PENDING.md             <- Tasks + trang thai
-├── backup_now.sh          <- Chay hang toi: bash backup_now.sh
-├── wisdom_backup.py       <- Docker volume backup
-├── wisdom_app.py          <- Entry point
-├── wisdom_server.py       <- FastAPI server
+├── CLAUDE.md              ← Đọc trước tiên
+├── PENDING.md             ← Tasks + trạng thái
+├── backup_now.sh
+├── wisdom_app.py
+├── wisdom_server.py
 ├── wisdom/core/
-│   ├── wisdom_ingest.py   <- Layer 1: Ingest web/text
-│   ├── wisdom_upload.py   <- Layer 1: Upload files
-│   ├── wisdom_fb_ingest.py<- Layer 1: FB (cho P-043 Wisdom Lens)
-│   ├── wisdom_query.py    <- Layer 3: Search + Query
-│   ├── wisdom_validator.py<- Layer 4: Council + Validation
-│   ├── wisdom_decay.py    <- Temporal decay function
-│   ├── wisdom_dedup.py    <- SHA-256 dedup
-│   ├── wisdom_payment.py  <- Unified Ledger
-│   └── wisdom_schema.py   <- Node schema
-├── docs/
-│   ├── WISDOM_ARCHITECTURE.md  <- Chi tiet kien truc
-│   ├── WISDOM_VOICE.md         <- Output writing standard (P-029)
-│   ├── wisdom_node_schema.md   <- Node properties (P-026)
-│   └── CLAUDE_STRATEGY_HANDOVER.md
-└── templates/
-    ├── FORM_LIBRARY.md
-    └── WISDOM_SKILL_TEMPLATE.md
+│   ├── wisdom_ingest.py
+│   ├── wisdom_upload.py
+│   ├── wisdom_query.py
+│   ├── wisdom_validator.py   ← P-020 Council (TODO)
+│   ├── wisdom_decay.py
+│   ├── wisdom_dedup.py
+│   ├── wisdom_payment.py
+│   └── wisdom_schema.py
+└── docs/
+    ├── WISDOM_ARCHITECTURE.md
+    ├── WISDOM_VOICE.md
+    └── wisdom_node_schema.md
 ```
 
 ---
 
-## RULES — Bat buoc khi viet code
+## RULES — Bắt buộc khi viết code
 
 **[RULE-A]** Neo4j = SOURCE OF TRUTH. Qdrant = SEARCH INDEX.
-Write Neo4j TRUOC -> lay node_id -> write Qdrant.
+Write Neo4j TRƯỚC → lấy node_id → write Qdrant.
 
-**[RULE-B]** Moi KnowledgeNode phai co du fields:
+**[RULE-B]** Mọi KnowledgeNode phải có đủ fields:
 trust_score, decay_lambda, valid_from, valid_until,
 epistemic_status, cultural_context, source_type
-→ Xem chi tiet: docs/wisdom_node_schema.md
 
 **[RULE-C]** Decay: trust_score(t) = base * exp(-lambda * age_days)
 
-**[RULE-D]** Validation ASYNC — khong block ingest pipeline.
-PENDING → DB ngay. Background job validate. Chi VERIFIED vao Global Pool.
+**[RULE-D]** Validation ASYNC — không block ingest pipeline.
+PENDING → DB ngay. Background job validate. Chỉ VERIFIED vào Global Pool.
 
-**[RULE-E]** Tacit knowledge = explicit opt-in. Khong auto-push.
+**[RULE-E]** Tacit knowledge = explicit opt-in. Không auto-push.
 
-**[RULE-F]** Mau thuan → tao CONTRADICTS node. Khong bao gio xoa.
+**[RULE-F]** Mâu thuẫn → tạo CONTRADICTS node. Không bao giờ xóa.
 
 **[RULE-G]** Qdrant collections: wisdom_public | wisdom_private_{uid} | wisdom_shadow
 
-**[RULE-H]** Obsidian bridge (P-025) chi lam SAU P-007 stable.
+**[RULE-H]** Giant Shoulders Engine chạy trong sandbox — không expose logic ra ngoài.
+
+**[RULE-I]** Lưu cả kết luận lẫn chuỗi suy luận khi ingest.
 
 ---
 
-## WORKFLOW — Bat dau moi session
+## CHECKLIST TRƯỚC KHI VIẾT CODE
 
-```
-1. Doc CLAUDE.md nay (xong roi)
-2. Doc PENDING.md — xem task uu tien
-3. Hoi Sep: "Hom nay lam gi?"
-4. Ship. Khong over-engineer.
-```
-
----
-
-## CHECKLIST TRUOC KHI VIET CODE
-
-- [ ] strip_emoji() cho moi xu ly text
-- [ ] encoding='utf-8' cho moi open()
-- [ ] try/except cho moi DB call
-- [ ] os.environ.get() — khong hardcode key
-- [ ] Windows subprocess → dung Git Bash exe
-- [ ] Write Neo4j TRUOC Qdrant (RULE-A)
-- [ ] KnowledgeNode du fields (RULE-B)
+- [ ] strip_emoji() cho mọi xử lý text
+- [ ] encoding='utf-8' cho mọi open()
+- [ ] try/except cho mọi DB call
+- [ ] os.environ.get() — không hardcode key
+- [ ] Write Neo4j TRƯỚC Qdrant (RULE-A)
+- [ ] KnowledgeNode đủ fields (RULE-B)
+- [ ] Giant Shoulders logic trong sandbox (RULE-H)
 
 ---
 
@@ -96,273 +205,53 @@ Docker: wisdom-neo4j (port 7474/7687) + wisdom-qdrant (port 6333/6334)
 OS: Windows 11, Git Bash terminal
 
 ## INFRASTRUCTURE
-- Phase 1: Laptop (hien tai) + OneDrive backup
-- Phase 2: Hetzner CX32 $14/thang (khi P-007 xong)
-- Phase 3: Hybrid $50-80/thang (khi co 50+ users)
+- Phase 1: Laptop local + OneDrive backup (hiện tại)
+- Phase 2: Hetzner CX32 $14/tháng (khi P-007 xong + có buyers)
+- Phase 3: Hybrid $50-80/tháng (khi có 50+ users)
 
-## PRIORITY (Hom nay)
-P-007 Web UI → P-026 node_schema → P-029 WISDOM_VOICE
-→ Xem PENDING.md de biet toan bo
-
----
-## SOUL OF WISDOM — Triet ly Nen tang (P-040)
-
-**Explicit knowledge (99%)** = AI xu ly duoc
-**Tacit knowledge (1%)** = Moat that su cua Sep — khong AI nao co duoc
-
-Explicit: Quy trinh, checklist, framework, data
-Tacit:    Mui thi truong, giac kinh doanh, kinh nghiem song
-
-**Nguyen tac Above the Algorithm** (Sangeet Paul Choudary):
-- AI gioi o tang duoi (xu ly, phan tich, thuc thi)
-- Con nguoi phai o tang tren (dinh huong, phan quyet, thau hieu)
-- Wisdom = Amplifier cho tang tren — KHONG phai replacement
-
-**3 dieu AI khong the thue ngoai:**
-1. Thau hieu van hoa dia phuong (thi truong VN)
-2. Tin tuong tu cong dong (Sep la nguoi — AI la tool)
-3. Truc giac tu trai nghiem that (khong the copy)
-
-**Ap dung trong Wisdom:**
-- Moi output phai amplify judgment cua Sep, khong thay the
-- Tacit knowledge chi push vao wisdom_private khi Sep opt-in (RULE-E)
-- Persona 5 (The Intuition) = so hoa truc giac cua Sep — moat lon nhat
-
-**Quote:** Co the thue ngoai suy nghi. Khong the thue ngoai thau hieu.
-
----
-
-## AI CODING BEHAVIOR — Karpathy Guidelines (v2026-05-14)
-> Source: github.com/forrestchang/andrej-karpathy-skills (127K stars)
-
-### 1. Think Before Coding
-- Neu ro assumption cu the. Neu khong chac, hoi.
-- Neu co nhieu cach hieu, trinh bay het.
-- Neu co gi khong ro, DUNG LAI. Hoi.
-
-### 2. Simplicity First
-- Khong them feature ngoai yeu cau.
-- Khong abstraction cho single-use code.
-- Neu viet 200 dong ma co the 50 dong, viet lai.
-
-### 3. Surgical Changes
-- Khong "improve" adjacent code ngoai scope.
-- Match existing style du co the lam khac.
-- Moi dong thay doi phai trace duoc ve request cua Sep.
-
-### 4. Goal-Driven Execution
-- "Fix the bug" -> "Viet test reproduce bug, roi lam pass"
-- Multi-step: neu plan truoc, verify tung buoc.
-
----
-
-## REPO INTELLIGENCE (2026-05-14)
-| Repo | Stars | Action |
-|---|---|---|
-| forrestchang/andrej-karpathy-skills | 127K | Da tich hop section tren |
-| mattpocock/skills | 66K | Them .claude/skills/ |
-| rohitg00/agentmemory | Growing | Nghien cuu sau Gumroad |
-| addyosmani/agent-skills | 30K | Phase 2 |
-| NousResearch/hermes-agent | 148K | Hoc pattern Phase 2 |
-| apernet/hysteria | - | Skip |
-| tinyhumansai/openhuman | - | GPL3, skip |
-| CloakHQ/cloakbrowser | - | Giu cho P-016 |
-
----
-
-## INVERSE KNOWLEDGE SEARCH — Dark Matter Layer (v2026-05-14)
-Chi them 1 function: query_inverse() trong wisdom_query.py
-KHONG build: RDT, LCoT pipeline, multi-solver.
-Usage: python wisdom_query.py --inverse "concept"
-RULE-I: Luu ca ket luan lan chuan suy luan khi ingest.
-
----
-
-## DOMAIN & IDENTITY (v2026-05-15)
-Domain    : synapsenetwork.io (Namecheap, 1 year từ Jan 15 2026)
+## DOMAIN & IDENTITY
+Domain    : synapsenetwork.io (Namecheap)
 Owner     : Nguyen — 23B3 Le Quang Dinh, Ho Chi Minh City, VN
-Account   : Tamnd
 GitHub    : synapsefounder2026-cmd
 Product   : Wisdom Factory — OPC Knowledge OS
 
-URLs ke hoach:
-  synapsenetwork.io          → Landing page chinh
-  app.synapsenetwork.io      → Wisdom Dashboard
-  api.synapsenetwork.io      → Wisdom API
-  docs.synapsenetwork.io     → INSTALLATION + QUICKSTART
+---
 
-Dung cho Payoneer:
-  Business name : Synapse Network
-  Website URL   : https://synapsenetwork.io
-  Business type : Individual / Freelancer
+## PRODUCTS ĐÃ BUILD (Sẵn sàng publish)
+
+| # | Sản phẩm | Giá | File | Trạng thái |
+|---|----------|-----|------|-----------|
+| 1 | Wisdom Knowledge OS Starter Blueprint | $49 | Wisdom_Blueprint_001_BUNDLE.zip | ✅ Sẵn sàng |
+| 2 | The $0 AI Solopreneur Stack | $29 | Zero_Cost_AI_Stack_BUNDLE.zip | ✅ Sẵn sàng |
+
+**Bước tiếp theo:** Payoneer xác thực → upload lên Payhip → publish.
 
 ---
 
-## BLUEPRINT FACTORY — Chien luoc san pham (v2026-05-16)
-> Wisdom = Nha may tao blueprints. Moi 100 videos ingest = 1 blueprint ban duoc.
-> Nguon: Antigravity analysis + 2 case studies + phan bien thuc te
+## PENDING PRIORITIES
 
-### Dinh nghia Blueprint
-Blueprint = Tri thuc duoc cau truc thanh san pham ban duoc
-  - Khong chi la PDF — la LIVING DOCUMENT (wiki nodes trong Neo4j)
-  - Tu dong update khi co thong tin moi (ARCHIVIST)
-  - Evidence-based: phai co case studies thuc te
-  - Validation Gate: Sep tu chay thu truoc khi publish
-
-### 5 Nguon Tao Blueprints
-1. YouTube channels (da co pipeline) → wisdom_whisper.py
-2. GitHub awesome-* repos → wisdom_code_scout.py (P-010)
-3. Newsletters/Substack → Playwright MCP crawl
-4. Reddit (r/SideProject, r/EntrepreneurRideAlong) → Tavily search
-5. IndieHackers interviews → 3000+ revenue-validated cases
-
-### Pipeline Tu Dong
-INPUT → ARCHIVIST (ingest + extract) → ANALYST (cluster + validate)
-     → SCRIBE (write structure) → VALIDATION GATE (Sep review)
-     → PUBLISH tren Wisdom Marketplace
-
-### Blueprint Structure (bat buoc)
-1. Overview & outcomes (ket qua cu the)
-2. Prerequisites (can gi truoc)
-3. Step-by-step workflow
-4. Tools & stack (co links)
-5. Common mistakes (tu Dark Matter analysis)
-6. Real examples (co citations tu KB)
-7. Estimated ROI / timeline (validated)
-
-### Phan bien quan trong
-- Legal Graph Blueprint: TRANH thi truong VN (data khong public)
-  → Thay bang "Business Intelligence Graph" (data public, khong rui ro)
-- Validation Gate: moi blueprint Sep phai tu chay thu 1 lan truoc khi ban
-  → Tranh refund + bao ve reputation
-
-### Wisdom Blueprint Advantages
-1. Living Documents: tu dong update khi co info moi
-2. Graph-powered Recommendation: match blueprint voi profile user
-3. Evidence-based: chi ban proven playbooks, khong ban ly thuyet
+1. **[NGAY]** Publish 2 sản phẩm trên Payhip khi Payoneer xong
+2. **[TUẦN NÀY]** Viết "The Wisdom Way" — framework document đầy đủ
+3. **[TUẦN NÀY]** Xác định MVP đầu tiên của Wisdom OS
+4. **[SAU KHI CÓ BUYER]** P-020 Council Validator code
+5. **[PHASE 2]** Hướng 2 — Hosted SaaS Web App
 
 ---
 
-## BLUEPRINT ROADMAP — 10 San pham cu the (v2026-05-16)
+## AI CODING BEHAVIOR
 
-### Tuan nay (data da co san)
-| # | Blueprint | Gia | Tool | Status |
-|---|-----------|-----|------|--------|
-| 1 | YouTube OPC Pipeline Setup | $29 | wisdom_whisper.py | LAM NGAY |
-| 2 | FreeLLM API Zero-Cost AI Stack | $19 | SW-002 | LAM NGAY |
-| 3 | Wisdom Knowledge OS Starter | $49 | Wisdom itself | FLAGSHIP |
+### 1. Think Before Coding
+- Nêu rõ assumption cụ thể. Nếu không chắc, hỏi.
+- Nếu có nhiều cách hiểu, trình bày hết.
 
-### Thang 1 (sau 10 nodes verified)
-| # | Blueprint | Gia | Nguon |
-|---|-----------|-----|-------|
-| 4 | OPC AI Stack 2026 | $39 | awesome-* repos |
-| 5 | MCP Server Quick Start | $39 | wisdom_mcp.py |
-| 6 | IndieHacker $1K MRR Patterns | $79 | 50 interviews |
+### 2. Simplicity First
+- Không thêm feature ngoài yêu cầu.
+- Nếu viết 200 dòng mà có thể 50 dòng, viết lại.
 
-### Thang 2
-| # | Blueprint | Gia | Nguon |
-|---|-----------|-----|-------|
-| 7 | AI Agent Weekend Build Kit | $49 | Case 2 pattern |
-| 8 | Hidden Connection Finder | $79 | Neo4j Cypher |
-| 9 | Competitor Intelligence Graph | $99 | BettaFish pattern |
-| 10 | Vietnam OPC Legal Guide | $99 | VN market unique |
+### 3. Surgical Changes
+- Không "improve" code ngoài scope.
+- Mỗi dòng thay đổi phải trace được về request.
 
-### Revenue projection (conservative)
-Thang 1: 3 blueprints x 10 buyers x $29-49 avg = ~$1,200
-Thang 2: 6 blueprints x 20 buyers x $39-79 avg = ~$5,000
-Thang 3: Marketplace mo + commission = scaling
-
----
-
-## WISDOM INGEST WISHLIST — 8 Domains x 5 URLs (v2026-05-16)
-> Curated by Antigravity. ~2,000 wiki nodes khi ingest xong.
-> Thu tu uu tien: OPC → Monetization → Mindset → AI Tools → VN Local → Content → Finance
-
-### DOMAIN 1 — OPC Operations (Tuan 1)
-1. https://www.youtube.com/@DanKoe           — OPC model originator, 500+ videos
-2. https://www.justinwelsh.me/               — $5M OPC, documented SOPs
-3. https://www.youtube.com/@CodieBSanchez    — Business acquisition, OPC model
-4. https://www.indiehackers.com/interviews   — 3000+ revenue-validated interviews
-5. https://thedankoe.com/letters             — Dark matter OPC thinking
-
-### DOMAIN 2 — Knowledge Management (Tuan 2)
-1. https://fortelabs.com/blog/               — BASB creator, output-focused
-2. https://zettelkasten.de/posts/            — Nguon goc Zettelkasten
-3. https://www.youtube.com/@TiagoForte       — BASB methodology thuc chien
-4. https://www.youtube.com/@linkingyourthinking — Obsidian workflows
-5. https://fs.blog/mental-models/            — Munger/Buffett mental models
-
-### DOMAIN 3 — Monetization (Tuan 1)
-1. https://www.gumroad.com/discover          — Best-selling products thuc te
-2. https://www.indiehackers.com/products?revenue=1000- — $1K+/month verified
-3. https://www.youtube.com/@GrahamStephan   — $10M OPC income streams
-4. https://convertkit.com/resources/blog    — Creator economy case studies
-5. https://www.payhip.com/blog/             — VN-friendly + case studies
-
-### DOMAIN 4 — AI Tools & Automation (Tuan 3)
-1. https://www.youtube.com/@NickSaraev      — n8n + AI automation OPC
-2. https://www.youtube.com/@AIJasonZ        — Claude workflow thuc chien
-3. https://github.com/n8n-io/n8n/tree/master/packages/nodes-base/nodes
-4. https://ollama.com/library               — Local AI models + benchmarks
-5. https://www.youtube.com/@RileyBrown_     — Solopreneur AI stack
-
-### DOMAIN 5 — Mindset & Decision Making (Tuan 2)
-1. https://fs.blog/great-talks/             — Munger/Buffett/Bezos speeches
-2. https://paulgraham.com/articles.html     — 221 essays, dense tacit knowledge
-3. https://www.youtube.com/@TheKnowledgeProject — Mental models thuc te
-4. https://nav.al/                          — Naval: specific knowledge OPC
-5. https://www.berkshirehathaway.com/letters/letters.html — Buffett letters
-
-### DOMAIN 6 — Vietnam Market (Tuan 3)
-1. https://thuvienphapluat.vn/              — Phap luat VN chinh thuc
-2. https://www.youtube.com/@congtyluatvn   — Phap ly kinh doanh ca nhan VN
-3. https://vnexpress.net/kinh-doanh/khoi-nghiep — OPC VN case studies
-4. https://topdev.vn/blog/                 — IT freelancer VN market
-5. https://kienthucthuevietnam.com/         — Thue ca nhan kinh doanh VN
-
-### DOMAIN 7 — Content & Personal Branding (Tuan 4)
-1. https://www.youtube.com/@JustinWelsh    — LinkedIn OS, $8M solopreneur
-2. https://www.youtube.com/@TheFutur       — Personal brand for creative OPC
-3. https://www.ship30for30.com/blog        — Writing to sell methodology
-4. https://www.youtube.com/@JayClouse      — Creator economy systems
-5. https://creatoreconomy.so/              — Industry data 2026
-
-### DOMAIN 8 — Financial Intelligence (Tuan 4)
-1. https://www.bench.co/blog/             — P&L, cash flow for solopreneur
-2. https://www.youtube.com/@GrahamStephan — OPC financial model
-3. https://hurdlr.com/blog/               — Freelancer tax/expense
-4. https://www.accountingcoach.com/       — P&L fundamentals free
-5. https://gdt.gov.vn/                    — Tong cuc Thue VN chinh thuc
-
-### Target: ~2,000 wiki nodes
-Domain          | Est. nodes
-OPC Operations  | ~300
-Monetization    | ~250
-AI Tools        | ~400
-Mindset         | ~300
-Knowledge Mgmt  | ~200
-Vietnam Local   | ~150
-Content/Brand   | ~200
-Finance OPC     | ~150
-
----
-
-## SW-013: Everything Claude Code (ECC)
-> 182K stars | Anthropic Hackathon Winner | MIT
-> AgentShield scan: Grade A 100/100 — Cleared for launch!
-
-npx ecc-agentshield scan   # Security scan ($0, 5 phut)
-
----
-
-## VERIFICATION POLICY — Thuc te hon (v2026-05-17)
-Phase 1 (Build): Verification OPTIONAL
-  - Nodes PENDING van search duoc, van co trong report
-  - Chi verify khi Sep thuc su doc va dung node do
-  - Khong ep buoc — Wisdom phai phuc vu human
-
-Phase 2 (Buyers dung): Verification RECOMMENDED
-  - Buyers tu verify theo flow tu nhien cua ho
-  - Ho dang hoc that → verify co y nghia that
-
-NGUYEN TAC: Human dung Wisdom, khong phai Wisdom dung Human.
+### 4. Ship > Perfect
+- Done và deploy > perfect và chưa ra.
+- Có giao dịch thật trước khi optimize.
