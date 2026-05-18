@@ -255,3 +255,26 @@ Product   : Wisdom Factory — OPC Knowledge OS
 ### 4. Ship > Perfect
 - Done và deploy > perfect và chưa ra.
 - Có giao dịch thật trước khi optimize.
+
+---
+
+## TECHNICAL RISK — Đã xác định (2026-05-18)
+
+### Risk 1: Local vs Cloud Architecture Conflict
+**Vấn đề:** Sếp muốn user đăng nhập qua browser bất kỳ thiết bị nào (cloud UX), nhưng core engines (VibeVoice, Giant Shoulders Sandbox, SQLite) chạy local.
+
+**Quyết định kiến trúc: Hybrid Local-First**
+- Cloud: chỉ làm License Key validation + encrypted backup của Private Brain
+- Local (Electron/Tauri app + Ollama): toàn bộ computation nặng, sandbox, AI inference
+- Chưa build cloud layer cho đến khi có buyer đầu tiên confirm họ cần nó
+
+### Risk 2: Sandbox Security — Giant Shoulders Engine
+**Vấn đề:** Tự động clone và chạy repos GitHub lạ trên máy user Windows = security risk nghiêm trọng.
+
+**Giải pháp bắt buộc:**
+- Docker Container cô lập cho mọi repo lạ
+- AST Parsing tĩnh trước khi execute
+- Whitelist dependencies — chỉ allow known-safe packages
+- No network access trong sandbox khi testing
+
+**Rule:** Giant Shoulders Engine KHÔNG deploy cho đến khi 2 solutions trên được implement và tested.
